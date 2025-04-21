@@ -7,7 +7,7 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
-from surveyapp.forms import SubmitResponse, InformedConsent, Greetings, ProlificID, Thanks
+from surveyapp.forms import SubmitResponse, InformedConsent, Greetings, Thanks
 from surveyapp.models import Image, Participant, Response, AdviceStartTime, AdviceEndTime
 from django.template import RequestContext
 from collections import Counter
@@ -47,10 +47,7 @@ def introPage(request):
     request.session.save()  # Ensure session is saved
     print("ppant is:",ppant_rand)
 
-    form = ProlificID()
-    context = {
-        'form': form,
-    }
+    context = {}
 
     if request.method == 'POST':
         print("posting")
@@ -59,19 +56,14 @@ def introPage(request):
         time_now = datetime.datetime.now()
         category = request.session.get('category', 'default')
 
-        form = ProlificID(request.POST)
-        if form.is_valid():
-            print("form valid")
-            prolificID = form.cleaned_data['enterID']
-            ppant_instance = Participant(   #tuki gre v database
-                ppant_id = ppant_id,
-                prolificID = prolificID,
-                time_started = time_now,
-                category = category)
-            ppant_instance.save()
-            return redirect(taskInstructions)
-        else:
-            print("FORM INVALID")
+        # Create participant without prolific ID
+        ppant_instance = Participant(
+            ppant_id = ppant_id,
+            prolificID = "",  # Empty string instead of prolific ID
+            time_started = time_now,
+            category = category)
+        ppant_instance.save()
+        return redirect(exampleTask)
 
     return render(request, 'entrancePage.html', context=context)
 

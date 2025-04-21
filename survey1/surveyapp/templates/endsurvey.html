@@ -11,8 +11,8 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <style>
         .achievement-badge {
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             border-radius: 50%;
             background-color: #007bff;
             color: white;
@@ -20,16 +20,16 @@
             align-items: center;
             justify-content: center;
             margin: 0 auto;
-            font-size: 3rem;
+            font-size: 2.5rem;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .results-card {
-            border-radius: 15px;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            padding: 30px;
-            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+            padding: 20px;
+            margin-bottom: 20px;
             background-color: #f8f9fa;
             transition: transform 0.3s;
         }
@@ -68,7 +68,7 @@
             font-size: 2.5rem;
             font-weight: bold;
             text-align: center;
-            margin: 20px 0;
+            margin: 15px 0;
             color: #343a40;
         }
 
@@ -79,46 +79,85 @@
         }
 
         .stat-label {
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             color: #6c757d;
+        }
+
+        /* Horizontal accuracy slider styles */
+        .accuracy-slider-container {
+            position: relative;
+            width: 100%;
+            margin: 0 auto;
+            padding: 5px 0;
+        }
+
+        .accuracy-slider {
+            width: 100%;
+            height: 15px;
+            background-color: #f3f3f3;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 0 8px rgba(0,0,0,0.1);
+        }
+
+        .accuracy-slider-fill {
+            height: 100%;
+            width: var(--percentage);
+            background-color: var(--loader-color);
+            border-radius: 8px;
+            transition: width 1s ease, background-color 1s ease;
+        }
+
+        .accuracy-percentage {
+            font-size: 2rem;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 5px;
+            color: var(--loader-color);
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <div class="text-center mt-5">
-        <h1 class="display-4 mb-4">Challenge Complete!</h1>
+    <div class="text-center mt-4">
+        <h1 class="display-4 mb-3">Challenge Complete!</h1>
 
         <div class="results-card">
             <div class="achievement-badge">
                 <i class="fas fa-award"></i>
             </div>
-            <h2 class="achievement-title">{{ achievement }}</h2>
-            <p class="lead">Congratulations on completing the challenge to identify fake AI-generated faces!</p>
+            <h2 class="achievement-title" style="margin-bottom: 10px;">{{ achievement }}</h2>
+            <p class="lead" style="font-size: 1.4rem; margin-bottom: 10px;">Congratulations on completing the challenge to identify fake AI-generated faces!</p>
 
-            <div class="row mt-5">
+            <div class="row mt-3">
                 <div class="col-md-4">
                     <div class="card h-100">
-                        <div class="card-body text-center">
-                            <h5 class="stat-label">Correct Answers</h5>
-                            <p class="stat-value">{{ correct_answers_count }} / {{ total_questions }}</p>
+                        <div class="card-body text-center py-2">
+                            <h5 class="stat-label mb-1">Correct Answers</h5>
+                            <p class="stat-value mb-1">{{ correct_answers_count }} / {{ total_questions }}</p>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card h-100">
-                        <div class="card-body text-center">
-                            <h5 class="stat-label">Accuracy</h5>
-                            <p class="stat-value">{{ accuracy_percentage|floatformat:1 }}%</p>
+                        <div class="card-body text-center py-2">
+                            <h5 class="stat-label mb-1">Accuracy</h5>
+                            <div class="accuracy-slider-container">
+                                <div class="accuracy-slider">
+                                    <div class="accuracy-slider-fill" id="accuracy-slider-fill"></div>
+                                </div>
+                                <div class="accuracy-percentage" id="accuracy-percentage">{{ accuracy_percentage|floatformat:0 }}%</div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-4">
                     <div class="card h-100">
-                        <div class="card-body text-center">
-                            <h5 class="stat-label">Detective Rank</h5>
-                            <p class="stat-value">
+                        <div class="card-body text-center py-2">
+                            <h5 class="stat-label mb-1">Detective Rank</h5>
+                            <p class="stat-value mb-1">
                                 {% if accuracy_percentage >= 80 %}
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                                 {% elif accuracy_percentage >= 60 %}
@@ -134,30 +173,20 @@
                 </div>
             </div>
 
-            <div class="mt-4">
-                <h4>Your Accuracy</h4>
-                <div class="progress">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ accuracy_percentage }}%" 
-                         aria-valuenow="{{ accuracy_percentage }}" aria-valuemin="0" aria-valuemax="100">
-                        {{ accuracy_percentage|floatformat:1 }}%
-                    </div>
-                </div>
-            </div>
 
-            <div class="mt-5">
-                <h3>What You've Learned</h3>
-                <p class="lead">
+            <div class="mt-3">
+                <h3 style="font-size: 1.8rem;">What You've Learned</h3>
+                <p class="lead" style="font-size: 1.4rem; margin-bottom: 0.5rem;">
                     This challenge tested your ability to identify AI-generated fake faces. 
                     The technology behind these images is constantly improving, making detection increasingly difficult.
-                </p>
-                <p>
-                    Your detective skills have been put to the test, and you've gained valuable experience in 
-                    spotting the subtle signs that distinguish real faces from AI-generated ones.
                 </p>
             </div>
         </div>
 
-        <div class="mt-4">
+        <div class="mt-3">
+            <a href="{% url 'intro' %}" class="btn btn-primary btn-lg" style="font-size: 1.4rem;">
+                <i class="fas fa-redo mr-2"></i> Try Again
+            </a>
         </div>
     </div>
 </div>
@@ -188,9 +217,52 @@
         }
     }
 
+    // Function to initialize the accuracy slider
+    function initAccuracySlider() {
+        const accuracySliderFill = document.getElementById('accuracy-slider-fill');
+        const accuracyPercentage = document.getElementById('accuracy-percentage');
+        if (!accuracySliderFill || !accuracyPercentage) return;
+
+        // Get the accuracy percentage from the template
+        const percentage = {{ accuracy_percentage }};
+
+        // Set the percentage for the slider width
+        const percentageStr = `${percentage}%`;
+
+        // Determine color based on accuracy range
+        let sliderColor;
+        if (percentage >= 80) {
+            sliderColor = '#28a745'; // Green for high accuracy
+        } else if (percentage >= 60) {
+            sliderColor = '#17a2b8'; // Blue for good accuracy
+        } else if (percentage >= 40) {
+            sliderColor = '#ffc107'; // Yellow for medium accuracy
+        } else if (percentage >= 20) {
+            sliderColor = '#fd7e14'; // Orange for low accuracy
+        } else {
+            sliderColor = '#dc3545'; // Red for very low accuracy
+        }
+
+        // Set CSS variables for the slider
+        accuracySliderFill.style.setProperty('--percentage', percentageStr);
+        accuracySliderFill.style.setProperty('--loader-color', sliderColor);
+
+        // Also set the text color to match
+        accuracyPercentage.style.color = sliderColor;
+
+        // Add animation effect - start from 0 and animate to the actual percentage
+        accuracySliderFill.style.width = '0%';
+        setTimeout(() => {
+            accuracySliderFill.style.width = percentageStr;
+        }, 300);
+    }
+
     // Run confetti when page loads
     document.addEventListener('DOMContentLoaded', function() {
         createConfetti();
+
+        // Initialize the accuracy slider
+        initAccuracySlider();
 
         // Run confetti again every few seconds
         setInterval(createConfetti, 5000);
