@@ -75,10 +75,18 @@ console.log(categ);
 
         .clickable-image {
             cursor: pointer;
-            border: 3px solid transparent;
-            transition: border-color 0.3s;
+            border: 3px solid #ccc;
+            transition: all 0.3s;
             max-height: 450px;
             width: auto;
+            position: relative;
+            z-index: 5;
+        }
+
+        .clickable-image:hover {
+            border-color: #007bff;
+            transform: scale(1.01);
+            box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
         }
 
         .selected-image {
@@ -107,15 +115,32 @@ console.log(categ);
         </div>
 
         <div class="text-center">
-            <h3 style="font-size: 1.5rem;">Select the fake image (click on it)</h3>
+            <h3 style="font-size: 1.8rem; color: #000000; margin-bottom: 20px;">Select the fake image. Select parts of the image (squares) that seem off.</h3>
             <div class="row">
                 <div class="col-md-6 text-center">
-                    <img src="{% static left_image_path %}" class="img-fluid clickable-image" id="left-image" onclick="selectImage('left')">
+                    <div style="position: relative; cursor: pointer;" onclick="selectImage('left');">
+                        <img src="{% static left_image_path %}" class="img-fluid clickable-image" id="left-image" onclick="selectImage('left');" onload="adjustGridContainer('left')">
+                        <div id="container-left" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:20;">
+                        </div>
+                    </div>
                 </div>
                 <div class="col-md-6 text-center">
-                    <img src="{% static right_image_path %}" class="img-fluid clickable-image" id="right-image" onclick="selectImage('right')">
+                    <div style="position: relative; cursor: pointer;" onclick="selectImage('right');">
+                        <img src="{% static right_image_path %}" class="img-fluid clickable-image" id="right-image" onclick="selectImage('right');" onload="adjustGridContainer('right')">
+                        <div id="container-right" style="position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:20;">
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
+
+        <div class="text-center mt-4">
+            <button id="submit-answer" class="btn btn-primary btn-lg" type="button" onclick="submitForm();" style="margin: 0; padding: 0.5rem 1rem;">
+                <i class="fas fa-check mr-2"></i> Submit
+            </button>
+            <a id="next-question" href="{% url 'main1' %}" class="btn btn-primary btn-lg" style="display: none; margin: 0; padding: 0.5rem 1rem;">
+                <i class="fas fa-forward mr-2"></i> Next Question
+            </a>
         </div>
 
         <hr>
@@ -149,9 +174,9 @@ console.log(categ);
             <div class="col-md-6">
                 <div class="text-center">
                     <h3 style="font-size: 1.5rem;">Please give your confidence level:</h3>
-                    <p>0 = No confidence at all, 9 = Complete confidence</p>
+                    <p>1 = No confidence at all, 9 = Complete confidence</p>
                     <div class="form-check-inline">
-                        {% for i in "0123456789" %}
+                        {% for i in "123456789" %}
                         <div class="form-check form-check-inline" style="margin-right: 15px;">
                             <input class="form-check-input" type="radio" id="id_confidence_{{ i }}" name="confidence" value="{{ i }}" style="transform: scale(1.5); position: relative; top: -2px; margin-right: 5px;">
                             <label class="form-check-label" for="id_confidence_{{ i }}" style="font-size: 1.6rem; margin-left: 5px;">{{ i }}</label>
@@ -164,55 +189,218 @@ console.log(categ);
 
         <hr>
 
-        <div class="text-center">
-            <h3 style="font-size: 1.5rem;">Click on the relevant parts of the fake image:</h3>
-            <div class="row">
-                <div class="col-md-6">
-                    <div style="position: relative;">
-                        <img src="{% static left_image_path %}" class="img-fluid clickable-image" id="left-image-grid" onclick="selectImage('left')" style="max-height: 300px;">
-                        <div id="container-left" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:translate(0%,0%);">
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div style="position: relative;">
-                        <img src="{% static right_image_path %}" class="img-fluid clickable-image" id="right-image-grid" onclick="selectImage('right')" style="max-height: 300px;">
-                        <div id="container-right" style="position:absolute;top:0;left:0;width:100%;height:100%;transform:translate(0%,0%);">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            <script>
+                // Function to manually submit the form
+                function submitForm() {
+                    // Validate form
+                    if (!imageSelected) {
+                        alert('Please select the fake image before submitting.');
+                        return;
+                    }
 
-        <hr>
+                    // Check if at least one inconsistency type is selected
+                    if ($('input[name="inconsistency_type"]:checked').length === 0) {
+                        alert('Please select at least one feature you observed in the fake image.');
+                        return;
+                    }
 
-        <div class="text-center mt-4">
-            <button id="submit-answer" class="btn btn-primary btn-lg" type="button">
-                <i class="fas fa-check mr-2"></i> Submit
-            </button>
-            <a id="next-question" href="{% url 'main1' %}" class="btn btn-success btn-lg" style="display: none;">
-                <i class="fas fa-forward mr-2"></i> Next Question
-            </a>
+                    // Check if confidence level is selected
+                    if (!$('input[name="confidence"]:checked').val()) {
+                        alert('Please select your confidence level.');
+                        return;
+                    }
+
+                    // Manually submit the form using AJAX
+                    var formData = $('form').serialize();
+
+                    $.ajax({
+                        url: '{% url "submit_answer" %}',
+                        type: 'POST',
+                        data: formData,
+                        success: function(response) {
+
+                            // Display feedback
+                            $('#feedback-container').show();
+
+                            if (response.is_correct) {
+                                $('#feedback-container').removeClass('alert-danger').addClass('alert-success');
+                                $('#feedback-icon').removeClass('fa-times-circle').addClass('fa-check-circle').css('color', '#28a745');
+                                $('#feedback-badge').removeClass('badge-danger').addClass('badge-success').text('+1 POINT');
+                                $('#feedback-heading').text('Great job!');
+                                $('#feedback-text').html('The ' + (response.correct_answer === 'left' ? 'left' : 'right') + ' image was the fake one. <em>Keep it up!</em>');
+
+                                // Add a small confetti effect for correct answers
+                                createMiniConfetti();
+                            } else {
+                                $('#feedback-container').removeClass('alert-success').addClass('alert-danger');
+                                $('#feedback-icon').removeClass('fa-check-circle').addClass('fa-times-circle').css('color', '#dc3545');
+                                $('#feedback-badge').removeClass('badge-success').addClass('badge-danger').text('+0 POINTS');
+                                $('#feedback-heading').text('Not quite right!');
+                                $('#feedback-text').html('The ' + (response.correct_answer === 'left' ? 'left' : 'right') + ' image was the fake one. <em>Look closely at the details in the next one!</em>');
+                            }
+
+                            // Hide Submit Answer button and show Next Question button
+                            $('#submit-answer').hide();
+                            $('#next-question').show();
+                        },
+                        error: function(xhr, status, error) {
+                            alert("An error occurred while submitting your answer. Please try again.");
+                        }
+                    });
+                }
+            </script>
         </div>
 
     <script>
+        // Function to adjust grid container to match image dimensions and position
+        function adjustGridContainer(side) {
+            var image = document.getElementById(side + '-image');
+            var container = document.getElementById('container-' + side);
+
+            if (image && container) {
+                // Get the actual dimensions and position of the image
+                var rect = image.getBoundingClientRect();
+                var parentRect = image.parentElement.getBoundingClientRect();
+
+                // Calculate the position relative to the parent
+                var relativeLeft = rect.left - parentRect.left;
+                var relativeTop = rect.top - parentRect.top;
+
+                // Update the container dimensions and position to match the image exactly
+                container.style.width = rect.width + 'px';
+                container.style.height = rect.height + 'px';
+                container.style.left = relativeLeft + 'px';
+                container.style.top = relativeTop + 'px';
+
+                // Recreate the grid with the correct dimensions
+                createGrid(side, rect.width, rect.height);
+            }
+        }
+
         // Initialize selection status
         var imageSelected = false;
 
         function selectImage(choice) {
-            // Update UI to show which image is selected
-            updateImageSelection(choice);
+            try {
+                // Update UI to show which image is selected
+                updateImageSelection(choice);
 
-            // Set the radio button value
-            if (choice === 'left') {
-                document.getElementById('id_choice_0').checked = true;
-            } else {
-                document.getElementById('id_choice_1').checked = true;
+                // Set the radio button value
+                if (choice === 'left') {
+                    var leftRadio = document.getElementById('id_choice_0');
+                    if (leftRadio) {
+                        leftRadio.checked = true;
+                    }
+
+                    // Show left grid, hide right grid
+                    var leftSvg = document.querySelector('#container-left svg');
+                    var rightSvg = document.querySelector('#container-right svg');
+
+                    if (leftSvg && rightSvg) {
+                        leftSvg.style.display = "block";
+                        leftSvg.style.pointerEvents = "auto";
+                        leftSvg.style.visibility = "visible"; // Ensure visibility is set to visible
+                        rightSvg.style.display = "none";
+                        rightSvg.style.pointerEvents = "none";
+                    } else {
+                        // Try to recreate the grids with the correct dimensions
+                        var leftImage = document.getElementById('left-image');
+                        if (leftImage) {
+                            var leftRect = leftImage.getBoundingClientRect();
+                            createGrid('left', leftRect.width, leftRect.height);
+                            adjustGridContainer('left'); // Ensure grid is properly positioned
+
+                            // Try to get the SVG element again
+                            leftSvg = document.querySelector('#container-left svg');
+                            if (leftSvg) {
+                                leftSvg.style.display = "block";
+                                leftSvg.style.pointerEvents = "auto";
+                                leftSvg.style.visibility = "visible"; // Ensure visibility is set to visible
+                            }
+                        }
+
+                        var rightImage = document.getElementById('right-image');
+                        if (rightImage) {
+                            var rightRect = rightImage.getBoundingClientRect();
+                            createGrid('right', rightRect.width, rightRect.height);
+                            adjustGridContainer('right'); // Ensure grid is properly positioned
+
+                            // Try to get the SVG element again
+                            rightSvg = document.querySelector('#container-right svg');
+                            if (rightSvg) {
+                                rightSvg.style.display = "none";
+                                rightSvg.style.pointerEvents = "none";
+                                rightSvg.style.visibility = "hidden"; // Ensure visibility is set to hidden
+                            }
+                        }
+                    }
+                } else {
+                    var rightRadio = document.getElementById('id_choice_1');
+                    if (rightRadio) {
+                        rightRadio.checked = true;
+                    }
+
+                    // Show right grid, hide left grid
+                    var leftSvg = document.querySelector('#container-left svg');
+                    var rightSvg = document.querySelector('#container-right svg');
+
+                    if (leftSvg && rightSvg) {
+                        leftSvg.style.display = "none";
+                        leftSvg.style.pointerEvents = "none";
+                        rightSvg.style.display = "block";
+                        rightSvg.style.pointerEvents = "auto";
+                        rightSvg.style.visibility = "visible"; // Ensure visibility is set to visible
+                    } else {
+                        // Try to recreate the grids with the correct dimensions
+                        var leftImage = document.getElementById('left-image');
+                        if (leftImage) {
+                            var leftRect = leftImage.getBoundingClientRect();
+                            createGrid('left', leftRect.width, leftRect.height);
+                            adjustGridContainer('left'); // Ensure grid is properly positioned
+
+                            // Try to get the SVG element again
+                            leftSvg = document.querySelector('#container-left svg');
+                            if (leftSvg) {
+                                leftSvg.style.display = "none";
+                                leftSvg.style.pointerEvents = "none";
+                                leftSvg.style.visibility = "hidden"; // Ensure visibility is set to hidden
+                            }
+                        }
+
+                        var rightImage = document.getElementById('right-image');
+                        if (rightImage) {
+                            var rightRect = rightImage.getBoundingClientRect();
+                            createGrid('right', rightRect.width, rightRect.height);
+                            adjustGridContainer('right'); // Ensure grid is properly positioned
+
+                            // Try to get the SVG element again
+                            rightSvg = document.querySelector('#container-right svg');
+                            if (rightSvg) {
+                                rightSvg.style.display = "block";
+                                rightSvg.style.pointerEvents = "auto";
+                                rightSvg.style.visibility = "visible"; // Ensure visibility is set to visible
+                            }
+                        }
+                    }
+                }
+
+
+                // Mark that a selection has been made
+                imageSelected = true;
+
+                // Manually trigger a change event on the radio button to ensure form validation recognizes the selection
+                if (choice === 'left') {
+                    var event = new Event('change');
+                    document.getElementById('id_choice_0').dispatchEvent(event);
+                } else {
+                    var event = new Event('change');
+                    document.getElementById('id_choice_1').dispatchEvent(event);
+                }
+            } catch (error) {
+                // Handle errors silently
             }
-
-            // Mark that a selection has been made
-            imageSelected = true;
         }
+
 
         function updateImageSelection(choice) {
             // Remove selection from all images
@@ -221,21 +409,33 @@ console.log(categ);
                 img.classList.remove('selected-image');
             });
 
-            // Add selection to the chosen images (both top and grid versions)
-            // Use attribute selector to find all IDs that start with the choice
-            var selectedImages = document.querySelectorAll('[id^="' + choice + '-image"]');
-            selectedImages.forEach(function(img) {
-                img.classList.add('selected-image');
-            });
+            // Add selection to the chosen image
+            document.getElementById(choice + '-image').classList.add('selected-image');
         }
 
-        // Add form validation
+        // Add form validation and image click handlers
         document.addEventListener('DOMContentLoaded', function() {
+            // Add click event listeners to images
+            var leftImage = document.getElementById('left-image');
+            var rightImage = document.getElementById('right-image');
+
+            if (leftImage) {
+                leftImage.addEventListener('click', function() {
+                    selectImage('left');
+                });
+            }
+
+            if (rightImage) {
+                rightImage.addEventListener('click', function() {
+                    selectImage('right');
+                });
+            }
+
             // Validate form on submit
             document.querySelector('form').addEventListener('submit', function(e) {
                 if (!imageSelected) {
                     e.preventDefault();
-                    alert('Please click on the image you think is fake before submitting.');
+                    alert('Please select the fake image before submitting.');
                     return;
                 }
 
@@ -255,23 +455,21 @@ console.log(categ);
     </script>
 
             <script>
+            // Global variables for grid creation
             var clickedBoxes = new Array();
-            clickedBoxes.push("FORM");
-            var toFill = document.getElementById("id_heatmapFill");
-            toFill.value = JSON.stringify(clickedBoxes);
-            document.createSvg = function(tagName) {
-                var svgNS = "http://www.w3.org/2000/svg";
-                return this.createElementNS(svgNS, tagName);
-            };
             var numberPerSide = 10;
             var size = 10;
-            var pixelsPerSide = 300;
 
-            var grid = function(containerId, prefix, numberPerSide, size, pixelsPerSide, colors) {
-                var svg = document.createSvg("svg");
-                svg.setAttribute("width", pixelsPerSide);
-                svg.setAttribute("height", pixelsPerSide);
+            // Function to create an SVG grid
+            function createGridSvg(containerId, prefix, numberPerSide, size, width, height, colors) {
+                var svgNS = "http://www.w3.org/2000/svg";
+                var svg = document.createElementNS(svgNS, "svg");
+                svg.setAttribute("width", width);
+                svg.setAttribute("height", height);
                 svg.setAttribute("viewBox", [0, 0, numberPerSide * size, numberPerSide * size].join(" "));
+                svg.style.pointerEvents = "auto";
+                svg.style.zIndex = "20";
+
 
                 // Variables to track mouse state
                 var isMouseDown = false;
@@ -281,16 +479,18 @@ console.log(categ);
                     for(var j = 0; j < numberPerSide; j++) {
                       var color1 = colors[(i+j) % colors.length];
                       var color2 = colors[(i+j+1) % colors.length];
-                      var g = document.createSvg("g");
+                      var g = document.createElementNS(svgNS, "g");
                       g.setAttribute("transform", ["translate(", i*size, ",", j*size, ")"].join(""));
                       var number = numberPerSide * i + j;
-                      var box = document.createSvg("rect");
+                      var box = document.createElementNS(svgNS, "rect");
                       box.setAttribute("width", size);
                       box.setAttribute("height", size);
                       box.setAttribute("fill", color1);
-                      box.setAttribute("opacity", 0.5);
+                      box.setAttribute("opacity", 0.6); // Increased opacity for better visibility
                       box.setAttribute("id", prefix + "u"+number);
-                      box.setAttribute("style", "stroke-width:0.1; stroke:rgb(43, 222, 221);");
+                      box.setAttribute("style", "stroke-width:0.4; stroke:rgba(80, 80, 80, 1);"); // Darker and thicker lines
+
+
                       g.appendChild(box);
                       svg.appendChild(g);
                     }
@@ -301,7 +501,7 @@ console.log(categ);
                     var id = element.id;
                     if(id.substring(0,prefix.length+1)==prefix+"u") {
                         element.id=prefix+"c"+id.substring(prefix.length+1);
-                        element.style="fill:blue;opacity:0.3;stroke-width:0.1;stroke:rgb(43, 222, 221);";
+                        element.style="fill:rgba(0, 120, 255, 0.6);stroke-width:0.4;stroke:rgba(0, 120, 255, 1);";
                         var boxId = prefix+":"+element.id.substring(prefix.length+1);
                         if(clickedBoxes.indexOf(boxId) === -1) {
                             clickedBoxes.push(boxId);
@@ -309,13 +509,16 @@ console.log(categ);
                     }
                     else if(id.substring(0,prefix.length+1)==prefix+"c") {
                         element.id=prefix+"u"+id.substring(prefix.length+1);
-                        element.style="fill:rgba(255,0,0,0);stroke-width:0.1;stroke-opacity:0.5;stroke:rgb(43, 222, 221);";
+                        element.style="fill:rgba(0,0,0,0);stroke-width:0.4;stroke:rgba(80, 80, 80, 1);";
                         const index = clickedBoxes.indexOf(prefix+":"+element.id.substring(prefix.length+1));
                         if (index > -1) {
                             clickedBoxes.splice(index,1);
                         }
                     }
-                    toFill.value = JSON.stringify(clickedBoxes);
+                    var toFill = document.getElementById("id_heatmapFill");
+                    if (toFill) {
+                        toFill.value = JSON.stringify(clickedBoxes);
+                    }
                 }
 
                 // Function to only select squares during drag (no unselection)
@@ -323,12 +526,15 @@ console.log(categ);
                     var id = element.id;
                     if(id.substring(0,prefix.length+1)==prefix+"u") {
                         element.id=prefix+"c"+id.substring(prefix.length+1);
-                        element.style="fill:blue;opacity:0.3;stroke-width:0.1;stroke:rgb(43, 222, 221);";
+                        element.style="fill:rgba(0, 120, 255, 0.6);stroke-width:0.4;stroke:rgba(0, 120, 255, 1);";
                         var boxId = prefix+":"+element.id.substring(prefix.length+1);
                         if(clickedBoxes.indexOf(boxId) === -1) {
                             clickedBoxes.push(boxId);
                         }
-                        toFill.value = JSON.stringify(clickedBoxes);
+                        var toFill = document.getElementById("id_heatmapFill");
+                        if (toFill) {
+                            toFill.value = JSON.stringify(clickedBoxes);
+                        }
                     }
                     // No else clause - we don't unselect during drag
                 }
@@ -338,12 +544,15 @@ console.log(categ);
                     var id = element.id;
                     if(id.substring(0,prefix.length+1)==prefix+"c") {
                         element.id=prefix+"u"+id.substring(prefix.length+1);
-                        element.style="fill:rgba(255,0,0,0);stroke-width:0.1;stroke-opacity:0.5;stroke:rgb(43, 222, 221);";
+                        element.style="fill:rgba(0,0,0,0);stroke-width:0.4;stroke:rgba(80, 80, 80, 1);";
                         const index = clickedBoxes.indexOf(prefix+":"+element.id.substring(prefix.length+1));
                         if (index > -1) {
                             clickedBoxes.splice(index,1);
                         }
-                        toFill.value = JSON.stringify(clickedBoxes);
+                        var toFill = document.getElementById("id_heatmapFill");
+                        if (toFill) {
+                            toFill.value = JSON.stringify(clickedBoxes);
+                        }
                     }
                     // No else clause - we don't select during unselection drag
                 }
@@ -391,16 +600,94 @@ console.log(categ);
                     isMouseDown = false;
                     mouseButton = -1; // Reset button state
                 }, false);
+
                 return svg;
-            };
+            }
 
-            // Create grid for left image
-            var containerLeft = document.getElementById("container-left");
-            containerLeft.appendChild(grid("container-left", "left-", numberPerSide, size, pixelsPerSide, ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0)"]));
+            // Function to create or recreate a grid for a specific side
+            function createGrid(side, width, height) {
 
-            // Create grid for right image
-            var containerRight = document.getElementById("container-right");
-            containerRight.appendChild(grid("container-right", "right-", numberPerSide, size, pixelsPerSide, ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0)"]));
+                // Initialize clickedBoxes if not already done
+                if (clickedBoxes.length === 0) {
+                    clickedBoxes.push("FORM");
+                    var toFill = document.getElementById("id_heatmapFill");
+                    if (toFill) {
+                        toFill.value = JSON.stringify(clickedBoxes);
+                    }
+                }
+
+                // Get the container
+                var container = document.getElementById('container-' + side);
+                if (!container) {
+                    console.error("Container for " + side + " not found");
+                    return;
+                }
+
+                // Remove any existing grid
+                var existingSvg = container.querySelector('svg');
+                if (existingSvg) {
+                    container.removeChild(existingSvg);
+                }
+
+                // Create the grid with the specified dimensions
+                var prefix = side + '-';
+                var colors = ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0)"]; // Transparent colors for production
+                var newGrid = createGridSvg(container.id, prefix, numberPerSide, size, width, height, colors);
+
+                // Initially hide the grid
+                newGrid.style.display = "none";
+                newGrid.style.visibility = "hidden"; // Ensure visibility is set to hidden
+
+                // Add the grid to the container
+                container.appendChild(newGrid);
+
+
+            }
+
+            // Ensure this script runs after DOM is fully loaded
+            document.addEventListener('DOMContentLoaded', function() {
+
+                // Initialize clickedBoxes
+                if (clickedBoxes.length === 0) {
+                    clickedBoxes.push("FORM");
+                    var toFill = document.getElementById("id_heatmapFill");
+                    if (toFill) {
+                        toFill.value = JSON.stringify(clickedBoxes);
+                    }
+                }
+
+            // Initialize grids for both images
+            var leftImage = document.getElementById('left-image');
+            var rightImage = document.getElementById('right-image');
+
+            // Wait a short time to ensure images are loaded and their dimensions are available
+            setTimeout(function() {
+                // Initialize left grid
+                if (leftImage) {
+                    var leftRect = leftImage.getBoundingClientRect();
+                    createGrid('left', leftRect.width, leftRect.height);
+                    adjustGridContainer('left'); // Ensure grid is properly positioned
+                }
+
+                // Initialize right grid
+                if (rightImage) {
+                    var rightRect = rightImage.getBoundingClientRect();
+                    createGrid('right', rightRect.width, rightRect.height);
+                    adjustGridContainer('right'); // Ensure grid is properly positioned
+                }
+            }, 1000); // Wait 1000ms to ensure images are loaded
+
+            // Add window resize event listener to ensure grids stay aligned with images
+            window.addEventListener('resize', function() {
+                if (leftImage) {
+                    adjustGridContainer('left');
+                }
+                if (rightImage) {
+                    adjustGridContainer('right');
+                }
+            });
+
+            });
             </script>
         </form>
     </div>
@@ -421,7 +708,7 @@ console.log(categ);
             // Create feedback container if it doesn't exist
             if ($('#feedback-container').length === 0) {
                 var feedbackHtml = `
-                <div id="feedback-container" style="display: none;" class="alert mb-3">
+                <div id="feedback-container" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 80%; max-width: 800px;" class="alert mb-3">
                     <div class="row">
                         <div class="col-md-1 text-center">
                             <i id="feedback-icon" class="fas" style="font-size: 2rem;"></i>
@@ -436,8 +723,8 @@ console.log(categ);
                     </div>
                 </div>`;
 
-                // Insert feedback container before the submit button
-                $('#submit-answer').parent().before(feedbackHtml);
+                // Insert feedback container at the top of the page
+                $('.container').prepend(feedbackHtml);
             }
         });
 
@@ -474,28 +761,79 @@ console.log(categ);
         }
 
         $(document).ready(function() {
+            console.log("Document ready event fired for form submission setup");
+
+            // Add a global click event listener to debug click events
+            $(document).on('click', function(e) {
+                console.log("Click event detected on:", e.target);
+                console.log("Target ID:", e.target.id);
+                console.log("Target tag:", e.target.tagName);
+                console.log("Target classes:", e.target.className);
+                console.log("Event coordinates:", e.clientX, e.clientY);
+            });
+
+            // Add jQuery click handlers to images as an additional way to trigger selectImage
+            $('#left-image').on('click', function(e) {
+                console.log("jQuery click handler triggered for left image");
+                selectImage('left');
+                e.stopPropagation(); // Prevent event bubbling
+            });
+
+            $('#right-image').on('click', function(e) {
+                console.log("jQuery click handler triggered for right image");
+                selectImage('right');
+                e.stopPropagation(); // Prevent event bubbling
+            });
+
+            // Check if submit button exists
+            var submitButton = $('#submit-answer');
+            console.log("Submit button element:", submitButton);
+
+            if (submitButton.length === 0) {
+                console.error("Submit button not found");
+            }
+
             // Handle Submit Answer button click
-            $('#submit-answer').click(function() {
+            submitButton.click(function() {
+                console.log("Submit button clicked, imageSelected:", imageSelected);
+                console.log("Left radio checked:", $('#id_choice_0').prop('checked'));
+                console.log("Right radio checked:", $('#id_choice_1').prop('checked'));
+
                 // Validate form
                 if (!imageSelected) {
-                    alert('Please click on the image you think is fake before submitting.');
+                    console.error("No image selected");
+                    alert('Please select the fake image before submitting.');
                     return;
                 }
 
                 // Check if at least one inconsistency type is selected
-                if ($('input[name="inconsistency_type"]:checked').length === 0) {
+                var inconsistencyChecked = $('input[name="inconsistency_type"]:checked').length;
+                console.log("Inconsistency types checked:", inconsistencyChecked);
+                if (inconsistencyChecked === 0) {
+                    console.error("No inconsistency type selected");
                     alert('Please select at least one feature you observed in the fake image.');
                     return;
                 }
 
                 // Check if confidence level is selected
-                if (!$('input[name="confidence"]:checked').val()) {
+                var confidenceValue = $('input[name="confidence"]:checked').val();
+                console.log("Confidence value:", confidenceValue);
+                if (!confidenceValue) {
+                    console.error("No confidence level selected");
                     alert('Please select your confidence level.');
                     return;
                 }
 
                 // Get form data
                 var formData = $('form').serialize();
+                console.log("Initial form data:", formData);
+
+                // Debug form elements
+                console.log("Form elements:");
+                $('form').find('input, select, textarea').each(function() {
+                    var element = $(this);
+                    console.log(element.attr('name') + ": " + element.val() + " (type: " + element.attr('type') + ", checked: " + element.prop('checked') + ")");
+                });
 
                 // Ensure choice field is included
                 if (imageSelected) {
@@ -505,26 +843,76 @@ console.log(categ);
                         var selectedChoice = '';
                         if (document.getElementById('id_choice_0').checked) {
                             selectedChoice = 'left';
+                            console.log("Left radio button is checked");
                         } else if (document.getElementById('id_choice_1').checked) {
                             selectedChoice = 'right';
+                            console.log("Right radio button is checked");
+                        } else {
+                            console.error("No radio button is checked despite imageSelected being true");
                         }
 
                         if (selectedChoice) {
                             formData += '&choice=' + selectedChoice;
+                            console.log("Added choice to form data:", selectedChoice);
                         }
+                    } else {
+                        console.log("Choice already in form data");
                     }
+                } else {
+                    console.error("imageSelected is false, but we shouldn't reach this point");
                 }
 
+                console.log("Final form data:", formData);
+
                 // Submit form via AJAX
+                console.log("Submitting form via AJAX to:", '{% url "submit_answer" %}');
+                console.log("CSRF token:", $('input[name="csrfmiddlewaretoken"]').val());
+
+                // Check if the form is valid before submission
+                var formValid = true;
+                var formErrors = [];
+
+                if (!imageSelected) {
+                    formValid = false;
+                    formErrors.push("No image selected");
+                }
+
+                if ($('input[name="inconsistency_type"]:checked').length === 0) {
+                    formValid = false;
+                    formErrors.push("No inconsistency type selected");
+                }
+
+                if (!$('input[name="confidence"]:checked').val()) {
+                    formValid = false;
+                    formErrors.push("No confidence level selected");
+                }
+
+                console.log("Form valid:", formValid);
+                if (!formValid) {
+                    console.error("Form validation errors:", formErrors);
+                    alert("Please fix the following errors before submitting:\n" + formErrors.join("\n"));
+                    return;
+                }
+
                 $.ajax({
                     url: '{% url "submit_answer" %}',
                     type: 'POST',
                     data: formData,
+                    beforeSend: function(xhr) {
+                        console.log("AJAX request being sent with data:", formData);
+                        console.log("Headers:", xhr.getAllResponseHeaders());
+                    },
                     success: function(response) {
+                        console.log("AJAX request successful");
+                        console.log("Response type:", typeof response);
+                        console.log("Response data:", response);
+
                         // Display feedback
                         $('#feedback-container').show();
+                        console.log("Feedback container shown");
 
                         if (response.is_correct) {
+                            console.log("Response indicates correct answer");
                             $('#feedback-container').removeClass('alert-danger').addClass('alert-success');
                             $('#feedback-icon').removeClass('fa-times-circle').addClass('fa-check-circle').css('color', '#28a745');
                             $('#feedback-badge').removeClass('badge-danger').addClass('badge-success').text('+1 POINT');
@@ -534,6 +922,7 @@ console.log(categ);
                             // Add a small confetti effect for correct answers
                             createMiniConfetti();
                         } else {
+                            console.log("Response indicates incorrect answer");
                             $('#feedback-container').removeClass('alert-success').addClass('alert-danger');
                             $('#feedback-icon').removeClass('fa-check-circle').addClass('fa-times-circle').css('color', '#dc3545');
                             $('#feedback-badge').removeClass('badge-success').addClass('badge-danger').text('+0 POINTS');
@@ -544,26 +933,41 @@ console.log(categ);
                         // Hide Submit Answer button and show Next Question button
                         $('#submit-answer').hide();
                         $('#next-question').show();
+                        console.log("Submit button hidden, Next Question button shown");
                     },
-                    error: function(xhr) {
-                        console.error('Form submission error:', xhr.responseText);
+                    error: function(xhr, status, error) {
+                        console.error('Form submission error:', status, error);
+                        console.error('XHR object:', xhr);
+                        console.error('Response text:', xhr.responseText);
+                        console.error('Status code:', xhr.status);
+                        console.error('Ready state:', xhr.readyState);
+
                         try {
                             var response = JSON.parse(xhr.responseText);
+                            console.log('Parsed response:', response);
+
                             if (response.errors) {
-                                var errorObj = JSON.parse(response.errors);
-                                var errorMessages = [];
-                                for (var field in errorObj) {
-                                    errorObj[field].forEach(function(error) {
-                                        errorMessages.push(field + ': ' + error.message);
-                                    });
+                                try {
+                                    var errorObj = JSON.parse(response.errors);
+                                    console.log('Parsed errors:', errorObj);
+
+                                    var errorMessages = [];
+                                    for (var field in errorObj) {
+                                        errorObj[field].forEach(function(error) {
+                                            errorMessages.push(field + ': ' + error.message);
+                                        });
+                                    }
+                                    alert('Form validation errors:\n' + errorMessages.join('\n'));
+                                } catch (parseError) {
+                                    console.error('Error parsing error object:', parseError);
+                                    alert('Form validation error: ' + response.errors);
                                 }
-                                alert('Form validation errors:\n' + errorMessages.join('\n'));
                             } else {
-                                alert('An error occurred. Please try again.');
+                                alert('An error occurred. Please try again. Error: ' + error);
                             }
                         } catch (e) {
                             console.error('Error parsing response:', e);
-                            alert('An error occurred. Please try again.');
+                            alert('An error occurred. Please try again. Error: ' + error);
                         }
                     }
                 });
