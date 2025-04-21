@@ -1,6 +1,6 @@
 from django.urls import path
 from surveyapp.views import mainQuPage, introPage, familiarizationPage, helpPage, taskInstructions, exampleTask, \
-    consent, greetingQu, dataProtection, bonusPaymentInfo
+    consent, greetingQu, dataProtection, bonusPaymentInfo, submit_answer
 
 urlpatterns = [
     path('intro', introPage, name='intro'),
@@ -13,6 +13,7 @@ urlpatterns = [
     path('consent', consent, name='consent'),
     path('dataProtection', dataProtection, name='dataProtection'),
     path('bonusPaymentInfo', bonusPaymentInfo, name='bonusPaymentInfo'),
+    path('submit_answer', submit_answer, name='submit_answer'),
 ]
 
 handler500 = 'surveyapp.views.handler500'

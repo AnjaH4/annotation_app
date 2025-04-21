@@ -97,16 +97,16 @@
     </div>
 
         <p><br><br><br></p>
-        <hr>
-        <p><br><br></p>
-        <div class="text-center form-group">
-        <p style="font-size: xx-large">Give your reasoning:</p>
-            <div class="form-group col-xl-12">
-        <p><textarea readonly class="form-control" name="reasoning" style="font-size: 1.7em; height: 10rem; min-width: 100%; min-height:100px;" required id="id_reasoning" placeholder="Explain your decision."></textarea></p>
-        <p><br><br><br></p>
-            </div>
-        </div>
-        <hr>
+{#        <hr>#}
+{#        <p><br><br></p>#}
+{#        <div class="text-center form-group">#}
+{#        <p style="font-size: xx-large">Give your reasoning:</p>#}
+{#            <div class="form-group col-xl-12">#}
+{#        <p><textarea readonly class="form-control" name="reasoning" style="font-size: 1.7em; height: 10rem; min-width: 100%; min-height:100px;" required id="id_reasoning" placeholder="Explain your decision."></textarea></p>#}
+{#        <p><br><br><br></p>#}
+{#            </div>#}
+{#        </div>#}
+{#        <hr>#}
      <p style="font-size: x-large;"><br><br>If clicking on the relevant parts of the picture would help to explain your answer, please do so:</p>
         <div class="container" style="position:relative;text-align:center;">
             <img id='heatimg' src="{% static 'img/smileyface.png' %}" height="720px" width="720px">
@@ -167,7 +167,7 @@ reasons.value = "It's obviously just a smiley face emoticon, not a real face.\nS
 
 <div class="col-md-8" style="margin:auto">
     <p><br><br></p>
-    <a class="btn btn-primary btn-lg btn-block" style="margin:0px 0px;" href="{% url 'dataProtection' %}">Next Page</a>
+    <a class="btn btn-primary btn-lg btn-block" style="margin:0px 0px;" href="{% url 'introHelp' %}">Next Page</a>
     <p><br><br><br></p>
 </div>
 

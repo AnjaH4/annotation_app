@@ -100,3 +100,25 @@ img {
   background: #4CAF50; /* Green background */
   cursor: pointer; /* Cursor on hover */
 }
+
+/* Checkbox alignment styles */
+.form-check {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-bottom: 10px;
+  /* Allow parent element to control text alignment */
+}
+
+.form-check-input {
+  margin-right: 10px !important;
+  position: static !important;
+  transform: scale(1.5);
+  width: 20px !important;
+  min-width: 20px !important;
+}
+
+.form-check-label {
+  font-size: 1.5rem;
+  margin-left: 0 !important;
+}

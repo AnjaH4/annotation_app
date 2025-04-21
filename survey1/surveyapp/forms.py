@@ -2,20 +2,28 @@ import datetime
 
 from django import forms
 from django.core.exceptions import ValidationError
-from django.utils.translation import ugettext_lazy as _
+#from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import gettext_lazy as _
 
 
 class SubmitResponse(forms.Form):
     image = forms.CharField()
-    choice = forms.ChoiceField(choices=[('real','Real'),('ai','AI-generated')],widget=forms.RadioSelect)
+    choice = forms.ChoiceField(choices=[('left','Left Image is Fake'),('right','Right Image is Fake')],widget=forms.RadioSelect)
     confidence = forms.ChoiceField(choices=[('0','0'),('1','1'),('2','2'),('3','3'),('4','4'),('5','5'),('6','6'),('7','7'),('8','8'),('9','9')],widget=forms.RadioSelect)
-    reasoning = forms.CharField()
+    inconsistency_type = forms.MultipleChoiceField(choices=[
+        ('color', 'Color'),
+        ('boundary', 'Boundary'),
+        ('texture', 'Texture'),
+        ('geometry', 'Geometry'),
+        ('landmark', 'Landmark')
+    ], widget=forms.CheckboxSelectMultiple)
+    reasoning = forms.CharField(required=False)
     heatmapFill = forms.CharField()
 
-    def clean_response_date(self):
-        data = self.cleaned_data['reasoning','choice','confidence','heatmapFill','image']
-        # Remember to always return the cleaned data.
-        return data
+    # This method is not needed as Django's form validation handles this automatically
+    # def clean(self):
+    #     # Form-level validation if needed
+    #     return self.cleaned_data
 
 
 class Greetings(forms.Form):
@@ -34,6 +42,8 @@ class Thanks(forms.Form):
     five = forms.BooleanField(label="Many thanks for completing the survey.", required=False)
 
 
+
+#Consent Forms
 class InformedConsent(forms.Form):
     voluntary = forms.BooleanField(label="I understand that my participation is voluntary and that I can stop the survey at any time without giving a reason.", required=True)
     unremoveable = forms.BooleanField(label="I understand that once I have submitted my answers, my responses can’t be removed.")
@@ -41,7 +51,7 @@ class InformedConsent(forms.Form):
     publishable = forms.BooleanField(label="I understand that the results of this survey will be reported in academic publications or conference presentations.")
     benefits = forms.BooleanField(label="I understand the direct/indirect benefits of participating.")
     nomoney = forms.BooleanField(label="I understand that, beyond the initial and potential bonus fee via the Prolific platform, I will not benefit financially from this study or from any possible outcome it may result in in the future.")
-    complaint = forms.BooleanField(label="I am aware of who I should contact if I wish to lodge a complaint (email address: s.bray@cs.ucl.ac.uk).")
+    complaint = forms.BooleanField(label="I am aware of who I should contact if I wish to lodge a complaint (email address: s.bray@cs.ucl.ac.uk).")  #tuki daj svoj email
 
     def clean_retrospective_date(self):
         data = {self.cleaned_data['voluntary'], self.cleaned_data['unremoveable'], self.cleaned_data['anonymous'],

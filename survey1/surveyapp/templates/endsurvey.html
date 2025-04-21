@@ -3,58 +3,198 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Finished Survey</title>
+    <title>Your Results</title>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
     {% load static %}
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <style>
+        .achievement-badge {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #007bff;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto;
+            font-size: 3rem;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            margin-bottom: 20px;
+        }
+
+        .results-card {
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 30px;
+            margin-bottom: 30px;
+            background-color: #f8f9fa;
+            transition: transform 0.3s;
+        }
+
+        .results-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .progress {
+            height: 30px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background-color: #f00;
+            border-radius: 50%;
+            animation: fall 3s ease-in infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100vh) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .achievement-title {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+            color: #343a40;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .stat-label {
+            font-size: 1.2rem;
+            color: #6c757d;
+        }
+    </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>Survey Complete</h1>
+    <div class="text-center mt-5">
+        <h1 class="display-4 mb-4">Challenge Complete!</h1>
 
-    <div style="font-size:xx-large;">
-        <p><br>You have successfully completed this survey. Thank you!</p>
-        <p><br>This survey was concerned with an Artificial Intelligence technology which can create images of faces of people that don't exist.<br><br></p>
-        <p>Participants in this study received one of the following four forms of assistance to help researchers understand how potential assistance methods affect performance at the survey's central task:</p>
-        <div class="p-5">
-            <li>
-                No assistance <br>
-                This group were asked to rank a set of greeting messages and to add their own version, before the survey's central task began; and then to do the same for a series of thank you messages. <br>
-                This task was given to participants who are in the control group.<br>
-                It was a "filler" activity which took approximately as long as the activities the other groups were asked to complete,
-                while having neutral effect on participants' performance on the task.
-                <br><br>
-            </li>
-            <li>
-                Familiarization before questions <br>
-                This group were shown twenty examples of the AI-generated images before the survey's central task began.
-                <br><br>
-            </li>
-            <li>
-                Advice before questions <br>
-                This group were given three categories of "tell-tale features", which may have helped to distinguish the AI-generated images from the images of real human faces.
-                <br><br>
-            </li>
-            <li>
-                Advice before questions with reminder during questions <br>
-                This group were given the same three categories of "tell-tale features" as the "Advice before questions" group. <br>
-                Additionally, they were given a reminder of what these categories' "tell-tale features" were at the top of each webpage for the duration of the central task.
-            </li>
+        <div class="results-card">
+            <div class="achievement-badge">
+                <i class="fas fa-award"></i>
+            </div>
+            <h2 class="achievement-title">{{ achievement }}</h2>
+            <p class="lead">Congratulations on completing the challenge to identify fake AI-generated faces!</p>
+
+            <div class="row mt-5">
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="stat-label">Correct Answers</h5>
+                            <p class="stat-value">{{ correct_answers_count }} / {{ total_questions }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="stat-label">Accuracy</h5>
+                            <p class="stat-value">{{ accuracy_percentage|floatformat:1 }}%</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card h-100">
+                        <div class="card-body text-center">
+                            <h5 class="stat-label">Detective Rank</h5>
+                            <p class="stat-value">
+                                {% if accuracy_percentage >= 80 %}
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                {% elif accuracy_percentage >= 60 %}
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                {% elif accuracy_percentage >= 40 %}
+                                    <i class="fas fa-star"></i>
+                                {% else %}
+                                    <i class="far fa-star"></i>
+                                {% endif %}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <h4>Your Accuracy</h4>
+                <div class="progress">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: {{ accuracy_percentage }}%" 
+                         aria-valuenow="{{ accuracy_percentage }}" aria-valuemin="0" aria-valuemax="100">
+                        {{ accuracy_percentage|floatformat:1 }}%
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-5">
+                <h3>What You've Learned</h3>
+                <p class="lead">
+                    This challenge tested your ability to identify AI-generated fake faces. 
+                    The technology behind these images is constantly improving, making detection increasingly difficult.
+                </p>
+                <p>
+                    Your detective skills have been put to the test, and you've gained valuable experience in 
+                    spotting the subtle signs that distinguish real faces from AI-generated ones.
+                </p>
+            </div>
         </div>
-        <hr><br>
-        <p>Please send any thoughts, queries, or concerns to the following email address: <br>&emsp;&emsp; s.bray@cs.ucl.ac.uk</p>
-        <br><hr><br>
-        <p>Please click the link below to redirect your browser to Prolific (which will then know that you have completed this survey).</p>
-        <div style="text-align:center;">
-            <a class="btn btn-success px-5 py-4" style="font-size:x-large" href="https://app.prolific.co/submissions/complete?XXXXXXXXXX">Redirect to Prolific</a>
+
+        <div class="mt-4">
         </div>
-        <p><br></p>
     </div>
-    <!-- JS, Popper.js, and jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+</div>
+
+<!-- JS, Popper.js, and jQuery -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+<script>
+    // Create confetti effect
+    function createConfetti() {
+        const colors = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f'];
+        const container = document.querySelector('body');
+
+        for (let i = 0; i < 100; i++) {
+            const confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = Math.random() * 100 + 'vw';
+            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+            confetti.style.animationDelay = Math.random() * 3 + 's';
+            container.appendChild(confetti);
+
+            // Remove confetti after animation
+            setTimeout(() => {
+                confetti.remove();
+            }, 3000);
+        }
+    }
+
+    // Run confetti when page loads
+    document.addEventListener('DOMContentLoaded', function() {
+        createConfetti();
+
+        // Run confetti again every few seconds
+        setInterval(createConfetti, 5000);
+    });
+</script>
 </body>
 </html>
