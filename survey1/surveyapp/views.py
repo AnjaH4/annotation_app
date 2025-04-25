@@ -305,6 +305,15 @@ def submit_answer(request):
             )
             response_instance.save()
 
+            # Clear the current image ID and fake_on_left from the session
+            # This ensures a new image is selected when the user clicks "Next Question"
+            if 'current_image_id' in request.session:
+                del request.session['current_image_id']
+            if 'fake_on_left' in request.session:
+                del request.session['fake_on_left']
+
+            request.session.save()  # Ensure session is saved
+
             # Return feedback as JSON
             return JsonResponse({
                 'is_correct': is_correct,
@@ -454,6 +463,14 @@ def mainQuPage(request): #stran z vprašanjem
                 'is_correct': is_correct,
                 'correct_answer': correct_answer
             }
+
+            # Clear the current image ID and fake_on_left from the session
+            # This ensures a new image is selected for the next question
+            if 'current_image_id' in request.session:
+                del request.session['current_image_id']
+            if 'fake_on_left' in request.session:
+                del request.session['fake_on_left']
+
             request.session.save()  # Ensure session is saved
 
             return HttpResponseRedirect(reverse('main1'))
@@ -463,31 +480,60 @@ def mainQuPage(request): #stran z vprašanjem
         print("GET request.")
         form = SubmitResponse()
 
-    # Select the image pair that has been shown the least number of times
-    # If multiple pairs have the same count, select a random one from the least shown images
+    # Check if there's a current image ID stored in the session for this question
+    current_image_id = request.session.get('current_image_id', None)
     selected_image = None
 
-    if all_images.exists():
-        # Get the minimum times_seen count
-        min_times_seen = all_images.first().times_seen
+    # If we have a stored image ID and this is a page refresh (not a new question after submission)
+    if current_image_id is not None and 'feedback' not in request.session:
+        try:
+            # Try to get the image with the stored ID
+            selected_image = Image.objects.get(id=current_image_id)
+            print(f"Using stored image ID: {current_image_id}")
+        except Image.DoesNotExist:
+            # If the image doesn't exist, we'll select a new one
+            current_image_id = None
+            print("Stored image ID not found, selecting a new image")
 
-        # Get all images with the minimum times_seen count
-        least_shown_images = all_images.filter(times_seen=min_times_seen)
+    # If we don't have a stored image ID or it wasn't found, select a new image
+    if current_image_id is None or selected_image is None:
+        if all_images.exists():
+            # Get the minimum times_seen count
+            min_times_seen = all_images.first().times_seen
 
-        # Select a random image from the least shown images
-        # If there's only one image with the minimum count, it will select that one
-        selected_image = random.choice(list(least_shown_images))
+            # Get all images with the minimum times_seen count
+            least_shown_images = all_images.filter(times_seen=min_times_seen)
 
-        # Increment the times_seen counter
-        selected_image.times_seen += 1
-        selected_image.save()
+            # Select a random image from the least shown images
+            # If there's only one image with the minimum count, it will select that one
+            selected_image = random.choice(list(least_shown_images))
+
+            # Increment the times_seen counter
+            selected_image.times_seen += 1
+            selected_image.save()
+
+            # Store the selected image ID in the session
+            request.session['current_image_id'] = selected_image.id
+            request.session.save()  # Ensure session is saved
+            print(f"Selected new image ID: {selected_image.id}")
+        else:
+            # If no images exist, create a default one (this should not happen in production)
+            print("No images found in database!")
+            # You might want to handle this case differently
+
+    # Check if there's a fake_on_left value stored in the session for this question
+    # Only use the stored value if we're using a stored image (page refresh)
+    if current_image_id is not None and 'feedback' not in request.session and 'fake_on_left' in request.session:
+        fake_on_left = request.session['fake_on_left']
+        print(f"Using stored fake_on_left value: {fake_on_left}")
     else:
-        # If no images exist, create a default one (this should not happen in production)
-        print("No images found in database!")
-        # You might want to handle this case differently
+        # Randomly decide which side (left or right) will show the fake image
+        fake_on_left = random.choice([True, False])
+        # Store the fake_on_left value in the session
+        request.session['fake_on_left'] = fake_on_left
+        request.session.save()
+        print(f"Selected new fake_on_left value: {fake_on_left}")
 
-    # Randomly decide which side (left or right) will show the fake image
-    fake_on_left = random.choice([True, False])
     correct_answer = 'left' if fake_on_left else 'right'
 
     # Store the correct answer in the session for validation when the form is submitted
