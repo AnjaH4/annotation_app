@@ -17,13 +17,9 @@ class SubmitResponse(forms.Form):
         ('geometry', 'Geometry'),
         ('landmark', 'Landmark')
     ], widget=forms.CheckboxSelectMultiple)
-    reasoning = forms.CharField(required=False)
     heatmapFill = forms.CharField()
 
-    # This method is not needed as Django's form validation handles this automatically
-    # def clean(self):
-    #     # Form-level validation if needed
-    #     return self.cleaned_data
+
 
 
 class Greetings(forms.Form):

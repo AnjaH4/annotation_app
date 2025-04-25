@@ -110,7 +110,7 @@
         }
     </style>
 
-    <form action="" method="post">
+    <form action="javascript:void(0);" method="post">
         {% csrf_token %}
         <div style="display: none;">
             <div class="form-group">
@@ -150,7 +150,7 @@
         </div>
 
         <div class="text-center mt-3">
-            <button id="submit-answer" class="btn btn-primary btn-lg" type="button" onclick="submitForm();" style="margin: 0; padding: 0.6rem 1.4rem; font-size: 1.5rem;">
+            <button id="submit-answer" class="btn btn-primary btn-lg" type="button" style="margin: 0; padding: 0.6rem 1.4rem; font-size: 1.5rem;">
                 <i class="fas fa-check mr-2"></i> Submit
             </button>
             <a id="next-question" href="{% url 'main1' %}" class="btn btn-primary btn-lg" style="display: none; margin: 0; padding: 0.7rem 1.5rem; font-size: 1.6rem;">
@@ -220,6 +220,36 @@
                         return;
                     }
 
+                    // Save the current grid state for the selected image
+                    if (currentSelectedSide) {
+                        saveGridState(currentSelectedSide);
+                    }
+
+                    // Prepare the final grid data for submission
+                    // We want to save the grid with selected squares for the selected image
+                    // and an empty grid for the unselected image
+                    var selectedChoice = '';
+                    if (document.getElementById('id_choice_0').checked) {
+                        selectedChoice = 'left';
+                    } else if (document.getElementById('id_choice_1').checked) {
+                        selectedChoice = 'right';
+                    }
+
+                    // Update clickedBoxes to contain only the selected squares from the chosen image
+                    if (selectedChoice === 'left') {
+                        clickedBoxes = ["FORM"].concat(leftGridState);
+                    } else if (selectedChoice === 'right') {
+                        clickedBoxes = ["FORM"].concat(rightGridState);
+                    } else {
+                        clickedBoxes = ["FORM"]; // Fallback to empty grid
+                    }
+
+                    // Update the heatmapFill input value
+                    var toFill = document.getElementById("id_heatmapFill");
+                    if (toFill) {
+                        toFill.value = JSON.stringify(clickedBoxes);
+                    }
+
                     // Manually submit the form using AJAX
                     var formData = $('form').serialize();
 
@@ -227,14 +257,6 @@
                     if (imageSelected) {
                         // Check if choice is already in formData
                         if (formData.indexOf('choice=') === -1) {
-                            // Add the choice field manually based on which image is selected
-                            var selectedChoice = '';
-                            if (document.getElementById('id_choice_0').checked) {
-                                selectedChoice = 'left';
-                            } else if (document.getElementById('id_choice_1').checked) {
-                                selectedChoice = 'right';
-                            }
-
                             if (selectedChoice) {
                                 formData += '&choice=' + selectedChoice;
                             }
@@ -311,6 +333,11 @@
         var imageSelected = false;
         // Flag to track if form has been submitted
         var formSubmitted = false;
+        // Store the currently selected side
+        var currentSelectedSide = null;
+        // Store grid states for both sides
+        var leftGridState = [];
+        var rightGridState = [];
 
         function selectImage(choice) {
             // If form has been submitted, don't allow changing the selection
@@ -319,8 +346,37 @@
                 return;
             }
             try {
+                // If clicking on the same image that's already selected, ensure grid is visible
+                if (currentSelectedSide === choice) {
+                    var svg = document.querySelector('#container-' + choice + ' svg');
+                    if (svg) {
+                        if (svg.style.display === "none" || svg.style.visibility === "hidden") {
+                            // Save the current grid state before showing it again
+                            saveGridState(choice);
+
+                            // Show the grid
+                            svg.style.display = "block";
+                            svg.style.pointerEvents = "auto";
+                            svg.style.visibility = "visible";
+
+                            // Restore previously selected squares
+                            restoreGridState(choice);
+                        }
+                        // Always keep the grid visible when clicking on the same image again
+                    }
+                    return;
+                }
+
+                // Save current grid state before switching
+                if (currentSelectedSide) {
+                    saveGridState(currentSelectedSide);
+                }
+
                 // Update UI to show which image is selected
                 updateImageSelection(choice);
+
+                // Update the currently selected side
+                currentSelectedSide = choice;
 
                 // Set the radio button value
                 if (choice === 'left') {
@@ -470,23 +526,26 @@
 
             // Validate form on submit
             document.querySelector('form').addEventListener('submit', function(e) {
+                // Always prevent default form submission to avoid duplicate submissions
+                e.preventDefault();
+
                 if (!imageSelected) {
-                    e.preventDefault();
                     alert('Please select the fake image before submitting.');
                     return;
                 }
 
                 if (!document.querySelector('input[name="inconsistency_type"]:checked')) {
-                    e.preventDefault();
                     alert('Please select at least one feature you observed in the fake image.');
                     return;
                 }
 
                 if (!document.querySelector('input[name="confidence"]:checked')) {
-                    e.preventDefault();
                     alert('Please select your confidence level.');
                     return;
                 }
+
+                // If validation passes, manually call submitForm
+                submitForm();
             });
         });
     </script>
@@ -672,6 +731,128 @@
                 container.appendChild(newGrid);
             }
 
+            // Function to save the current grid state
+            function saveGridState(side) {
+                // Clear the previous state
+                if (side === 'left') {
+                    leftGridState = [];
+                } else {
+                    rightGridState = [];
+                }
+
+                // Get all selected squares
+                var selectedSquares = document.querySelectorAll('#container-' + side + ' svg rect[id^="' + side + '-c"]');
+                var stateArray = [];
+
+                selectedSquares.forEach(function(square) {
+                    var id = square.id;
+                    var boxId = side + ':' + id.substring(side.length + 1);
+                    stateArray.push(boxId);
+                });
+
+                // Store the state
+                if (side === 'left') {
+                    leftGridState = stateArray;
+                } else {
+                    rightGridState = stateArray;
+                }
+            }
+
+            // Function to restore a saved grid state
+            function restoreGridState(side) {
+                // Get the state array for the side
+                var stateArray = (side === 'left') ? leftGridState : rightGridState;
+
+                // Clear current selection first
+                var allSquares = document.querySelectorAll('#container-' + side + ' svg rect');
+                allSquares.forEach(function(square) {
+                    var id = square.id;
+                    if (id.substring(0, side.length + 1) === side + '-c') {
+                        // Reset to unselected state
+                        square.id = side + '-u' + id.substring(side.length + 2);
+                        square.style = "fill:rgba(0,0,0,0);stroke-width:0.4;stroke:rgba(80, 80, 80, 1);";
+                    }
+                });
+
+                // Apply saved state
+                stateArray.forEach(function(boxId) {
+                    if (boxId.startsWith(side + ':')) {
+                        var squareId = boxId.substring(side.length + 1);
+                        var square = document.getElementById(side + '-u' + squareId);
+                        if (square) {
+                            square.id = side + '-c' + squareId;
+                            square.style = "fill:rgba(0, 120, 255, 0.6);stroke-width:0.4;stroke:rgba(0, 120, 255, 1);";
+                        }
+                    }
+                });
+
+                // Update clickedBoxes array
+                clickedBoxes = ["FORM"].concat(stateArray);
+                var toFill = document.getElementById("id_heatmapFill");
+                if (toFill) {
+                    toFill.value = JSON.stringify(clickedBoxes);
+                }
+            }
+
+            // Function to handle clicks outside the images
+            function handleOutsideClick(event) {
+                // If no image is selected or form is submitted, do nothing
+                if (!currentSelectedSide || formSubmitted) {
+                    return;
+                }
+
+                // Check if click is outside both image containers and not on any UI elements
+                var leftContainer = document.querySelector('#left-image').parentElement;
+                var rightContainer = document.querySelector('#right-image').parentElement;
+                var leftGridContainer = document.getElementById('container-left');
+                var rightGridContainer = document.getElementById('container-right');
+                var submitButton = document.getElementById('submit-answer');
+                var nextButton = document.getElementById('next-question');
+                var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                var radioButtons = document.querySelectorAll('input[type="radio"]');
+
+                // Don't hide grid if clicking on form elements
+                if (submitButton && submitButton.contains(event.target)) return;
+                if (nextButton && nextButton.contains(event.target)) return;
+
+                for (var i = 0; i < checkboxes.length; i++) {
+                    if (checkboxes[i].contains(event.target) || 
+                        (checkboxes[i].labels && checkboxes[i].labels[0] && checkboxes[i].labels[0].contains(event.target))) {
+                        return;
+                    }
+                }
+
+                for (var i = 0; i < radioButtons.length; i++) {
+                    if (radioButtons[i].contains(event.target) || 
+                        (radioButtons[i].labels && radioButtons[i].labels[0] && radioButtons[i].labels[0].contains(event.target))) {
+                        return;
+                    }
+                }
+
+                // Check if the click is on a grid square (SVG rect element)
+                var isClickOnGridSquare = event.target.tagName && event.target.tagName.toLowerCase() === 'rect';
+
+                // Check if the click is inside the grid containers
+                var isClickInGridContainer = (leftGridContainer && leftGridContainer.contains(event.target)) || 
+                                           (rightGridContainer && rightGridContainer.contains(event.target));
+
+                // Only hide the grid if the click is outside both the image containers and the grid containers,
+                // and not on a grid square
+                if (!leftContainer.contains(event.target) && !rightContainer.contains(event.target) && 
+                    !isClickInGridContainer && !isClickOnGridSquare) {
+                    // Save current grid state
+                    saveGridState(currentSelectedSide);
+
+                    // Hide the grid
+                    var svg = document.querySelector('#container-' + currentSelectedSide + ' svg');
+                    if (svg) {
+                        svg.style.display = "none";
+                        svg.style.pointerEvents = "none";
+                        svg.style.visibility = "hidden";
+                    }
+                }
+            }
+
             // Ensure this script runs after DOM is fully loaded
             document.addEventListener('DOMContentLoaded', function() {
                 // Initialize clickedBoxes
@@ -682,6 +863,9 @@
                         toFill.value = JSON.stringify(clickedBoxes);
                     }
                 }
+
+                // Add event listener for clicks outside the images
+                document.addEventListener('click', handleOutsideClick);
 
             // Initialize grids for both images
             var leftImage = document.getElementById('left-image');

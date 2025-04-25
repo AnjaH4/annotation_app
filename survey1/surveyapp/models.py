@@ -35,24 +35,23 @@ class Participant(models.Model):
 
 
 class Response(models.Model):
-    time_at_submission = models.CharField(max_length=40)
-    response_id = models.CharField(max_length=20)
     ppant_id = models.ForeignKey(Participant, on_delete=models.CASCADE)
-    image_id = models.CharField(max_length=20)
-    choice=models.CharField(max_length=20)  # 'left' or 'right'
-    confidence=models.CharField(max_length=20)
-    inconsistency_type=models.CharField(max_length=50, choices=[
-        ('color', 'Color'),
-        ('boundary', 'Boundary'),
-        ('texture', 'Texture'),
-        ('geometry', 'Geometry'),
-        ('landmark', 'Landmark')
-    ], default='color')
-    reasoning=models.CharField(blank=True,max_length=500)
-    heatmapFill = models.CharField(blank=True,max_length=500)
-    is_correct = models.BooleanField(default=False)  # Track if the user's answer was correct
-    def __str__(self):
-        return self.response_id
+    time_at_submission = models.DateTimeField()
+    time_on_question = models.CharField(max_length=20)
+    response_id = models.CharField(max_length=20)
+    image_id = models.CharField(max_length=255)
+    choice = models.CharField(max_length=10)  # 'left' or 'right'
+    confidence = models.IntegerField()
+    heatmapFill = models.JSONField(default=list)  # Use JSONField for lists
+    assigned_label = models.IntegerField()  # 1 for selected, 0 for unselected
+    gt = models.IntegerField()  # 1 for fake, 0 for real
+    inconsistency_color = models.IntegerField(default=0)
+    inconsistency_boundary = models.IntegerField(default=0)
+    inconsistency_geometry = models.IntegerField(default=0)
+    inconsistency_landmark = models.IntegerField(default=0)
+    inconsistency_texture = models.IntegerField(default=0)
+    position = models.CharField(max_length=5)  # 'left' or 'right'
+    is_correct = models.BooleanField(default=False)
 
 
 class AdviceStartTime(models.Model):
