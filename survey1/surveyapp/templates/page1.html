@@ -11,19 +11,6 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
 </head>
 <body>
-<script type="text/javascript">
-function showValue(newValue) {
-    document.getElementById("range").innerHTML = newValue;
-}
-</script>
-
-<script type="text/javascript">
-// Log participant info
-var ppant = 'Participant Number: {{ ppant_id }}';
-console.log(ppant);
-var categ = 'Category: {{ category }}';
-console.log(categ);
-</script>
 
 <div class="container">
     <h1></h1>
@@ -259,7 +246,6 @@ console.log(categ);
                         type: 'POST',
                         data: formData,
                         success: function(response) {
-
                             // Display feedback
                             $('#feedback-container').show();
 
@@ -283,6 +269,9 @@ console.log(categ);
                             // Hide Submit Answer button and show Next Question button
                             $('#submit-answer').hide();
                             $('#next-question').show();
+
+                            // Set the formSubmitted flag to prevent changing selection
+                            formSubmitted = true;
                         },
                         error: function(xhr, status, error) {
                             alert("An error occurred while submitting your answer. Please try again.");
@@ -320,8 +309,15 @@ console.log(categ);
 
         // Initialize selection status
         var imageSelected = false;
+        // Flag to track if form has been submitted
+        var formSubmitted = false;
 
         function selectImage(choice) {
+            // If form has been submitted, don't allow changing the selection
+            if (formSubmitted) {
+                console.log("Form already submitted - selection cannot be changed");
+                return;
+            }
             try {
                 // Update UI to show which image is selected
                 updateImageSelection(choice);
@@ -511,7 +507,6 @@ console.log(categ);
                 svg.style.pointerEvents = "auto";
                 svg.style.zIndex = "20";
 
-
                 // Variables to track mouse state
                 var isMouseDown = false;
                 var mouseButton = -1; // -1: no button, 0: left, 1: middle, 2: right
@@ -519,7 +514,6 @@ console.log(categ);
                 for(var i = 0; i < numberPerSide; i++) {
                     for(var j = 0; j < numberPerSide; j++) {
                       var color1 = colors[(i+j) % colors.length];
-                      var color2 = colors[(i+j+1) % colors.length];
                       var g = document.createElementNS(svgNS, "g");
                       g.setAttribute("transform", ["translate(", i*size, ",", j*size, ")"].join(""));
                       var number = numberPerSide * i + j;
@@ -527,10 +521,9 @@ console.log(categ);
                       box.setAttribute("width", size);
                       box.setAttribute("height", size);
                       box.setAttribute("fill", color1);
-                      box.setAttribute("opacity", 0.6); // Increased opacity for better visibility
+                      box.setAttribute("opacity", 0.6);
                       box.setAttribute("id", prefix + "u"+number);
-                      box.setAttribute("style", "stroke-width:0.4; stroke:rgba(80, 80, 80, 1);"); // Darker and thicker lines
-
+                      box.setAttribute("style", "stroke-width:0.4; stroke:rgba(80, 80, 80, 1);");
 
                       g.appendChild(box);
                       svg.appendChild(g);
@@ -562,7 +555,7 @@ console.log(categ);
                     }
                 }
 
-                // Function to only select squares during drag (no unselection)
+                // Function to only select squares during drag
                 function handleDragSelection(element) {
                     var id = element.id;
                     if(id.substring(0,prefix.length+1)==prefix+"u") {
@@ -577,10 +570,9 @@ console.log(categ);
                             toFill.value = JSON.stringify(clickedBoxes);
                         }
                     }
-                    // No else clause - we don't unselect during drag
                 }
 
-                // Function to only unselect squares during drag (no selection)
+                // Function to only unselect squares during drag
                 function handleDragUnselection(element) {
                     var id = element.id;
                     if(id.substring(0,prefix.length+1)==prefix+"c") {
@@ -595,7 +587,6 @@ console.log(categ);
                             toFill.value = JSON.stringify(clickedBoxes);
                         }
                     }
-                    // No else clause - we don't select during unselection drag
                 }
 
                 // Click event for individual selection
@@ -647,7 +638,6 @@ console.log(categ);
 
             // Function to create or recreate a grid for a specific side
             function createGrid(side, width, height) {
-
                 // Initialize clickedBoxes if not already done
                 if (clickedBoxes.length === 0) {
                     clickedBoxes.push("FORM");
@@ -660,7 +650,6 @@ console.log(categ);
                 // Get the container
                 var container = document.getElementById('container-' + side);
                 if (!container) {
-                    console.error("Container for " + side + " not found");
                     return;
                 }
 
@@ -672,22 +661,19 @@ console.log(categ);
 
                 // Create the grid with the specified dimensions
                 var prefix = side + '-';
-                var colors = ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0)"]; // Transparent colors for production
+                var colors = ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0)"];
                 var newGrid = createGridSvg(container.id, prefix, numberPerSide, size, width, height, colors);
 
                 // Initially hide the grid
                 newGrid.style.display = "none";
-                newGrid.style.visibility = "hidden"; // Ensure visibility is set to hidden
+                newGrid.style.visibility = "hidden";
 
                 // Add the grid to the container
                 container.appendChild(newGrid);
-
-
             }
 
             // Ensure this script runs after DOM is fully loaded
             document.addEventListener('DOMContentLoaded', function() {
-
                 // Initialize clickedBoxes
                 if (clickedBoxes.length === 0) {
                     clickedBoxes.push("FORM");
@@ -701,43 +687,31 @@ console.log(categ);
             var leftImage = document.getElementById('left-image');
             var rightImage = document.getElementById('right-image');
 
-            // Wait a short time to ensure images are loaded and their dimensions are available
+            // Wait for images to load
             setTimeout(function() {
-                // Initialize left grid
                 if (leftImage) {
                     var leftRect = leftImage.getBoundingClientRect();
                     createGrid('left', leftRect.width, leftRect.height);
-                    adjustGridContainer('left'); // Ensure grid is properly positioned
+                    adjustGridContainer('left');
                 }
 
-                // Initialize right grid
                 if (rightImage) {
                     var rightRect = rightImage.getBoundingClientRect();
                     createGrid('right', rightRect.width, rightRect.height);
-                    adjustGridContainer('right'); // Ensure grid is properly positioned
-                }
-            }, 1000); // Wait 1000ms to ensure images are loaded
-
-            // Add window resize event listener to ensure grids stay aligned with images
-            window.addEventListener('resize', function() {
-                if (leftImage) {
-                    adjustGridContainer('left');
-                }
-                if (rightImage) {
                     adjustGridContainer('right');
                 }
-            });
+            }, 1000);
 
+            // Adjust grids on window resize
+            window.addEventListener('resize', function() {
+                if (leftImage) adjustGridContainer('left');
+                if (rightImage) adjustGridContainer('right');
+            });
             });
             </script>
         </form>
     </div>
 
-    <!-- Removed duplicate feedback container and buttons -->
-
-    <!-- JS, Popper.js, and jQuery -->
-
-    <!-- Removed telltale signs elements and JavaScript -->
     <!-- JS, Popper.js, and jQuery -->
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -801,335 +775,30 @@ console.log(categ);
             }
         }
 
-        // Function to show achievement notification
-        function showAchievement(title, message) {
-            // Create achievement notification if it doesn't exist
-            if ($('#achievement-notification').length === 0) {
-                const achievementHtml = `
-                <div id="achievement-notification" style="display: none; position: fixed; bottom: 10px; right: 10px; 
-                     background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%); color: white; 
-                     border-radius: 8px; padding: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); 
-                     z-index: 1050; max-width: 250px; transform: translateY(100px); opacity: 0;">
-                    <div class="d-flex align-items-center">
-                        <div style="margin-right: 10px;">
-                            <i class="fas fa-trophy" style="font-size: 1.5rem; color: #f1c40f;"></i>
-                        </div>
-                        <div>
-                            <h6 id="achievement-title" style="margin-bottom: 3px; font-weight: bold;"></h6>
-                            <p id="achievement-message" style="margin-bottom: 0; font-size: 0.85rem;"></p>
-                        </div>
-                    </div>
-                </div>`;
-
-                $('body').append(achievementHtml);
-            }
-
-            // Set achievement content
-            $('#achievement-title').text(title);
-            $('#achievement-message').text(message);
-
-            // Show and animate the achievement notification
-            const notification = $('#achievement-notification');
-            notification.css({display: 'block'})
-                .animate({
-                    opacity: 1,
-                    transform: 'translateY(0)'
-                }, 500)
-                .delay(3000)
-                .animate({
-                    opacity: 0,
-                    transform: 'translateY(100px)'
-                }, 500, function() {
-                    $(this).css({display: 'none'});
-                });
-
-            // Add a small sparkle effect
-            for (let i = 0; i < 8; i++) {
-                const sparkle = $('<div></div>');
-                sparkle.css({
-                    'position': 'absolute',
-                    'width': '8px',
-                    'height': '8px',
-                    'background-color': '#f1c40f',
-                    'border-radius': '50%',
-                    'z-index': '1051',
-                    'left': (notification.offset().left + Math.random() * notification.width()) + 'px',
-                    'top': (notification.offset().top + Math.random() * notification.height()) + 'px',
-                    'opacity': 1
-                });
-
-                $('body').append(sparkle);
-
-                sparkle.animate({
-                    width: '+=10px',
-                    height: '+=10px',
-                    left: '-=5px',
-                    top: '-=5px',
-                    opacity: 0
-                }, 1000, function() {
-                    $(this).remove();
-                });
-            }
-        }
-
-        // Check for achievements based on score
-        function checkAchievements(score, total) {
-            // Only show achievements for meaningful progress
-            if (total >= 3) {
-                if (score === 1 && total === 1) {
-                    showAchievement("First Success!", "Great start! You identified your first fake image correctly.");
-                } else if (score === 3) {
-                    showAchievement("On a Roll!", "You've correctly identified 3 fake images. Keep it up!");
-                } else if (score === 5) {
-                    showAchievement("Fake Detector!", "5 correct identifications! You have a good eye for fakes.");
-                } else if (score === 10) {
-                    showAchievement("Master Detective!", "Impressive! 10 correct identifications.");
-                } else if (score > 0 && score === total && total >= 5) {
-                    showAchievement("Perfect Score!", "Wow! You've identified all images correctly so far!");
-                }
-            }
-        }
-
         $(document).ready(function() {
-            console.log("Document ready event fired for form submission setup");
-
-            // Check for achievements on page load
-            checkAchievements({{ correct_answers_count }}, {{ questions_attempted }});
-
-            // Add a global click event listener to debug click events
-            $(document).on('click', function(e) {
-                console.log("Click event detected on:", e.target);
-                console.log("Target ID:", e.target.id);
-                console.log("Target tag:", e.target.tagName);
-                console.log("Target classes:", e.target.className);
-                console.log("Event coordinates:", e.clientX, e.clientY);
-            });
-
-            // Add jQuery click handlers to images as an additional way to trigger selectImage
-            $('#left-image').on('click', function(e) {
-                console.log("jQuery click handler triggered for left image");
-                selectImage('left');
-                e.stopPropagation(); // Prevent event bubbling
-            });
-
-            $('#right-image').on('click', function(e) {
-                console.log("jQuery click handler triggered for right image");
-                selectImage('right');
-                e.stopPropagation(); // Prevent event bubbling
-            });
-
-            // Check if submit button exists
-            var submitButton = $('#submit-answer');
-            console.log("Submit button element:", submitButton);
-
-            if (submitButton.length === 0) {
-                console.error("Submit button not found");
-            }
 
             // Handle Submit Answer button click
-            submitButton.click(function() {
-                console.log("Submit button clicked, imageSelected:", imageSelected);
-                console.log("Left radio checked:", $('#id_choice_0').prop('checked'));
-                console.log("Right radio checked:", $('#id_choice_1').prop('checked'));
-
+            $('#submit-answer').click(function() {
                 // Validate form
                 if (!imageSelected) {
-                    console.error("No image selected");
                     alert('Please select the fake image before submitting.');
                     return;
                 }
 
                 // Check if at least one inconsistency type is selected
-                var inconsistencyChecked = $('input[name="inconsistency_type"]:checked').length;
-                console.log("Inconsistency types checked:", inconsistencyChecked);
-                if (inconsistencyChecked === 0) {
-                    console.error("No inconsistency type selected");
+                if ($('input[name="inconsistency_type"]:checked').length === 0) {
                     alert('Please select at least one feature you observed in the fake image.');
                     return;
                 }
 
                 // Check if confidence level is selected
-                var confidenceValue = $('input[name="confidence"]:checked').val();
-                console.log("Confidence value:", confidenceValue);
-                if (!confidenceValue) {
-                    console.error("No confidence level selected");
+                if (!$('input[name="confidence"]:checked').val()) {
                     alert('Please select your confidence level.');
                     return;
                 }
 
-                // Get form data
-                var formData = $('form').serialize();
-                console.log("Initial form data:", formData);
-
-                // Debug form elements
-                console.log("Form elements:");
-                $('form').find('input, select, textarea').each(function() {
-                    var element = $(this);
-                    console.log(element.attr('name') + ": " + element.val() + " (type: " + element.attr('type') + ", checked: " + element.prop('checked') + ")");
-                });
-
-                // Ensure choice field is included
-                if (imageSelected) {
-                    // Check if choice is already in formData
-                    if (formData.indexOf('choice=') === -1) {
-                        // Add the choice field manually based on which image is selected
-                        var selectedChoice = '';
-                        if (document.getElementById('id_choice_0').checked) {
-                            selectedChoice = 'left';
-                            console.log("Left radio button is checked");
-                        } else if (document.getElementById('id_choice_1').checked) {
-                            selectedChoice = 'right';
-                            console.log("Right radio button is checked");
-                        } else {
-                            console.error("No radio button is checked despite imageSelected being true");
-                        }
-
-                        if (selectedChoice) {
-                            formData += '&choice=' + selectedChoice;
-                            console.log("Added choice to form data:", selectedChoice);
-                        }
-                    } else {
-                        console.log("Choice already in form data");
-                    }
-                } else {
-                    console.error("imageSelected is false, but we shouldn't reach this point");
-                }
-
-                console.log("Final form data:", formData);
-
-                // Submit form via AJAX
-                console.log("Submitting form via AJAX to:", '{% url "submit_answer" %}');
-                console.log("CSRF token:", $('input[name="csrfmiddlewaretoken"]').val());
-
-                // Check if the form is valid before submission
-                var formValid = true;
-                var formErrors = [];
-
-                if (!imageSelected) {
-                    formValid = false;
-                    formErrors.push("No image selected");
-                }
-
-                if ($('input[name="inconsistency_type"]:checked').length === 0) {
-                    formValid = false;
-                    formErrors.push("No inconsistency type selected");
-                }
-
-                if (!$('input[name="confidence"]:checked').val()) {
-                    formValid = false;
-                    formErrors.push("No confidence level selected");
-                }
-
-                console.log("Form valid:", formValid);
-                if (!formValid) {
-                    console.error("Form validation errors:", formErrors);
-                    alert("Please fix the following errors before submitting:\n" + formErrors.join("\n"));
-                    return;
-                }
-
-                $.ajax({
-                    url: '{% url "submit_answer" %}',
-                    type: 'POST',
-                    data: formData,
-                    beforeSend: function(xhr) {
-                        console.log("AJAX request being sent with data:", formData);
-                        console.log("Headers:", xhr.getAllResponseHeaders());
-                    },
-                    success: function(response) {
-                        console.log("AJAX request successful");
-                        console.log("Response type:", typeof response);
-                        console.log("Response data:", response);
-
-                        // Display feedback
-                        $('#feedback-container').show();
-                        console.log("Feedback container shown");
-
-                        if (response.is_correct) {
-                            console.log("Response indicates correct answer");
-                            $('#feedback-container').removeClass('alert-danger').addClass('alert-success');
-                            $('#feedback-icon').removeClass('fa-times-circle').addClass('fa-check-circle').css('color', '#28a745');
-                            $('#feedback-badge').removeClass('badge-danger').addClass('badge-success').text('+1 POINT');
-                            $('#feedback-heading').text('Great job!');
-                            $('#feedback-text').html('The ' + (response.correct_answer === 'left' ? 'left' : 'right') + ' image was the fake one. <em>Keep it up!</em>');
-
-                            // Add a small confetti effect for correct answers
-                            createMiniConfetti();
-
-                            // Check for achievements with updated score
-                            // Add 1 to current score since the UI hasn't been updated yet
-                            checkAchievements({{ correct_answers_count }} + 1, {{ questions_attempted }} + 1);
-
-                            // Animate the score to highlight the change
-                            const scoreElement = $('.score-container span');
-                            scoreElement.css('transition', 'none');
-                            scoreElement.css('transform', 'scale(1)');
-
-                            // Force reflow
-                            void scoreElement[0].offsetWidth;
-
-                            // Add animation
-                            scoreElement.css('transition', 'transform 0.5s ease-out, color 0.5s ease-out');
-                            scoreElement.css('transform', 'scale(1.5)');
-                            scoreElement.css('color', '#2ecc71');
-
-                            // Return to normal after animation
-                            setTimeout(function() {
-                                scoreElement.css('transform', 'scale(1)');
-                                scoreElement.css('color', '#3498db');
-                            }, 700);
-                        } else {
-                            console.log("Response indicates incorrect answer");
-                            $('#feedback-container').removeClass('alert-success').addClass('alert-danger');
-                            $('#feedback-icon').removeClass('fa-check-circle').addClass('fa-times-circle').css('color', '#dc3545');
-                            $('#feedback-badge').removeClass('badge-success').addClass('badge-danger').text('+0 POINTS');
-                            $('#feedback-heading').text('Not quite right!');
-                            $('#feedback-text').html('The ' + (response.correct_answer === 'left' ? 'left' : 'right') + ' image was the fake one. <em>Look closely at the details in the next one!</em>');
-
-                            // Check for achievements with updated attempts but same score
-                            checkAchievements({{ correct_answers_count }}, {{ questions_attempted }} + 1);
-                        }
-
-                        // Hide Submit Answer button and show Next Question button
-                        $('#submit-answer').hide();
-                        $('#next-question').show();
-                        console.log("Submit button hidden, Next Question button shown");
-                    },
-                    error: function(xhr, status, error) {
-                        console.error('Form submission error:', status, error);
-                        console.error('XHR object:', xhr);
-                        console.error('Response text:', xhr.responseText);
-                        console.error('Status code:', xhr.status);
-                        console.error('Ready state:', xhr.readyState);
-
-                        try {
-                            var response = JSON.parse(xhr.responseText);
-                            console.log('Parsed response:', response);
-
-                            if (response.errors) {
-                                try {
-                                    var errorObj = JSON.parse(response.errors);
-                                    console.log('Parsed errors:', errorObj);
-
-                                    var errorMessages = [];
-                                    for (var field in errorObj) {
-                                        errorObj[field].forEach(function(error) {
-                                            errorMessages.push(field + ': ' + error.message);
-                                        });
-                                    }
-                                    alert('Form validation errors:\n' + errorMessages.join('\n'));
-                                } catch (parseError) {
-                                    console.error('Error parsing error object:', parseError);
-                                    alert('Form validation error: ' + response.errors);
-                                }
-                            } else {
-                                alert('An error occurred. Please try again. Error: ' + error);
-                            }
-                        } catch (e) {
-                            console.error('Error parsing response:', e);
-                            alert('An error occurred. Please try again. Error: ' + error);
-                        }
-                    }
-                });
+                // Submit the form
+                submitForm();
             });
         });
     </script>
