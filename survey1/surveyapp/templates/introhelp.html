@@ -11,168 +11,179 @@
 </head>
 <body>
 <div class="container">
-    <h1>Introductory Help</h1>
-    <div class="row mx-4">
-        <p style="font-size:x-large">
-            <br>
-            Below are examples of ten "tell-tale" features that the <b>AI-generated images</b> tend to exhibit.
-            <br><br>Again, <b>these images feature the faces of people who do not exist</b>.
-            <br><br>
-            The features are divided into three categories: &emsp;Background, Asymmetry, and Abnormalities.
-            <br><br><br><br>Note that <b>perhaps none of these features will appear</b> on a given AI-generated image.
-            <br><br>Note also that these are <b>not the only features that can be used to distinguish the AI-generated images</b>.
-            <br><br><b>The features are a guide</b>; it is important to also apply an element of <b>common sense.</b>
-            <br><br><br><br>
+    <h1 style="font-size: 2.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">Introductory Help</h1>
+    <div class="px-4 mx-4" style="font-size: 1.2rem; margin-bottom: 15px;">
+        <p>Below are examples of some "tell-tale" features that the <b>AI-manipulated images</b> tend to exhibit.</p>
 
-            In the main question sequence, you will be <b>tested on your ability to distinguish these images from images of faces of people who do exist</b>. <br><br>
-            <b>You will be quizzed on your memory of these signs later.</b><br><br><br><br>
-            <b>Please study these carefully.</b> <br><br>
-        </p>
+        <p>The inconsistencies are divided into four categories:<b> Color, Boundary, Texture and Landmark.</b> Note that they can appear individually or in any combination.</p>
+
+        <p>In the main question sequence, you will be <b>tested on your ability to distinguish manipulated images from real images</b>.</p>
+
+        <p><b>Please study these carefully.</b></p>
+        <hr style="margin: 10px 0;">
     </div>
 
     {% for div1 in maj %}
-    <br>
-    <br>
-    <hr>
-    <div style="padding-left:5%; padding-top:1%; padding-bottom: 1%;" id='{{ div1 }}'></div>
+    <hr style="margin: 15px 0;">
+    <div class="text-center" style="margin-bottom: 20px;">
+        <div id='{{ div1 }}' style="background-color: #f8f9fa; border-radius: 8px; padding: 15px; margin-bottom: 15px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);"></div>
+    </div>
     {% endfor %}
 </div>
 
 <div style="display: none">
     <li>
-        <ul>a) asymmetries</ul>
+        <ul>a) Color</ul>
         <ul id="la1">
-            <br> <b>Glasses:</b> <br>&emsp;The frame or style of glasses may be asymmetrical; glasses may also be half-transparent.<br>
+            Part of a face is a different color than the rest.<br>
             <div class="row">
                 <div class="col">
-                    <img height="500" src="{% static 'img/help/glasses1.jpg' %}">
+                    <div class="img-with-text" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/color/950/544_0_real.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <p style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Real Image</p>
+                    </div>
                 </div>
                 <div class="col">
-                    <img height="500" src="{% static 'img/help/glasses2.jpg' %}">
+                    <div class="img-with-text" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/color/950/544_0_fakeOG.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <p style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Fake Image</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="img-with-text" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/color/950/544_0_fake.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <p style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Inconsistencies</p>
+                    </div>
                 </div>
             </div>
         </ul>
-        <ul id="la2"><br> <b>Earrings:</b> <br>&emsp;Earrings may have different shapes.
+        <ul>b) boundary</ul>
+        <ul id="lb1">The boundary where two faces have been blended together is visible.<br>
             <div class="row">
                 <div class="col">
-                    <img height="500" src="{% static 'img/help/earrings1.jpg' %}">
+                    <div class="image-container" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/boundary/267/305_0_real.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Real Image</figcaption>
+                    </div>
                 </div>
                 <div class="col">
-                    <img height="500" src="{% static 'img/help/earrings2.jpg' %}">
+                    <div class="image-container" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/boundary/267/305_0_fakeOG.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Fake Image</figcaption>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="image-container" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/boundary/267/305_0_fake.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Inconsistencies</figcaption>
+                    </div>
                 </div>
             </div>
         </ul>
-        <ul id="la3"><br> <b>Facial hair: </b><br>&emsp;Facial hair may be heavier on one side of the face than the other.
+        <ul>c) texture</ul>
+        <ul id="lc1">The texture is not consistent across the entire face.<br>&emsp;
             <div class="row">
                 <div class="col">
-                    <img height="500" src="{% static 'img/help/beard1.jpg' %}">
+                    <div class="image-container" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/texture/936/000_0_real.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Real Image</figcaption>
+                    </div>
                 </div>
                 <div class="col">
-                    <img height="500" src="{% static 'img/help/beard2.jpg' %}">
+                    <div class="image-container" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/texture/936/000_0_fakeOG.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Fake Image</figcaption>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="image-container" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/texture/936/000_0_fake.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Inconsistencies</figcaption>
+                    </div>
                 </div>
             </div>
         </ul>
-        <ul>b) background</ul>
-        <ul id="lb1"><br><b>Impossible location:</b><br>&emsp;The background may look like it could not possibly correspond to an actual location.
+        <ul>d) landmarks</ul>
+        <ul id="ld1"> Facial landmarks such as the eyes, eyebrows, mouth, and nose appear duplicated.<br>&emsp;
             <div class="row">
                 <div class="col">
-                    <img height="500" src="{% static 'img/help/location1.jpg' %}">
+                    <div class="image-container" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/landmarks/046/359_0_real.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Real Image</figcaption>
+                    </div>
                 </div>
                 <div class="col">
-                    <img height="500" src="{% static 'img/help/location2.jpg' %}">
-                </div>
-            </div>
-        </ul>
-        <ul id="lb2"><br> <b>Warped companion faces:</b><br>&emsp;If any additional face is in the picture, it may be very warped.
-            <div class="row">
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/companion1.jpg' %}">
+                    <div class="image-container" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/landmarks/046/359_0_fakeOG.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Fake Image</figcaption>
+                    </div>
                 </div>
                 <div class="col">
-                    <img height="500" src="{% static 'img/help/companion2.jpg' %}">
-                </div>
-            </div>
-        </ul>
-        <ul id="lb3"><br> <b>Distorted text/patterns:</b><br>&emsp;Any text or patterns in the background may be distorted and warped.
-            <div class="row">
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/distorted1.jpg' %}">
-                </div>
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/distorted2.jpg' %}">
-                </div>
-            </div>
-        </ul>
-        <ul id="lb4"><br> <b>Colours bleed in from background:</b><br>&emsp;Patterns or colours from the background may seep into the clothing or hair of the person.
-            <div class="row">
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/bleed1.jpg' %}">
-                </div>
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/bleed2.jpg' %}">
-                </div>
-            </div>
-        </ul>
-        <ul>c) abnormalities</ul>
-        <ul id="lc1"><br> <b>Accessories don’t make sense:</b><br>&emsp;Accessories such as hats or headdresses, or glasses or earrings, may not look right; logos or patterns may look warped or melted.
-            <div class="row">
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/accessories1.jpg' %}">
-                </div>
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/accessories2.jpg' %}">
-                </div>
-            </div>
-        </ul>
-        <ul id="lc2"><br> <b>Abnormal clothing structure:</b><br>&emsp;The clothes may appear structurally abnormal or impossible.
-            <div class="row">
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/clothes1.jpg' %}">
-                </div>
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/clothes2.jpg' %}">
-                </div>
-            </div>
-        </ul>
-        <ul id="lc3"><br> <b>Strange clothing fabric:</b><br>&emsp;The material of the clothes may look extremely synthetic or otherwise abnormal.
-            <div class="row">
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/paint1.jpg' %}">
-                </div>
-                <div class="col">
-                    <img height="500" src="{% static 'img/help/paint2.jpg' %}">
+                    <div class="image-container" style="text-align: center; margin-bottom: 10px;">
+                        <img height="250" src="{% static 'img/SBIs/inconsistencies/landmarks/046/359_0_fake.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Inconsistencies</figcaption>
+                    </div>
                 </div>
             </div>
         </ul>
     </li>
 </div>
 
-<p><br></p>
-<div class="container">
+<div class="col-md-8" style="margin:auto; margin-top: 15px; margin-bottom: 15px;">
     <form action="" method="post">
         {% csrf_token %}
-    <input class="btn btn-primary btn-lg btn-block" style="font-size:x-large;" type="submit" value="Next Page">
-        </form>
+        <button class="btn btn-primary btn-lg btn-block" type="submit">
+            <span style="font-size: 1.5rem;">Next Page</span>
+        </button>
+    </form>
 </div>
 
-    <p><br><br></p>
-
 <script>
-    var majA = document.getElementById("a");
-    majA.innerHTML = "<h2><br>Asymmetries</h2>";
-    {% for A in minA %}
-        majA.innerHTML += "<p style='font-size:x-large'>"+la{{ A }}.innerHTML+"<br></p>";
-    {% endfor %}
-    var majB = document.getElementById("b");
-    majB.innerHTML = "<h2><br>Background</h2>";
-    {% for B in minB %}
-        majB.innerHTML += "<p style='font-size:x-large'>"+lb{{ B }}.innerHTML+"<br></p>";
-    {% endfor %}
-    var majC = document.getElementById("c");
-    majC.innerHTML = "<h2><br>Abnormalities</h2>";
-    {% for C in minC %}
-        majC.innerHTML += "<p style='font-size:x-large'>"+lc{{ C }}.innerHTML+"<br></p>";
-    {% endfor %}
+    document.addEventListener("DOMContentLoaded", function () {
+        var majA = document.getElementById("a");
+        if (majA) {
+            majA.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>Color</h3>";
+            {% for A in minA %}
+                var laElement = document.getElementById("la{{ A }}");
+                if (laElement) {
+                    majA.innerHTML += "<p style='font-size: 1.2rem; margin-top:8px; margin-bottom:8px;'>"+laElement.innerHTML+"</p>";
+                }
+            {% endfor %}
+        }
+
+        var majB = document.getElementById("b");
+        if (majB) {
+            majB.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>Boundary</h3>";
+            {% for B in minB %}
+                var lbElement = document.getElementById("lb{{ B }}");
+                if (lbElement) {
+                    majB.innerHTML += "<p style='font-size: 1.2rem; margin-top:8px; margin-bottom:8px;'>"+lbElement.innerHTML+"</p>";
+                }
+            {% endfor %}
+        }
+
+        var majC = document.getElementById("c");
+        if (majC) {
+            majC.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>Texture</h3>";
+            {% for C in minC %}
+                var lcElement = document.getElementById("lc{{ C }}");
+                if (lcElement) {
+                    majC.innerHTML += "<p style='font-size: 1.2rem; margin-top:8px; margin-bottom:8px;'>"+lcElement.innerHTML+"</p>";
+                }
+            {% endfor %}
+        }
+
+        var majD = document.getElementById("d");
+        if (majD) {
+            majD.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>Landmark</h3>";
+            {% for D in minD %}
+                var ldElement = document.getElementById("ld{{ D }}");
+                if (ldElement) {
+                    majD.innerHTML += "<p style='font-size: 1.2rem; margin-top:8px; margin-bottom:8px;'>"+ldElement.innerHTML+"</p>";
+                }
+            {% endfor %}
+        }
+    });
 </script>
 
 <!-- JS, Popper.js, and jQuery -->
@@ -181,5 +192,3 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 </body>
 </html>
-
-

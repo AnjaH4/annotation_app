@@ -44,25 +44,6 @@
             margin: 20px 0;
         }
 
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #f00;
-            border-radius: 50%;
-            animation: fall 3s ease-in infinite;
-        }
-
-        @keyframes fall {
-            0% {
-                transform: translateY(-100vh) rotate(0deg);
-                opacity: 1;
-            }
-            100% {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
 
         .achievement-title {
             font-size: 2.5rem;
@@ -107,6 +88,7 @@
             background-color: var(--loader-color);
             border-radius: 8px;
             transition: width 1s ease, background-color 1s ease;
+            position: relative;
         }
 
         .accuracy-percentage {
@@ -129,7 +111,7 @@
                 <i class="fas fa-award"></i>
             </div>
             <h2 class="achievement-title" style="margin-bottom: 10px;">{{ achievement }}</h2>
-            <p class="lead" style="font-size: 1.4rem; margin-bottom: 10px;">Congratulations on completing the challenge to identify fake AI-generated faces!</p>
+            <p class="lead" style="font-size: 1.4rem; margin-bottom: 10px;">Congratulations on completing the challenge to identify fake AI-manipulated faces!</p>
 
             <div class="row mt-3">
                 <div class="col-md-4">
@@ -197,25 +179,6 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
 
 <script>
-    // Create confetti effect
-    function createConfetti() {
-        const colors = ['#f00', '#0f0', '#00f', '#ff0', '#0ff', '#f0f'];
-        const container = document.querySelector('body');
-
-        for (let i = 0; i < 100; i++) {
-            const confetti = document.createElement('div');
-            confetti.className = 'confetti';
-            confetti.style.left = Math.random() * 100 + 'vw';
-            confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
-            confetti.style.animationDelay = Math.random() * 3 + 's';
-            container.appendChild(confetti);
-
-            // Remove confetti after animation
-            setTimeout(() => {
-                confetti.remove();
-            }, 3000);
-        }
-    }
 
     // Function to initialize the accuracy slider
     function initAccuracySlider() {
@@ -257,15 +220,10 @@
         }, 300);
     }
 
-    // Run confetti when page loads
+    // Initialize when page loads
     document.addEventListener('DOMContentLoaded', function() {
-        createConfetti();
-
         // Initialize the accuracy slider
         initAccuracySlider();
-
-        // Run confetti again every few seconds
-        setInterval(createConfetti, 5000);
     });
 </script>
 </body>

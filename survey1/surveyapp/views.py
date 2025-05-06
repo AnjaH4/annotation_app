@@ -115,7 +115,7 @@ def familiarizationPage(request):
 
 
 def helpPage(request):
-    maj = ['a', 'b', 'c']
+    maj = ['a', 'b', 'c', 'd']
     random.shuffle(maj)
     minA = ['1', '2', '3']
     random.shuffle(minA)
@@ -123,6 +123,8 @@ def helpPage(request):
     random.shuffle(minB)
     minC = ['1', '2', '3']
     random.shuffle(minC)
+    minD = ['1']
+    random.shuffle(minD)
 
     if request.method == 'POST':
         # submit to database timelog of: advicetype, participantid, time
@@ -156,6 +158,7 @@ def helpPage(request):
         'minA': minA,
         'minB': minB,
         'minC': minC,
+        'minD': minD,
     }
     return render(request, 'introhelp.html', context=context)
 
