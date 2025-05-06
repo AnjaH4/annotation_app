@@ -38,7 +38,7 @@
     <h1 style="font-size: 2.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">Example Task</h1>
     <div class="px-4 mx-4" style="font-size: 1.2rem; margin-bottom: 15px;">
         <p>Here is an example question, with two face images where one is real and one is fake.</p>
-        The example answers demonstrate how the questions may be answered.
+        The example answers demonstrate how the questions may be answered. The inconsistencies might be difficult to spot but if you have a feeling "something is off" mark it on the grid.
         Please <b>answer the actual questions in whichever way you think is most relevant.</b>
         <hr style="margin: 10px 0;">
     </div>
@@ -105,7 +105,12 @@
     </div>
 
     <div class="col-md-8" style="margin:auto; margin-top: 15px; margin-bottom: 15px;">
-        <a class="btn btn-primary btn-lg btn-block" href="{% url 'introHelp' %}">Next Page</a>
+        <form action="" method="post">
+            {% csrf_token %}
+            <button class="btn btn-primary btn-lg btn-block" type="submit">
+                <span style="font-size: 1.5rem;">Next Page</span>
+            </button>
+        </form>
     </div>
 
     <!-- JS, Popper.js, and jQuery -->

@@ -64,13 +64,39 @@ def introPage(request):
             time_started = time_now,
             category = category)
         ppant_instance.save()
-        return redirect(exampleTask)
+        return redirect(helpPage)
 
     return render(request, 'entrancePage.html', context=context)
 
 
 
 def exampleTask(request):
+    if request.method == 'POST':
+        # submit to database timelog of: advicetype, participantid, time
+        time_now = datetime.datetime.now()
+        this_ppant_id = request.session.get('ppant_id', 'default')
+        ppant_query = Participant.objects.filter(ppant_id=this_ppant_id)
+
+        # Initialize ppant_instance to None
+        ppant_instance = None
+
+        # Try to get the participant instance
+        for i in ppant_query:
+            ppant_instance = i
+            break
+
+        # If no participant found, redirect to intro page
+        if ppant_instance is None:
+            print("Participant not found, redirecting to intro page")
+            return redirect('intro')
+        advice_time_instance = AdviceEndTime(
+            ppant_id=ppant_instance,
+            advice_type='control',
+            time_at_submission=time_now
+        )
+        advice_time_instance.save()
+        return redirect(mainQuPage)
+
     context = {
         'category': request.session.get('category', 'default'),
     }
@@ -151,7 +177,7 @@ def helpPage(request):
             time_at_submission=time_now
         )
         advice_time_instance.save()
-        return redirect(mainQuPage)
+        return redirect(exampleTask)
 
     context = {
         'maj': maj,
