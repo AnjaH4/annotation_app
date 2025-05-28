@@ -3,6 +3,7 @@ import json
 import random
 
 from django.http import HttpResponse, JsonResponse
+from django.utils import timezone
 from django.http import HttpResponseRedirect
 from django.shortcuts import redirect
 from django.shortcuts import render
@@ -54,7 +55,7 @@ def introPage(request):
         print("posting")
         ppant_id = request.session.get('ppant_id', 'default')
         print("ppant is:",ppant_id)
-        time_now = datetime.datetime.now()
+        time_now = timezone.now()
         category = request.session.get('category', 'default')
 
         # Create participant without prolific ID
@@ -73,7 +74,7 @@ def introPage(request):
 def exampleTask(request):
     if request.method == 'POST':
         # submit to database timelog of: advicetype, participantid, time
-        time_now = datetime.datetime.now()
+        time_now = timezone.now()
         this_ppant_id = request.session.get('ppant_id', 'default')
         ppant_query = Participant.objects.filter(ppant_id=this_ppant_id)
 
@@ -110,7 +111,7 @@ def familiarizationPage(request):
 
     if request.method == 'POST':
         # submit to database timelog of: advicetype, participantid, time
-        time_now = datetime.datetime.now()
+        time_now = timezone.now()
         this_ppant_id = request.session.get('ppant_id', 'default')
         ppant_query = Participant.objects.filter(ppant_id=this_ppant_id)
 
@@ -154,7 +155,7 @@ def helpPage(request):
 
     if request.method == 'POST':
         # submit to database timelog of: advicetype, participantid, time
-        time_now = datetime.datetime.now()
+        time_now = timezone.now()
         print("Help",time_now)
         this_ppant_id = request.session.get('ppant_id', 'default')
         ppant_query = Participant.objects.filter(ppant_id=this_ppant_id)
@@ -359,6 +360,8 @@ def calculate_time_on_question(request, time_now):
     """Calculate the time spent on the question."""
     if 'question_start_time' in request.session:
         start_time = datetime.datetime.strptime(request.session['question_start_time'], '%Y-%m-%d %H:%M:%S.%f')
+        # Make start_time timezone-aware by applying the same timezone as time_now
+        start_time = timezone.make_aware(start_time, timezone=time_now.tzinfo)
         time_on_question = str((time_now - start_time).total_seconds())
         del request.session['question_start_time']
         return time_on_question
@@ -478,7 +481,7 @@ def create_response_instance(form, request, ppant_instance, selected_image, time
 @ensure_csrf_cookie
 def mainQuPage(request):
     """Main page with the image task."""
-    time_now = datetime.datetime.now()
+    time_now = timezone.now()
     how_many_qus = 20
 
     if 'question_start_time' not in request.session:
