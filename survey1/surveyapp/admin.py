@@ -7,6 +7,6 @@ admin.site.register(Participant)
 admin.site.register(Response)
 admin.site.register(AdviceStartTime)
 admin.site.register(AdviceEndTime)
-from django.contrib import admin
+
 
 # Register your models here.

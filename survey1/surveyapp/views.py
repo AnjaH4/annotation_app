@@ -61,9 +61,7 @@ def introPage(request):
         # Create participant without prolific ID
         ppant_instance = Participant(
             ppant_id = ppant_id,
-            prolificID = "",  # Empty string instead of prolific ID
-            time_started = time_now,
-            category = category)
+            time_started = time_now)
         ppant_instance.save()
         return redirect(helpPage)
 
@@ -356,16 +354,16 @@ def get_participant(request):
             return None
     return None
 
-def calculate_time_on_question(request, time_now):
-    """Calculate the time spent on the question."""
-    if 'question_start_time' in request.session:
-        start_time = datetime.datetime.strptime(request.session['question_start_time'], '%Y-%m-%d %H:%M:%S.%f')
-        # Make start_time timezone-aware by applying the same timezone as time_now
-        start_time = timezone.make_aware(start_time, timezone=time_now.tzinfo)
-        time_on_question = str((time_now - start_time).total_seconds())
-        del request.session['question_start_time']
-        return time_on_question
-    return None
+# def calculate_time_on_question(request, time_now):   #daj ven, ok je če samo čas beleži!!
+#     """Calculate the time spent on the question."""
+#     if 'question_start_time' in request.session:
+#         start_time = datetime.datetime.strptime(request.session['question_start_time'], '%Y-%m-%d %H:%M:%S.%f')
+#         # Make start_time timezone-aware by applying the same timezone as time_now
+#         start_time = timezone.make_aware(start_time, timezone=time_now.tzinfo)
+#         time_on_question = str((time_now - start_time).total_seconds())
+#         del request.session['question_start_time']
+#         return time_on_question
+#     return None
 
 def extract_image_id(path):
     """Extract formatted image ID from full path."""
@@ -389,7 +387,7 @@ def process_heatmap_data(form, user_answer):
         print("Heatmap parsing error:", e)
         return [], []
 
-def create_response_instance(form, request, ppant_instance, selected_image, time_now, time_on_question):
+def create_response_instance(form, request, ppant_instance, selected_image, time_now, time_start):
     """Create and save response entry."""
     user_answer = form.cleaned_data['choice']
     confidence = form.cleaned_data['confidence']
@@ -436,7 +434,7 @@ def create_response_instance(form, request, ppant_instance, selected_image, time
             response = Response(
                 ppant_id=ppant_instance,
                 time_at_submission=time_now,
-                time_on_question=time_on_question,
+                time_start=time_start,
                 response_id=response_id,  # Add the response_id
                 image_id=image_id,
                 choice=user_answer,
@@ -446,18 +444,18 @@ def create_response_instance(form, request, ppant_instance, selected_image, time
                 gt=gt,
                 inconsistency_boundary=int('boundary' in inconsistency_types),
                 inconsistency_color=int('color' in inconsistency_types),
-                inconsistency_geometry=int('geometry' in inconsistency_types),
                 inconsistency_landmark=int('landmark' in inconsistency_types),
                 inconsistency_texture=int('texture' in inconsistency_types),
                 position=position,
-                is_correct=is_correct  # mark correct only for selected
+                is_correct=is_correct,
+
             )
         else:
             # For unselected image, all inconsistency types are 0
             response = Response(
                 ppant_id=ppant_instance,
                 time_at_submission=time_now,
-                time_on_question=time_on_question,
+                time_start=time_start,
                 response_id=response_id,  # Add the response_id
                 image_id=image_id,
                 choice=user_answer,
@@ -467,11 +465,11 @@ def create_response_instance(form, request, ppant_instance, selected_image, time
                 gt=gt,
                 inconsistency_boundary=0,
                 inconsistency_color=0,
-                inconsistency_geometry=0,
                 inconsistency_landmark=0,
                 inconsistency_texture=0,
                 position=position,
-                is_correct=False
+                is_correct=is_correct,
+
             )
         response.save()
         responses.append(response)
@@ -505,7 +503,8 @@ def mainQuPage(request):
     if request.method == 'POST':
         form = SubmitResponse(request.POST)
         if form.is_valid():
-            time_on_question = calculate_time_on_question(request, time_now)
+            #time_on_question = calculate_time_on_question(request, time_now)
+            time_start = datetime.datetime.strptime(request.session['question_start_time'], '%Y-%m-%d %H:%M:%S.%f')
 
             try:
                 selected_image = Image.objects.get(id=form.cleaned_data['image'])
@@ -514,7 +513,7 @@ def mainQuPage(request):
 
             create_response_instance(
                 form, request, ppant_instance, selected_image,
-                time_now, time_on_question
+                time_now, time_start
             )
 
             # Clear session

@@ -3,3 +3,11 @@ __pycache__
 *.jpg
 .idea/
 *.png
+
+# Django #
+*.log
+*.pot
+*.pyc
+__pycache__
+survey1/db.sqlite3
+media
