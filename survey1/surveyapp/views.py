@@ -9,52 +9,82 @@ from django.shortcuts import redirect
 from django.shortcuts import render
 from django.urls import reverse
 from django.views.decorators.csrf import ensure_csrf_cookie
+from django.db.models import F
 from surveyapp.forms import SubmitResponse, InformedConsent, Greetings, Thanks
-from surveyapp.models import Image, Participant, Response, AdviceStartTime, AdviceEndTime
-from django.template import RequestContext
+from surveyapp.models import Image, Participant, Response, AdviceStartTime, AdviceEndTime, AttentionTestImage
+#from django.template import RequestContext
 from collections import Counter
 
+# def handler500(request, *args, **argv):
+#     # response = render(None,'500.html', {}, context_instance=RequestContext(request))
+#     # response.status_code = 500
+#     # return response
+#     response = render(request, '500.html', {})
+#     response.status_code = 500
+#     return response
+
 def handler500(request, *args, **argv):
-    response = render(None,'500.html', {}, context_instance=RequestContext(request))
-    response.status_code = 500
-    return response
+    # The first argument to render MUST be the request.
+    # context_instance is deprecated; render handles context processors automatically.
+    return render(request, '500.html', status=500)
 
 
 def index(request):
-    return HttpResponse("Hello, you've somehow reached the index page. Please go to .../intro instead of .../index")
+    # Redirect users to the proper starting page
+    return redirect('intro')
 
+
+def log_advice_end_time_and_redirect(request, redirect_to_view):
+    """Logs the 'control' advice end time and redirects."""
+    ppant_instance = get_participant(request) # You already have this helper!
+    if ppant_instance is None:
+        return redirect('intro')
+
+    AdviceEndTime.objects.create(
+        ppant_id=ppant_instance,
+        advice_type='control',
+        time_at_submission=timezone.now()
+    )
+    return redirect(redirect_to_view)
 
 def introPage(request):
-    print('start page')
+    #print('start page')
+
+    request.session.flush()
 
     cons_so_far = AdviceStartTime.objects.all()
     ppants_consented = []
     for c in cons_so_far:
-        ppants_consented += [c.ppant_id]
+        ppants_consented.append(c.ppant_id)
 
     request.session['numsYet'] = []
-    request.session.save()  # Ensure session is saved
+    #request.session.save()  # Ensure session is saved
     ppants = Participant.objects.all()
 
     # All users get the same experience, no category assignment needed
     request.session['category'] = 'C'  # Using category C as the default for all users
-    request.session.save()  # Ensure session is saved
+   # request.session.save()  # Ensure session is saved
 
     #assigninig a random ppant id!
-    ppant_rand = random.randint(0, 999999)+1
-    while ppant_rand in [p.ppant_id for p in ppants]:
-        ppant_rand = random.randint(0, 999999) + 1
+    # ppant_rand = random.randint(0, 999999)+1
+    # while ppant_rand in [p.ppant_id for p in ppants]:
+    #     ppant_rand = random.randint(0, 999999) + 1
+
+    ppant_rand = random.randint(1, 999999)
+    # Use .exists() for a fast database check
+    while Participant.objects.filter(ppant_id=ppant_rand).exists():
+        ppant_rand = random.randint(1, 999999)
 
     request.session['ppant_id'] = ppant_rand
-    request.session.save()  # Ensure session is saved
-    print("ppant is:",ppant_rand)
+    #request.session.save()  # Ensure session is saved
+    #print("ppant is:",ppant_rand)
 
     context = {}
 
     if request.method == 'POST':
-        print("posting")
+        #print("posting")
         ppant_id = request.session.get('ppant_id', 'default')
-        print("ppant is:",ppant_id)
+        #print("ppant is:",ppant_id)
         time_now = timezone.now()
         category = request.session.get('category', 'default')
 
@@ -69,36 +99,43 @@ def introPage(request):
 
 
 
+# def exampleTask(request):
+#     if request.method == 'POST':
+#         # submit to database timelog of: advicetype, participantid, time
+#         time_now = timezone.now()
+#         this_ppant_id = request.session.get('ppant_id', 'default')
+#         ppant_query = Participant.objects.filter(ppant_id=this_ppant_id)
+#
+#         # Initialize ppant_instance to None
+#         ppant_instance = None
+#
+#         # Try to get the participant instance
+#         for i in ppant_query:
+#             ppant_instance = i
+#             break
+#
+#         # If no participant found, redirect to intro page
+#         if ppant_instance is None:
+#             #print("Participant not found, redirecting to intro page")
+#             return redirect('intro')
+#         advice_time_instance = AdviceEndTime(
+#             ppant_id=ppant_instance,
+#             advice_type='control',
+#             time_at_submission=time_now
+#         )
+#         advice_time_instance.save()
+#         return redirect(mainQuPage)
+#
+#     context = {
+#         'category': request.session.get('category', 'default'),
+#     }
+#     return render(request, 'exampleTask.html', context=context)
+
 def exampleTask(request):
     if request.method == 'POST':
-        # submit to database timelog of: advicetype, participantid, time
-        time_now = timezone.now()
-        this_ppant_id = request.session.get('ppant_id', 'default')
-        ppant_query = Participant.objects.filter(ppant_id=this_ppant_id)
+        return log_advice_end_time_and_redirect(request, mainQuPage)
 
-        # Initialize ppant_instance to None
-        ppant_instance = None
-
-        # Try to get the participant instance
-        for i in ppant_query:
-            ppant_instance = i
-            break
-
-        # If no participant found, redirect to intro page
-        if ppant_instance is None:
-            print("Participant not found, redirecting to intro page")
-            return redirect('intro')
-        advice_time_instance = AdviceEndTime(
-            ppant_id=ppant_instance,
-            advice_type='control',
-            time_at_submission=time_now
-        )
-        advice_time_instance.save()
-        return redirect(mainQuPage)
-
-    context = {
-        'category': request.session.get('category', 'default'),
-    }
+    context = {'category': request.session.get('category', 'default')}
     return render(request, 'exampleTask.html', context=context)
 
 
@@ -123,7 +160,7 @@ def familiarizationPage(request):
 
         # If no participant found, redirect to intro page
         if ppant_instance is None:
-            print("Participant not found, redirecting to intro page")
+            #print("Participant not found, redirecting to intro page")
             return redirect('intro')
         advice_time_instance = AdviceEndTime(
             ppant_id=ppant_instance,
@@ -152,31 +189,8 @@ def helpPage(request):
     random.shuffle(minD)
 
     if request.method == 'POST':
-        # submit to database timelog of: advicetype, participantid, time
-        time_now = timezone.now()
-        print("Help",time_now)
-        this_ppant_id = request.session.get('ppant_id', 'default')
-        ppant_query = Participant.objects.filter(ppant_id=this_ppant_id)
-
-        # Initialize ppant_instance to None
-        ppant_instance = None
-
-        # Try to get the participant instance
-        for i in ppant_query:
-            ppant_instance = i
-            break
-
-        # If no participant found, redirect to intro page
-        if ppant_instance is None:
-            print("Participant not found, redirecting to intro page")
-            return redirect('intro')
-        advice_time_instance = AdviceEndTime(
-            ppant_id=ppant_instance,
-            advice_type='control',
-            time_at_submission=time_now
-        )
-        advice_time_instance.save()
-        return redirect(exampleTask)
+        return log_advice_end_time_and_redirect(request, exampleTask)
+        #return redirect(exampleTask)
 
     context = {
         'maj': maj,
@@ -188,40 +202,62 @@ def helpPage(request):
     return render(request, 'introhelp.html', context=context)
 
 
+# def select_image(request, all_images):
+#     """Select an image for the current question based on participant history."""
+#     ppant_instance = get_participant(request)
+#     if ppant_instance is None:
+#         return random.choice(all_images)
+#
+#     # Get responses for this participant
+#     responses = Response.objects.filter(ppant_id=ppant_instance)
+#
+#     # Get unique image IDs that have been seen
+#     # First, get the image_id strings from responses
+#     seen_image_id_strings = list(responses.values_list('image_id', flat=True).distinct())
+#
+#     # Then, get the actual Image objects with these image_id strings
+#     # This is needed because the Response.image_id field stores the image_id string, not the Image.id
+#     seen_images = []
+#     if seen_image_id_strings:
+#         # Create a list to store image IDs
+#         seen_image_ids = []
+#
+#         # For each image in the database
+#         for image in Image.objects.all():
+#             # Check if its image_id is in the list of seen image_id strings
+#             if image.image_id in seen_image_id_strings:
+#                 seen_image_ids.append(image.id)
+#
+#         # Exclude already seen images
+#         unseen_images = all_images.exclude(id__in=seen_image_ids)
+#     else:
+#         # If no images have been seen, all images are unseen
+#         unseen_images = all_images
+#
+#
+#     # If all images have been seen, allow any image
+#     if not unseen_images:
+#         return random.choice(all_images)
+#
+#     return random.choice(unseen_images)
+
 def select_image(request, all_images):
     """Select an image for the current question based on participant history."""
     ppant_instance = get_participant(request)
     if ppant_instance is None:
         return random.choice(all_images)
 
-    # Get responses for this participant
-    responses = Response.objects.filter(ppant_id=ppant_instance)
+    # Get unique image_id strings that the participant has responded to.
+    seen_image_id_strings = Response.objects.filter(
+        ppant_id=ppant_instance
+    ).values_list('image_id', flat=True).distinct()
 
-    # Get unique image IDs that have been seen
-    # First, get the image_id strings from responses
-    seen_image_id_strings = list(responses.values_list('image_id', flat=True).distinct())
+    # Filter out images whose image_id has been seen.
+    # This is much more efficient than looping in Python.
+    unseen_images = all_images.exclude(image_id__in=seen_image_id_strings)
 
-    # Then, get the actual Image objects with these image_id strings
-    # This is needed because the Response.image_id field stores the image_id string, not the Image.id
-    seen_images = []
-    if seen_image_id_strings:
-        # Create a list to store image IDs
-        seen_image_ids = []
-
-        # For each image in the database
-        for image in Image.objects.all():
-            # Check if its image_id is in the list of seen image_id strings
-            if image.image_id in seen_image_id_strings:
-                seen_image_ids.append(image.id)
-
-        # Exclude already seen images
-        unseen_images = all_images.exclude(id__in=seen_image_ids)
-    else:
-        # If no images have been seen, all images are unseen
-        unseen_images = all_images
-
-    # If all images have been seen, allow any image
-    if not unseen_images:
+    if not unseen_images.exists(): # Use .exists() for efficiency
+        # If all images have been seen, allow any image.
         return random.choice(all_images)
 
     return random.choice(unseen_images)
@@ -258,7 +294,7 @@ def determine_image_placement(request, selected_image):
 
     # Store the current image ID in session
     request.session['current_image_id'] = selected_image.id
-    request.session.save()
+    #request.session.save()
 
     # Determine paths and set correct answer
     if fake_on_left:
@@ -272,7 +308,7 @@ def determine_image_placement(request, selected_image):
 
     # Store the correct answer in session for feedback
     request.session['correct_answer'] = correct_answer
-    request.session.save()
+    #request.session.save()
 
     return left_image_path, right_image_path, correct_answer
 
@@ -282,7 +318,9 @@ def clear_session_data(request):
         del request.session['current_image_id']
     if 'fake_on_left' in request.session:
         del request.session['fake_on_left']
-    request.session.save()
+    if 'current_image_model_type' in request.session:
+        del request.session['current_image_model_type']
+    #request.session.save()
 
 def survey_complete(request):
     """View for the survey completion page."""
@@ -384,7 +422,7 @@ def process_heatmap_data(form, user_answer):
         unselected_heatmap = []
         return selected_heatmap, unselected_heatmap
     except Exception as e:
-        print("Heatmap parsing error:", e)
+        #print("Heatmap parsing error:", e)
         return [], []
 
 def create_response_instance(form, request, ppant_instance, selected_image, time_now, time_start):
@@ -450,27 +488,27 @@ def create_response_instance(form, request, ppant_instance, selected_image, time
                 is_correct=is_correct,
 
             )
-        else:
-            # For unselected image, all inconsistency types are 0
-            response = Response(
-                ppant_id=ppant_instance,
-                time_at_submission=time_now,
-                time_start=time_start,
-                response_id=response_id,  # Add the response_id
-                image_id=image_id,
-                choice=user_answer,
-                confidence=confidence,
-                heatmapFill=heatmap,
-                assigned_label=assigned_label,
-                gt=gt,
-                inconsistency_boundary=0,
-                inconsistency_color=0,
-                inconsistency_landmark=0,
-                inconsistency_texture=0,
-                position=position,
-                is_correct=is_correct,
-
-            )
+        # else: #ne rabim obeh zabeležit. Vse je 0
+        #     # For unselected image, all inconsistency types are 0
+        #     response = Response(
+        #         ppant_id=ppant_instance,
+        #         time_at_submission=time_now,
+        #         time_start=time_start,
+        #         response_id=response_id,  # Add the response_id
+        #         image_id=image_id,
+        #         choice=user_answer,
+        #         confidence=confidence,
+        #         heatmapFill=heatmap,
+        #         assigned_label=assigned_label,
+        #         gt=gt,
+        #         inconsistency_boundary=0,
+        #         inconsistency_color=0,
+        #         inconsistency_landmark=0,
+        #         inconsistency_texture=0,
+        #         position=position,
+        #         is_correct=is_correct,
+        #
+        #     )
         response.save()
         responses.append(response)
 
@@ -483,8 +521,8 @@ def mainQuPage(request):
     how_many_qus = 20
 
     if 'question_start_time' not in request.session:
-        request.session['question_start_time'] = time_now.strftime('%Y-%m-%d %H:%M:%S.%f')
-        request.session.save()
+        request.session['question_start_time'] = time_now.isoformat()
+        #request.session.save()
 
     ppant_instance = get_participant(request)
     if ppant_instance is None:
@@ -504,10 +542,16 @@ def mainQuPage(request):
         form = SubmitResponse(request.POST)
         if form.is_valid():
             #time_on_question = calculate_time_on_question(request, time_now)
-            time_start = datetime.datetime.strptime(request.session['question_start_time'], '%Y-%m-%d %H:%M:%S.%f')
+            #time_start = datetime.datetime.strptime(request.session['question_start_time'], '%Y-%m-%d %H:%M:%S.%f')
+            time_start = datetime.datetime.fromisoformat(request.session['question_start_time'])
+
 
             try:
                 selected_image = Image.objects.get(id=form.cleaned_data['image'])
+
+                selected_image.times_seen = F('times_seen') + 1
+                selected_image.save(update_fields=['times_seen'])
+
             except Image.DoesNotExist:
                 return JsonResponse({'error': 'Image not found'}, status=400)
 
@@ -523,14 +567,23 @@ def mainQuPage(request):
                 'is_correct': form.cleaned_data['choice'] == request.session.get('correct_answer', 'left'),
                 'correct_answer': request.session.get('correct_answer', 'left')
             })
+
+
         else:
             return JsonResponse({'error': 'Form is invalid', 'errors': form.errors.as_json()}, status=400)
 
     else:
         form = SubmitResponse()
 
+    #g
+
     # GET: set up new question
+    if img_nums_so_far_this_ppant == 8 or img_nums_so_far_this_ppant == 15:   #attention test - pokaži ful simple slike
+        all_images=AttentionTestImage.objects.all().order_by('times_seen')
+
     selected_image = select_image(request, all_images)
+    # selected_image.times_seen = F('times_seen') + 1
+    # selected_image.save(update_fields=['times_seen'])
     left_image_path, right_image_path, correct_answer = determine_image_placement(request, selected_image)
 
     context = prepare_context(

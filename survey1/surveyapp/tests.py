@@ -22,9 +22,7 @@ class ModelTests(TestCase):
         )
         self.participant = Participant.objects.create(
             ppant_id="12345",
-            prolificID="test_prolific_id",
-            time_started=timezone.now(),
-            category="C"
+            time_started=timezone.now()
         )
 
     def test_image_creation(self):
@@ -38,8 +36,6 @@ class ModelTests(TestCase):
     def test_participant_creation(self):
         """Test that a participant can be created with the correct attributes."""
         self.assertEqual(self.participant.ppant_id, "12345")
-        self.assertEqual(self.participant.prolificID, "test_prolific_id")
-        self.assertEqual(self.participant.category, "C")
         self.assertEqual(str(self.participant), "12345")
 
     def test_response_creation(self):
@@ -47,7 +43,6 @@ class ModelTests(TestCase):
         response = Response.objects.create(
             ppant_id=self.participant,
             time_at_submission=timezone.now(),
-            time_on_question="10.5",
             response_id="test_response_001",
             image_id="test_image_001",
             choice="left",
@@ -57,7 +52,6 @@ class ModelTests(TestCase):
             gt=1,
             inconsistency_color=1,
             inconsistency_boundary=0,
-            inconsistency_geometry=1,
             inconsistency_landmark=0,
             inconsistency_texture=1,
             position="left",
@@ -73,7 +67,6 @@ class ModelTests(TestCase):
         self.assertEqual(response.gt, 1)
         self.assertEqual(response.inconsistency_color, 1)
         self.assertEqual(response.inconsistency_boundary, 0)
-        self.assertEqual(response.inconsistency_geometry, 1)
         self.assertEqual(response.inconsistency_landmark, 0)
         self.assertEqual(response.inconsistency_texture, 1)
         self.assertEqual(response.position, "left")
@@ -143,9 +136,7 @@ class ViewTests(TestCase):
 
         self.participant = Participant.objects.create(
             ppant_id="12345",
-            prolificID="test_prolific_id",
             time_started=timezone.now(),
-            category="C"
         )
 
     def test_intro_page(self):
@@ -211,15 +202,12 @@ class FunctionTests(TestCase):
 
         self.participant = Participant.objects.create(
             ppant_id="12345",
-            prolificID="test_prolific_id",
-            time_started=timezone.now(),
-            category="C"
+            time_started=timezone.now()
         )
 
         self.response = Response.objects.create(
             ppant_id=self.participant,
             time_at_submission=timezone.now(),
-            time_on_question="10.5",
             response_id="test_response_001",
             image_id="test_image_001",
             choice="left",
@@ -229,7 +217,6 @@ class FunctionTests(TestCase):
             gt=1,
             inconsistency_color=1,
             inconsistency_boundary=0,
-            inconsistency_geometry=1,
             inconsistency_landmark=0,
             inconsistency_texture=1,
             position="left",
@@ -270,7 +257,6 @@ class FunctionTests(TestCase):
         Response.objects.create(
             ppant_id=self.participant,
             time_at_submission=timezone.now(),
-            time_on_question="5.2",
             response_id="test_response_001",  # Same response_id
             image_id="test_image_002",
             choice="right",
@@ -280,7 +266,6 @@ class FunctionTests(TestCase):
             gt=0,
             inconsistency_color=0,
             inconsistency_boundary=0,
-            inconsistency_geometry=0,
             inconsistency_landmark=0,
             inconsistency_texture=0,
             position="right",
@@ -294,7 +279,6 @@ class FunctionTests(TestCase):
         Response.objects.create(
             ppant_id=self.participant,
             time_at_submission=timezone.now(),
-            time_on_question="7.3",
             response_id="test_response_002",  
             image_id="test_image_002",
             choice="right",
@@ -304,7 +288,6 @@ class FunctionTests(TestCase):
             gt=1,
             inconsistency_color=0,
             inconsistency_boundary=1,
-            inconsistency_geometry=0,
             inconsistency_landmark=1,
             inconsistency_texture=0,
             position="right",
@@ -362,4 +345,3 @@ class IntegrationTests(TestCase):
         self.assertIsNotNone(participant_id)
 
         participant = Participant.objects.get(ppant_id=participant_id)
-        self.assertEqual(participant.category, 'C')
