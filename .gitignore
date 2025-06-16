@@ -11,3 +11,4 @@ __pycache__
 __pycache__
 survey1/db.sqlite3
 media
+survey1/venv/
