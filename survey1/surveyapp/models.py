@@ -8,7 +8,7 @@ from django.db import models
 #         return self.image_id
 
 class Image(models.Model):
-    image_id = models.CharField(max_length=20, unique=True)  # Example: "065_0"
+    image_id = models.CharField(max_length=30, unique=True)  # Example: "065_0"
     fake_path = models.CharField(max_length=255, null=True, blank=True)  # Path to fake image (nullable)
     real_path = models.CharField(max_length=255, null=True, blank=True)  # Path to real image (nullable)
     times_seen = models.IntegerField(default=0)  # Tracks how often the pair has been shown
@@ -22,7 +22,7 @@ class Image(models.Model):
         ]
 
 class AttentionTestImage(models.Model):
-    image_id = models.CharField(max_length=20, unique=True)  # Example: "065_0"
+    image_id = models.CharField(max_length=35, unique=True)  # Example: "065_0"
     fake_path = models.CharField(max_length=255, null=True, blank=True)  # Path to fake image (nullable)
     real_path = models.CharField(max_length=255, null=True, blank=True)  # Path to real image (nullable)
     times_seen = models.IntegerField(default=0)  # Tracks how often the pair has been shown
@@ -37,7 +37,7 @@ class AttentionTestImage(models.Model):
 
 
 class Participant(models.Model):
-    ppant_id = models.CharField(max_length=20)
+    ppant_id = models.CharField(max_length=40)
     time_started = models.CharField(max_length=40) #Y not use DateTimeField?
 
     def __str__(self):
@@ -47,8 +47,8 @@ class Participant(models.Model):
 class Response(models.Model):
     ppant_id = models.ForeignKey(Participant, on_delete=models.CASCADE)
     time_at_submission = models.DateTimeField()
-    time_start = models.CharField(max_length=20)
-    response_id = models.CharField(max_length=20)
+    time_start = models.CharField(max_length=50)
+    response_id = models.CharField(max_length=50)
     image_id = models.CharField(max_length=255)
     choice = models.CharField(max_length=10)  # 'left' or 'right'
     confidence = models.IntegerField()
@@ -66,7 +66,7 @@ class Response(models.Model):
 
 class AdviceStartTime(models.Model):
     ppant_id = models.ForeignKey(Participant, on_delete=models.CASCADE)
-    advice_type = models.CharField(max_length=20)
+    advice_type = models.CharField(max_length=40)
     time_at_submission = models.CharField(max_length=40)
     def __str__(self):
         return self.ppant_id
@@ -74,7 +74,7 @@ class AdviceStartTime(models.Model):
 
 class AdviceEndTime(models.Model):
     ppant_id = models.ForeignKey(Participant, on_delete=models.CASCADE)
-    advice_type = models.CharField(max_length=20)
+    advice_type = models.CharField(max_length=40)
     time_at_submission = models.CharField(max_length=40)
     def __str__(self):
         return self.ppant_id

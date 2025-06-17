@@ -30,14 +30,15 @@ SECRET_KEY = config('SECRET_KEY')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+# DEBUG = True
 # DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
-# DEBUG = False
+DEBUG = False
 
 
 ALLOWED_HOSTS = [
     '193.2.72.133',
-    'deepfake.fri.uni-lj.si'
+    'deepfake.fri.uni-lj.si',
+    '127.0.0.1',
 ]
 
 
@@ -89,7 +90,7 @@ WSGI_APPLICATION = 'survey1.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': config('DB_NAME'),
         'USER': config('DB_USER'),
         'PASSWORD': config('DB_PASSWORD'),
@@ -132,7 +133,7 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-STATIC_ROOT = ''
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATICFILES_FINDERS = (
     'django.contrib.staticfiles.finders.FileSystemFinder',
@@ -147,3 +148,9 @@ STATICFILES_FINDERS = (
 # SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTOCOL', 'https')
 
 DEFAULT_AUTO_FIELD='django.db.models.AutoField'
+
+
+INTERNAL_IPS = [
+    "127.0.0.1",
+    "89.143.137.128",
+]

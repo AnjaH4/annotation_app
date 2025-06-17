@@ -12,7 +12,7 @@ __pycache__
 survey1/db.sqlite3
 media
 survey1/venv/
-survey1/.env/
+survey1/.env
 survey1/staticfiles/
 survey1/surveyapp/management/commands/__pycache__/
 survey1/surveyapp/__pycache__/
@@ -20,3 +20,4 @@ survey1/survey1/__init__.py
 survey1/surveyapp/__init__.py
 survey1/surveyapp/migrations/__init__.py
 survey1/surveyapp/migrations/__pycache__/
+*.swp
