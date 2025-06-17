@@ -12,3 +12,5 @@ __pycache__
 survey1/db.sqlite3
 media
 survey1/venv/
+survey1/.env/
+survey1/staticfiles/
