@@ -21,3 +21,4 @@ survey1/surveyapp/__init__.py
 survey1/surveyapp/migrations/__init__.py
 survey1/surveyapp/migrations/__pycache__/
 *.swp
+survey1/my_data.json
