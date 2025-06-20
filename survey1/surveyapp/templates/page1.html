@@ -1,16 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Choices Page</title>
+    {% load i18n %}
+    {% load static %}
+    <title>{% trans "Choices Page" %}</title>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    {% load static %}
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
 </head>
 <body>
+{% get_current_language as CURRENT_LANGUAGE %}
+<form action="{% url 'set_language' %}" method="post" class="d-inline">
+    {% csrf_token %}
+    <input name="next" type="hidden" value="{{ request.path }}">
+    <input type="hidden" name="language" value="{% if CURRENT_LANGUAGE == 'en' %}sl{% else %}en{% endif %}">
+    <button type="submit" class="btn btn-sm lang-switch-btn">
+        {% if CURRENT_LANGUAGE == 'en' %}
+            <span class="flag-icon">🇸🇮</span> SL
+        {% else %}
+            <span class="flag-icon">🇬🇧</span> EN
+        {% endif %}
+    </button>
+</form>
 
 <div class="container">
     <h1></h1>
@@ -19,7 +33,7 @@
             <div class="score-container p-1" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 <h5 style="margin-bottom: 0.2rem; color: #2c3e50; font-weight: bold;">
                     <i class="fas fa-star" style="color: #f1c40f; margin-right: 5px;"></i>
-                    Score: <span style="color: #3498db; font-size: 1.1em;">{{ correct_answers_count }}</span> / {{ questions_attempted }}
+                    {% trans "Score:" %} <span style="color: #3498db; font-size: 1.1em;">{{ correct_answers_count }}</span> / {{ questions_attempted }}
                 </h5>
                 {% if correct_answers_count > 0 %}
                 <div class="progress" style="height: 6px; margin-top: 4px;">
@@ -37,7 +51,7 @@
             <div class="question-counter p-1" style="background: linear-gradient(135deg, #e0f7fa 0%, #80deea 100%); border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
                 <h5 style="margin-bottom: 0.2rem; color: #2c3e50; font-weight: bold;">
                     <i class="fas fa-question-circle" style="color: #3498db; margin-right: 5px;"></i>
-                    Question <span style="color: #e74c3c; font-size: 1.1em;">{{ current_question_number }}</span> / {{ total_questions }}
+                    {% trans "Question" %} <span style="color: #e74c3c; font-size: 1.1em;">{{ current_question_number }}</span> / {{ total_questions }}
                 </h5>
                 <div class="progress" style="height: 6px; margin-top: 4px;">
                     <div class="progress-bar bg-info" role="progressbar" 
@@ -64,16 +78,21 @@
             <div class="col-md-11">
                 <h5 class="alert-heading mb-1">
                     {% if feedback.is_correct %}
-                    <span class="badge badge-success" style="font-size: 0.8rem; padding: 0.3rem;">+1 POINT</span> Great job!
+                    <span class="badge badge-success" style="font-size: 0.8rem; padding: 0.3rem;">{% trans "+1 POINT" %}</span> {% trans "Great job!" %}
                     {% else %}
-                    <span class="badge badge-danger" style="font-size: 0.8rem; padding: 0.3rem;">+0 POINTS</span> Not quite right!
+                    <span class="badge badge-danger" style="font-size: 0.8rem; padding: 0.3rem;">{% trans "+0 POINTS" %}</span> {% trans "Not quite right!" %}
                     {% endif %}
                 </h5>
-                <p class="mb-0" style="font-size: 0.9rem;">The {% if feedback.correct_answer == 'left' %}left{% else %}right{% endif %} image was the fake one.
-                    {% if feedback.is_correct %}
-                    <em>Keep it up!</em>
+                <p class="mb-0" style="font-size: 0.9rem;">
+                    {% if feedback.correct_answer == 'left' %}
+                        {% trans "The left image was the fake one." %}
                     {% else %}
-                    <em>Look closely at the details in the next one!</em>
+                        {% trans "The right image was the fake one." %}
+                    {% endif %}
+                    {% if feedback.is_correct %}
+                    <em>{% trans "Keep it up!" %}</em>
+                    {% else %}
+                    <em>{% trans "Look closely at the details in the next one!" %}</em>
                     {% endif %}
                 </p>
             </div>
@@ -82,6 +101,30 @@
     {% endif %}
 
     <style>
+        .lang-switch-btn {
+            background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+        }
+
+        .lang-switch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .flag-icon {
+            margin-right: 2px;
+        }
+
         .badge {
             font-size: 1rem;
             padding: 0.5rem;
@@ -116,13 +159,13 @@
             <div class="form-group">
                 <label class="form_check_label" id="id_choice_0">
                     <input required class="form_check_input" type="radio" id="id_choice_0" name="choice" value="left">
-                    Left image is fake (AI-generated)
+                    {% trans "Left image is fake (AI-generated)" %}
                 </label>
             </div>
             <div class="form-group">
                 <label class="form_check_label" id="id_choice_1">
                     <input required class="form_check_input" type="radio" id="id_choice_1" name="choice" value="right">
-                    Right image is fake (AI-generated)
+                    {% trans "Right image is fake (AI-generated)" %}
                 </label>
             </div>
             <input type="text" value="{{ num }}" id="id_image" name="image">
@@ -130,7 +173,7 @@
         </div>
 
         <div class="text-center">
-            <h3 style="font-size: 1.8rem; color: #000000; margin-bottom: 15px;">Select the fake image. Select parts of the image (squares) that seem off.</h3>
+            <h3 style="font-size: 1.8rem; color: #000000; margin-bottom: 15px;">{% trans "Select the fake image. Select parts of the image (squares) that seem off." %}</h3>
             <div class="row">
                 <div class="col-md-6 text-center">
                     <div style="position: relative; cursor: pointer;" onclick="selectImage('left');">
@@ -151,34 +194,34 @@
 
         <div class="text-center mt-3">
             <button id="submit-answer" class="btn btn-primary btn-lg" type="button" style="margin: 0; padding: 0.6rem 1.4rem; font-size: 1.5rem;">
-                <i class="fas fa-check mr-2"></i> Submit
+                <i class="fas fa-check mr-2"></i> {% trans "Submit" %}
             </button>
             <a id="next-question" href="{% url 'main1' %}" class="btn btn-primary btn-lg" style="display: none; margin: 0; padding: 0.7rem 1.5rem; font-size: 1.6rem;">
-                <i class="fas fa-forward mr-2"></i> Next Question
+                <i class="fas fa-forward mr-2"></i> {% trans "Next Question" %}
             </a>
         </div>
 
         <div class="row mt-4">
             <div class="col-md-6">
                 <div class="text-center">
-                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">What did you observe in the fake image?</h3>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">{% trans "What did you observe in the fake image?" %}</h3>
                     <div class="row justify-content-center">
                         <div class="col-md-8">
                             <div class="form-check" style="margin-left: 30%; text-align: left;">
                                 <input class="form-check-input" type="checkbox" id="id_inconsistency_type_0" name="inconsistency_type" value="color">
-                                <label class="form-check-label" for="id_inconsistency_type_0" style="font-size: 1.5rem;">Color</label>
+                                <label class="form-check-label" for="id_inconsistency_type_0" style="font-size: 1.5rem;">{% trans "Color" %}</label>
                             </div>
                             <div class="form-check" style="margin-left: 30%; text-align: left;">
                                 <input class="form-check-input" type="checkbox" id="id_inconsistency_type_1" name="inconsistency_type" value="boundary">
-                                <label class="form-check-label" for="id_inconsistency_type_1" style="font-size: 1.5rem;">Boundary</label>
+                                <label class="form-check-label" for="id_inconsistency_type_1" style="font-size: 1.5rem;">{% trans "Boundary" %}</label>
                             </div>
                             <div class="form-check" style="margin-left: 30%; text-align: left;">
                                 <input class="form-check-input" type="checkbox" id="id_inconsistency_type_2" name="inconsistency_type" value="texture">
-                                <label class="form-check-label" for="id_inconsistency_type_2" style="font-size: 1.5rem;">Texture</label>
+                                <label class="form-check-label" for="id_inconsistency_type_2" style="font-size: 1.5rem;">{% trans "Texture" %}</label>
                             </div>
                             <div class="form-check" style="margin-left: 30%; text-align: left;">
                                 <input class="form-check-input" type="checkbox" id="id_inconsistency_type_3" name="inconsistency_type" value="landmark">
-                                <label class="form-check-label" for="id_inconsistency_type_3" style="font-size: 1.5rem;">Landmark</label>
+                                <label class="form-check-label" for="id_inconsistency_type_3" style="font-size: 1.5rem;">{% trans "Landmark" %}</label>
                             </div>
                         </div>
                     </div>
@@ -186,7 +229,7 @@
             </div>
             <div class="col-md-6">
                 <div class="text-center">
-                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">Confidence level: <small style="font-size: 1.2rem;">(1=None, 9=Complete)</small></h3>
+                    <h3 style="font-size: 1.8rem; margin-bottom: 10px;">{% trans "Confidence level:" %} <small style="font-size: 1.2rem;">{% trans "(1=None, 9=Complete)" %}</small></h3>
                     <div class="form-check-inline">
                         {% for i in "123456789" %}
                         <div class="form-check form-check-inline" style="margin-right: 12px;">
@@ -204,19 +247,19 @@
                 function submitForm() {
                     // Validate form
                     if (!imageSelected) {
-                        alert('Please select the fake image before submitting.');
+                        alert('{% trans "Please select the fake image before submitting." %}');
                         return;
                     }
 
                     // Check if at least one inconsistency type is selected
                     if ($('input[name="inconsistency_type"]:checked').length === 0) {
-                        alert('Please select at least one feature you observed in the fake image.');
+                        alert('{% trans "Please select at least one feature you observed in the fake image." %}');
                         return;
                     }
 
                     // Check if confidence level is selected
                     if (!$('input[name="confidence"]:checked').val()) {
-                        alert('Please select your confidence level.');
+                        alert('{% trans "Please select your confidence level." %}');
                         return;
                     }
 
@@ -274,18 +317,26 @@
                             if (response.is_correct) {
                                 $('#feedback-container').removeClass('alert-danger').addClass('alert-success');
                                 $('#feedback-icon').removeClass('fa-times-circle').addClass('fa-check-circle').css('color', '#28a745');
-                                $('#feedback-badge').removeClass('badge-danger').addClass('badge-success').text('+1 POINT');
-                                $('#feedback-heading').text('Great job!');
-                                $('#feedback-text').html('The ' + (response.correct_answer === 'left' ? 'left' : 'right') + ' image was the fake one. <em>Keep it up!</em>');
+                                $('#feedback-badge').removeClass('badge-danger').addClass('badge-success').text('{% trans "+1 POINT" %}');
+                                $('#feedback-heading').text('{% trans "Great job!" %}');
+                                if (response.correct_answer === 'left') {
+                                    $('#feedback-text').html('{% trans "The left image was the fake one." %} <em>{% trans "Keep it up!" %}</em>');
+                                } else {
+                                    $('#feedback-text').html('{% trans "The right image was the fake one." %} <em>{% trans "Keep it up!" %}</em>');
+                                }
 
                                 // Add a small confetti effect for correct answers
                                 createMiniConfetti();
                             } else {
                                 $('#feedback-container').removeClass('alert-success').addClass('alert-danger');
                                 $('#feedback-icon').removeClass('fa-check-circle').addClass('fa-times-circle').css('color', '#dc3545');
-                                $('#feedback-badge').removeClass('badge-success').addClass('badge-danger').text('+0 POINTS');
-                                $('#feedback-heading').text('Not quite right!');
-                                $('#feedback-text').html('The ' + (response.correct_answer === 'left' ? 'left' : 'right') + ' image was the fake one. <em>Look closely at the details in the next one!</em>');
+                                $('#feedback-badge').removeClass('badge-success').addClass('badge-danger').text('{% trans "+0 POINTS" %}');
+                                $('#feedback-heading').text('{% trans "Not quite right!" %}');
+                                if (response.correct_answer === 'left') {
+                                    $('#feedback-text').html('{% trans "The left image was the fake one." %} <em>{% trans "Look closely at the details in the next one!" %}</em>');
+                                } else {
+                                    $('#feedback-text').html('{% trans "The right image was the fake one." %} <em>{% trans "Look closely at the details in the next one!" %}</em>');
+                                }
                             }
 
                             // Hide Submit Answer button and show Next Question button
@@ -296,7 +347,7 @@
                             formSubmitted = true;
                         },
                         error: function(xhr, status, error) {
-                            alert("An error occurred while submitting your answer. Please try again.");
+                            alert("{% trans "An error occurred while submitting your answer. Please try again." %}");
                         }
                     });
                 }
@@ -530,17 +581,17 @@
                 e.preventDefault();
 
                 if (!imageSelected) {
-                    alert('Please select the fake image before submitting.');
+                    alert('{% trans "Please select the fake image before submitting." %}');
                     return;
                 }
 
                 if (!document.querySelector('input[name="inconsistency_type"]:checked')) {
-                    alert('Please select at least one feature you observed in the fake image.');
+                    alert('{% trans "Please select at least one feature you observed in the fake image." %}');
                     return;
                 }
 
                 if (!document.querySelector('input[name="confidence"]:checked')) {
-                    alert('Please select your confidence level.');
+                    alert('{% trans "Please select your confidence level." %}');
                     return;
                 }
 
@@ -965,19 +1016,19 @@
             $('#submit-answer').click(function() {
                 // Validate form
                 if (!imageSelected) {
-                    alert('Please select the fake image before submitting.');
+                    alert('{% trans "Please select the fake image before submitting." %}');
                     return;
                 }
 
                 // Check if at least one inconsistency type is selected
                 if ($('input[name="inconsistency_type"]:checked').length === 0) {
-                    alert('Please select at least one feature you observed in the fake image.');
+                    alert('{% trans "Please select at least one feature you observed in the fake image." %}');
                     return;
                 }
 
                 // Check if confidence level is selected
                 if (!$('input[name="confidence"]:checked').val()) {
-                    alert('Please select your confidence level.');
+                    alert('{% trans "Please select your confidence level." %}');
                     return;
                 }
 

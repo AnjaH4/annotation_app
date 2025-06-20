@@ -1,0 +1,1712 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-06-20 10:11+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n%100==1 ? 0 : n%100==2 ? 1 : n%100==3 || "
+"n%100==4 ? 2 : 3);\n"
+
+#: surveyapp/templates/endsurvey.html:8
+msgid "Your Results"
+msgstr "Vaši rezultati"
+
+#: surveyapp/templates/endsurvey.html:108
+msgid "Challenge Complete! Thank you for your response!"
+msgstr "Izziv končan! Hvala za vaš odgovor!"
+
+#: surveyapp/templates/endsurvey.html:115
+msgid ""
+"Congratulations on completing the challenge to identify fake AI-manipulated "
+"faces!"
+msgstr "Čestitke za dokončanje izziva prepoznavanja lažnih obrazov, manipuliranih z umetno inteligenco!"
+
+#: surveyapp/templates/endsurvey.html:121
+msgid "Correct Answers"
+msgstr "Pravilni odgovori"
+
+#: surveyapp/templates/endsurvey.html:129
+msgid "Accuracy"
+msgstr "Natančnost"
+
+#: surveyapp/templates/endsurvey.html:142
+msgid "Detective Rank"
+msgstr "Detektivski rang"
+
+#: surveyapp/templates/endsurvey.html:161
+msgid "What You've Learned"
+msgstr "Kaj ste se naučili"
+
+#: surveyapp/templates/endsurvey.html:163
+msgid ""
+"\n"
+"                    This challenge tested your ability to identify AI-"
+"generated fake faces. \n"
+"                    The technology behind these images is constantly "
+"improving, making detection increasingly difficult.\n"
+"\n"
+"                    This is part of a masters thesis project at Faculty for "
+"Computer and Information Science at University of Ljubljana.\n"
+"                    "
+msgstr ""
+"\n"
+"                    Ta izziv je preizkusil vašo sposobnost prepoznavanja lažnih obrazov, ustvarjenih z umetno inteligenco. \n"
+"                    Tehnologija za temi slikami se nenehno izboljšuje, zaradi česar je odkrivanje vse težje.\n"
+"\n"
+"                    To je del magistrskega projekta na Fakulteti za računalništvo in informatiko Univerze v Ljubljani.\n"
+"                    "
+
+#: surveyapp/templates/endsurvey.html:175
+msgid "Try Again"
+msgstr "Poskusi znova"
+
+#: surveyapp/templates/entrancePage.html:7
+#: surveyapp/templates/entrancePage.html:139
+msgid "Deepfake Challenge"
+msgstr "Deepfake Izziv"
+
+#: surveyapp/templates/entrancePage.html:140
+msgid "Test your ability to detect AI-manipulated images"
+msgstr ""
+"Preizkusite svojo sposobnost zaznavanja slik, manipuliranih z umetno "
+"inteligenco"
+
+#: surveyapp/templates/entrancePage.html:149
+msgid "Perception Test"
+msgstr "Test Zaznavanja"
+
+#: surveyapp/templates/entrancePage.html:150
+msgid ""
+"Challenge your ability to distinguish between real and AI-manipulated images."
+msgstr ""
+"Preizkusite svojo sposobnost razlikovanja med resničnimi in z umetno "
+"inteligenco manipuliranimi slikami."
+
+#: surveyapp/templates/entrancePage.html:156
+msgid "Intuition Training"
+msgstr "Trening Intuicije"
+
+#: surveyapp/templates/entrancePage.html:157
+msgid "Develop your intuition for spotting inconsistencies in fake images."
+msgstr "Razvijte svojo intuicijo za odkrivanje nedoslednosti v lažnih slikah."
+
+#: surveyapp/templates/entrancePage.html:163
+msgid ""
+"\n"
+"                This is a part of a master thesis project at <strong>Faculty "
+"of Computer and Information Science at University of Ljubljana</strong> (<a "
+"href=\"https://www.fri.uni-lj.si/en/\" style=\"color: inherit; text-"
+"decoration: none; box-shadow: none;\">https://www.fri.uni-lj.si/en/</a>), "
+"where the goal is to create a deepfake face detector that utilizes human "
+"perception. Your responses help us gather insights into visual cues, "
+"confidence levels, and perceived inconsistencies. The data about human "
+"intuition from this challenge will be combined with machine learning, to "
+"build a model that learns not just from pixels, but from human perception "
+"itself. <strong>All responses are anonymous</strong>.\n"
+"                "
+msgstr ""
+"\n"
+"                To je del magistrskega projekta na <strong>Fakulteti za "
+"računalništvo in informatiko Univerze v Ljubljani</strong> (<a "
+"href=\"https://www.fri.uni-lj.si/sl/\" style=\"color: inherit; text-"
+"decoration: none; box-shadow: none;\">https://www.fri.uni-lj.si/sl/</a>), "
+"katerega cilj je ustvariti detektor deepfake obrazov, ki uporablja človeško "
+"zaznavanje. Vaši odgovori nam pomagajo zbirati vpoglede v vizualne namige, "
+"stopnje zaupanja in zaznane nedoslednosti. Podatki o človeški intuiciji iz "
+"tega izziva bodo združeni s strojnim učenjem, da bi zgradili model, ki se "
+"uči ne le iz slikovnih točk, temveč tudi iz človeškega zaznavanja. "
+"<strong>Vsi odgovori so anonimni</strong>.\n"
+"                "
+
+#: surveyapp/templates/entrancePage.html:168
+msgid ""
+"\n"
+"                Pairs of images will be shown where one image is real and "
+"the other has inconsistencies typical for deepfake images. They represent "
+"the same face but one was transformed using random transformations to "
+"resemble a fake image. <strong>Your task is to select the fake image and "
+"answer some questions about your decision</strong>. The application is "
+"configured for computer so it's best if you use it for your response.\n"
+"                "
+msgstr ""
+"\n"
+"                Prikazani bodo pari slik, kjer je ena slika resnična, druga "
+"pa ima nedoslednosti, značilne za deepfake slike. Predstavljajo isti obraz, "
+"vendar je bil eden preoblikovan z naključnimi transformacijami, da bi bil "
+"podoben lažni sliki. <strong>Vaša naloga je izbrati lažno sliko in "
+"odgovoriti na nekaj vprašanj o vaši odločitvi</strong>. Aplikacija je "
+"konfigurirana za računalnik, zato je najbolje, da jo uporabljate za svoj "
+"odgovor.\n"
+"                "
+
+#: surveyapp/templates/entrancePage.html:178
+msgid "Start Challenge"
+msgstr "Začni Izziv"
+
+#: surveyapp/templates/exampleTask.html:8
+msgid "Example Demonstration Task"
+msgstr "Primer demonstracijske naloge"
+
+#: surveyapp/templates/exampleTask.html:39
+msgid "Example Task"
+msgstr "Primer naloge"
+
+#: surveyapp/templates/exampleTask.html:41
+msgid ""
+"\n"
+"        <p>Here is an example question, with two face images where one is "
+"real and one is fake.</p>\n"
+"        The example answers demonstrate how the questions may be answered. "
+"The inconsistencies might be difficult to spot but if you have a feeling "
+"\"something is off\" mark it on the grid.\n"
+"        Please <b>answer the actual questions in whichever way you think is "
+"most relevant.</b>\n"
+"\n"
+"        <p>To select multiple squares, click and drag your mouse over them. "
+"To hide the grid, simply click outside the image. Your selected squares will "
+"be saved and shown again when you return to the image. If you change your "
+"mind while selecting, no problem — just switch to another image and make "
+"your selections there. You don't need to unselect anything!</p>\n"
+"        "
+msgstr ""
+"\n"
+"        <p>Tukaj je primer vprašanja z dvema slikama obrazov, kjer je ena resnična in ena lažna.</p>\n"
+"        Primeri odgovorov prikazujejo, kako lahko odgovorite na vprašanja. Nedoslednosti so morda težko opazne, vendar če imate občutek, da \"nekaj ni v redu\", to označite na mreži.\n"
+"        Prosimo, <b>na dejanska vprašanja odgovorite na način, ki se vam zdi najbolj primeren.</b>\n"
+"\n"
+"        <p>Za izbiro več kvadratkov kliknite in povlecite miško čez njih. Za skrivanje mreže preprosto kliknite zunaj slike. Vaši izbrani kvadratki bodo shranjeni in ponovno prikazani, ko se vrnete na sliko. Če si premislite med izbiranjem, ni problema - preprosto preklopite na drugo sliko in tam naredite svoje izbire. Ničesar vam ni treba odznačiti!</p>\n"
+"        "
+
+#: surveyapp/templates/exampleTask.html:53 surveyapp/templates/page1.html:139
+msgid ""
+"Select the fake image. Select parts of the image (squares) that seem off."
+msgstr "Izberite lažno sliko. Izberite dele slike (kvadratke), ki se zdijo nenavadni."
+
+#: surveyapp/templates/exampleTask.html:75 surveyapp/templates/page1.html:170
+msgid "What did you observe in the fake image?"
+msgstr "Kaj ste opazili na lažni sliki?"
+
+#: surveyapp/templates/exampleTask.html:80
+#: surveyapp/templates/introhelp.html:39 surveyapp/templates/introhelp.html:148
+#: surveyapp/templates/page1.html:175
+msgid "Color"
+msgstr "Barva"
+
+#: surveyapp/templates/exampleTask.html:84
+#: surveyapp/templates/introhelp.html:63 surveyapp/templates/introhelp.html:159
+#: surveyapp/templates/page1.html:179
+msgid "Boundary"
+msgstr "Meja"
+
+#: surveyapp/templates/exampleTask.html:88
+#: surveyapp/templates/introhelp.html:86 surveyapp/templates/introhelp.html:170
+#: surveyapp/templates/page1.html:183
+msgid "Texture"
+msgstr "Tekstura"
+
+#: surveyapp/templates/exampleTask.html:92
+#: surveyapp/templates/introhelp.html:181 surveyapp/templates/page1.html:187
+msgid "Landmark"
+msgstr "Značilnost"
+
+#: surveyapp/templates/exampleTask.html:100 surveyapp/templates/page1.html:195
+msgid "Confidence level:"
+msgstr "Stopnja zaupanja:"
+
+#: surveyapp/templates/exampleTask.html:100 surveyapp/templates/page1.html:195
+msgid "(1=None, 9=Complete)"
+msgstr "(1=Nič, 9=Popolno)"
+
+#: surveyapp/templates/exampleTask.html:117
+#: surveyapp/templates/introfamiliarization.html:121
+#: surveyapp/templates/introhelp.html:139
+#: surveyapp/templates/taskInstructions.html:47
+msgid "Next Page"
+msgstr "Naslednja stran"
+
+#: surveyapp/templates/introfamiliarization.html:8
+msgid "Familiarization Page"
+msgstr "Stran za seznanitev"
+
+#: surveyapp/templates/introfamiliarization.html:15
+msgid "Introductory Familiarization"
+msgstr "Uvodna seznanitev"
+
+#: surveyapp/templates/introfamiliarization.html:20
+msgid ""
+"\n"
+"    <br>\n"
+"    Below are twenty examples of these <b>AI-generated images</b>.\n"
+"    <br><br>Again, <b>these images feature the faces of people who do not "
+"exist</b>.\n"
+"\n"
+"\n"
+"    <br><br><br><br>In the main question sequence, you will be <b>tested on "
+"your ability to distinguish these images from images of faces of people who "
+"do exist</b>. <br><br><br><br>\n"
+"    <b>Please study these carefully.</b> <br><br><br><br>\n"
+"    "
+msgstr ""
+"\n"
+"    <br>\n"
+"    Spodaj je dvajset primerov teh <b>slik, ustvarjenih z umetno inteligenco</b>.\n"
+"    <br><br>Ponovno, <b>te slike prikazujejo obraze ljudi, ki ne obstajajo</b>.\n"
+"\n"
+"\n"
+"    <br><br><br><br>V glavnem zaporedju vprašanj boste <b>preizkušeni v svoji sposobnosti razlikovanja teh slik od slik obrazov ljudi, ki dejansko obstajajo</b>. <br><br><br><br>\n"
+"    <b>Prosimo, da jih skrbno preučite.</b> <br><br><br><br>\n"
+"    "
+
+#: surveyapp/templates/introfamiliarization.html:128
+msgid "Asymmetries"
+msgstr "Asimetrije"
+
+#: surveyapp/templates/introfamiliarization.html:133
+msgid "Background"
+msgstr "Ozadje"
+
+#: surveyapp/templates/introfamiliarization.html:138
+msgid "Weirdness (/Abnormalities)"
+msgstr "Čudnost (/Nepravilnosti)"
+
+#: surveyapp/templates/introhelp.html:8
+msgid "Help Page"
+msgstr "Stran za pomoč"
+
+#: surveyapp/templates/introhelp.html:15
+msgid "Introductory Help"
+msgstr "Uvodna pomoč"
+
+#: surveyapp/templates/introhelp.html:17
+msgid ""
+"\n"
+"        <p>Below are examples of some \"tell-tale\" features that the <b>AI-"
+"manipulated images</b> tend to exhibit.</p>\n"
+"\n"
+"        <p>The inconsistencies are divided into four categories:<b> Color, "
+"Boundary, Texture and Landmark.</b> Note that they can appear "
+"<b>individually</b> or in <b>any combination</b>.</p>\n"
+"\n"
+"        <p>In the main question sequence, you will be <b>tested on your "
+"ability to distinguish manipulated images from real images</b>.</p>\n"
+"\n"
+"        <p><b>Please study these carefully.</b></p>\n"
+"        "
+msgstr ""
+"\n"
+"        <p>Spodaj so primeri nekaterih \"izdajalskih\" značilnosti, ki jih <b>slike, manipulirane z umetno inteligenco</b>, pogosto kažejo.</p>\n"
+"\n"
+"        <p>Nedoslednosti so razdeljene v štiri kategorije:<b> Barva, Meja, Tekstura in Značilnost.</b> Upoštevajte, da se lahko pojavijo <b>posamično</b> ali v <b>kakršnikoli kombinaciji</b>.</p>\n"
+"\n"
+"        <p>V glavnem zaporedju vprašanj boste <b>preizkušeni v svoji sposobnosti razlikovanja manipuliranih slik od resničnih slik</b>.</p>\n"
+"\n"
+"        <p><b>Prosimo, da jih skrbno preučite.</b></p>\n"
+"        "
+
+#: surveyapp/templates/introhelp.html:41
+msgid "Part of a face is a different color than the rest."
+msgstr "Del obraza je drugačne barve kot preostali del."
+
+#: surveyapp/templates/introhelp.html:46 surveyapp/templates/introhelp.html:69
+#: surveyapp/templates/introhelp.html:92 surveyapp/templates/introhelp.html:115
+msgid "Real Image"
+msgstr "Resnična slika"
+
+#: surveyapp/templates/introhelp.html:52 surveyapp/templates/introhelp.html:75
+#: surveyapp/templates/introhelp.html:98 surveyapp/templates/introhelp.html:121
+msgid "Fake Image"
+msgstr "Lažna slika"
+
+#: surveyapp/templates/introhelp.html:58 surveyapp/templates/introhelp.html:81
+#: surveyapp/templates/introhelp.html:104
+#: surveyapp/templates/introhelp.html:127
+msgid "Inconsistencies"
+msgstr "Nedoslednosti"
+
+#: surveyapp/templates/introhelp.html:64
+msgid "The boundary where two faces have been blended together is visible."
+msgstr "Meja, kjer sta bila dva obraza združena, je vidna."
+
+#: surveyapp/templates/introhelp.html:87
+msgid "The texture is not consistent across the entire face."
+msgstr "Tekstura ni dosledna po celotnem obrazu."
+
+#: surveyapp/templates/introhelp.html:109
+msgid "Landmarks"
+msgstr "Značilnosti obraza"
+
+#: surveyapp/templates/introhelp.html:110
+msgid ""
+"Facial landmarks such as the eyes, eyebrows, mouth, and nose appear "
+"duplicated."
+msgstr "Značilnosti obraza, kot so oči, obrvi, usta in nos, se pojavljajo podvojeno."
+
+#: surveyapp/templates/page1.html:8
+msgid "Choices Page"
+msgstr "Stran z izbirami"
+
+#: surveyapp/templates/page1.html:23
+msgid "Score:"
+msgstr "Rezultat:"
+
+#: surveyapp/templates/page1.html:41
+msgid "Question"
+msgstr "Vprašanje"
+
+#: surveyapp/templates/page1.html:68 surveyapp/templates/page1.html:283
+msgid "+1 POINT"
+msgstr "+1 TOČKA"
+
+#: surveyapp/templates/page1.html:68 surveyapp/templates/page1.html:284
+msgid "Great job!"
+msgstr "Odlično opravljeno!"
+
+#: surveyapp/templates/page1.html:70 surveyapp/templates/page1.html:296
+msgid "+0 POINTS"
+msgstr "+0 TOČK"
+
+#: surveyapp/templates/page1.html:70 surveyapp/templates/page1.html:297
+msgid "Not quite right!"
+msgstr "Ni čisto pravilno!"
+
+#: surveyapp/templates/page1.html:75 surveyapp/templates/page1.html:286
+#: surveyapp/templates/page1.html:299
+msgid "The left image was the fake one."
+msgstr "Leva slika je bila lažna."
+
+#: surveyapp/templates/page1.html:77 surveyapp/templates/page1.html:288
+#: surveyapp/templates/page1.html:301
+msgid "The right image was the fake one."
+msgstr "Desna slika je bila lažna."
+
+#: surveyapp/templates/page1.html:80 surveyapp/templates/page1.html:286
+#: surveyapp/templates/page1.html:288
+msgid "Keep it up!"
+msgstr "Le tako naprej!"
+
+#: surveyapp/templates/page1.html:82 surveyapp/templates/page1.html:299
+#: surveyapp/templates/page1.html:301
+msgid "Look closely at the details in the next one!"
+msgstr "Pozorno si oglejte podrobnosti pri naslednjem!"
+
+#: surveyapp/templates/page1.html:125
+msgid "Left image is fake (AI-generated)"
+msgstr "Leva slika je lažna (ustvarjena z UI)"
+
+#: surveyapp/templates/page1.html:131
+msgid "Right image is fake (AI-generated)"
+msgstr "Desna slika je lažna (ustvarjena z UI)"
+
+#: surveyapp/templates/page1.html:160
+msgid "Submit"
+msgstr "Potrdi"
+
+#: surveyapp/templates/page1.html:163
+msgid "Next Question"
+msgstr "Naslednje vprašanje"
+
+#: surveyapp/templates/page1.html:213 surveyapp/templates/page1.html:547
+#: surveyapp/templates/page1.html:982
+msgid "Please select the fake image before submitting."
+msgstr "Prosimo, izberite lažno sliko pred potrditvijo."
+
+#: surveyapp/templates/page1.html:219 surveyapp/templates/page1.html:552
+#: surveyapp/templates/page1.html:988
+msgid "Please select at least one feature you observed in the fake image."
+msgstr "Prosimo, izberite vsaj eno značilnost, ki ste jo opazili na lažni sliki."
+
+#: surveyapp/templates/page1.html:225 surveyapp/templates/page1.html:557
+#: surveyapp/templates/page1.html:994
+msgid "Please select your confidence level."
+msgstr "Prosimo, izberite svojo stopnjo zaupanja."
+
+#: surveyapp/templates/page1.html:313
+msgid "An error occurred while submitting your answer. Please try again."
+msgstr "Pri oddaji vašega odgovora je prišlo do napake. Prosimo, poskusite znova."
+
+#: surveyapp/templates/taskInstructions.html:8
+#: surveyapp/templates/taskInstructions.html:15
+msgid "Task Instructions"
+msgstr "Navodila za nalogo"
+
+#: surveyapp/templates/taskInstructions.html:17
+#, python-format
+msgid ""
+"\n"
+"        <p><br><i>The data you submit will be kept anonymous.</i></p>\n"
+"        <p style=\"padding-left:0%%\"><br> Your task is as follows:</p>\n"
+"        <p ><br>for each image shown to you, you are asked to decide whether "
+"it is </p>\n"
+"        <p style=\"padding-left: 4%%;\"><br>an image of a real human face "
+"<br><br>or <br><br>an artificial image that has been created by this AI "
+"technology.<br></p>\n"
+"        "
+msgstr ""
+"\n"
+"        <p><br><i>Podatki, ki jih pošljete, bodo ostali anonimni.</i></p>\n"
+"        <p style=\"padding-left:0%%\"><br> Vaša naloga je naslednja:</p>\n"
+"        <p ><br>za vsako prikazano sliko morate odločiti, ali gre za </p>\n"
+"        <p style=\"padding-left: 4%%;\"><br>sliko resničnega človeškega obraza "
+"<br><br>ali <br><br>umetno sliko, ki je bila ustvarjena s to tehnologijo UI.<br></p>\n"
+"        "
+
+#: surveyapp/templates/taskInstructions.html:27
+msgid ""
+"\n"
+"        <p><hr><br>You will also be asked for the level of <b>confidence</b> "
+"you have in each of these answers.<br><br></p>\n"
+"        "
+msgstr ""
+"\n"
+"        <p><hr><br>Prav tako boste vprašani o stopnji <b>zaupanja</b>, ki jo imate v vsak od teh odgovorov.<br><br></p>\n"
+"        "
+
+#: surveyapp/templates/taskInstructions.html:41
+msgid ""
+"\n"
+"        <p><br>In addition, you will see a <b>copy of the image with a grid</"
+"b> over it.<br><br></p>\n"
+"        <p>Here we ask you to <u>click the grid-squares containing any parts "
+"of the image that affected your decision</u>.<br><br><hr><br></p>\n"
+"        "
+msgstr ""
+"\n"
+"        <p><br>Poleg tega boste videli <b>kopijo slike z mrežo</b> čez njo.<br><br></p>\n"
+"        <p>Tu vas prosimo, da <u>kliknete na kvadratke mreže, ki vsebujejo dele slike, ki so vplivali na vašo odločitev</u>.<br><br><hr><br></p>\n"
+"        "
+
+#: venv/lib/python3.12/site-packages/django/contrib/messages/apps.py:16
+msgid "Messages"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/sitemaps/apps.py:8
+msgid "Site Maps"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/staticfiles/apps.py:9
+msgid "Static Files"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/contrib/syndication/apps.py:7
+msgid "Syndication"
+msgstr ""
+
+#. Translators: String used to replace omitted page numbers in elided page
+#. range generated by paginators, e.g. [1, 2, '…', 5, 6, 7, '…', 9, 10].
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:30
+msgid "…"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:32
+msgid "That page number is not an integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:33
+msgid "That page number is less than 1"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/paginator.py:34
+msgid "That page contains no results"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:22
+msgid "Enter a valid value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:70
+msgid "Enter a valid domain name."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:153
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:775
+msgid "Enter a valid URL."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:200
+msgid "Enter a valid integer."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:211
+msgid "Enter a valid email address."
+msgstr ""
+
+#. Translators: "letters" means latin letters: a-z and A-Z.
+#: venv/lib/python3.12/site-packages/django/core/validators.py:289
+msgid ""
+"Enter a valid “slug” consisting of letters, numbers, underscores or hyphens."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:297
+msgid ""
+"Enter a valid “slug” consisting of Unicode letters, numbers, underscores, or "
+"hyphens."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:309
+#: venv/lib/python3.12/site-packages/django/core/validators.py:318
+#: venv/lib/python3.12/site-packages/django/core/validators.py:332
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2220
+#, python-format
+msgid "Enter a valid %(protocol)s address."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:311
+msgid "IPv4"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:320
+#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:43
+msgid "IPv6"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:334
+msgid "IPv4 or IPv6"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:375
+msgid "Enter only digits separated by commas."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:381
+#, python-format
+msgid "Ensure this value is %(limit_value)s (it is %(show_value)s)."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:416
+#, python-format
+msgid "Ensure this value is less than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:425
+#, python-format
+msgid "Ensure this value is greater than or equal to %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:434
+#, python-format
+msgid "Ensure this value is a multiple of step size %(limit_value)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:441
+#, python-format
+msgid ""
+"Ensure this value is a multiple of step size %(limit_value)s, starting from "
+"%(offset)s, e.g. %(offset)s, %(valid_value1)s, %(valid_value2)s, and so on."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:473
+#, python-format
+msgid ""
+"Ensure this value has at least %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at least %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:491
+#, python-format
+msgid ""
+"Ensure this value has at most %(limit_value)d character (it has "
+"%(show_value)d)."
+msgid_plural ""
+"Ensure this value has at most %(limit_value)d characters (it has "
+"%(show_value)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:514
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:366
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:405
+msgid "Enter a number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:516
+#, python-format
+msgid "Ensure that there are no more than %(max)s digit in total."
+msgid_plural "Ensure that there are no more than %(max)s digits in total."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:521
+#, python-format
+msgid "Ensure that there are no more than %(max)s decimal place."
+msgid_plural "Ensure that there are no more than %(max)s decimal places."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:526
+#, python-format
+msgid ""
+"Ensure that there are no more than %(max)s digit before the decimal point."
+msgid_plural ""
+"Ensure that there are no more than %(max)s digits before the decimal point."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:597
+#, python-format
+msgid ""
+"File extension “%(extension)s” is not allowed. Allowed extensions are: "
+"%(allowed_extensions)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/core/validators.py:659
+msgid "Null characters are not allowed."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/base.py:1600
+#: venv/lib/python3.12/site-packages/django/forms/models.py:908
+msgid "and"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/base.py:1602
+#, python-format
+msgid "%(model_name)s with this %(field_labels)s already exists."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/constraints.py:22
+#, python-format
+msgid "Constraint “%(name)s” is violated."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:134
+#, python-format
+msgid "Value %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:135
+msgid "This field cannot be null."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:136
+msgid "This field cannot be blank."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:137
+#, python-format
+msgid "%(model_name)s with this %(field_label)s already exists."
+msgstr ""
+
+#. Translators: The 'lookup_type' is one of 'date', 'year' or
+#. 'month'. Eg: "Title must be unique for pub_date year"
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:141
+#, python-format
+msgid ""
+"%(field_label)s must be unique for %(date_field_label)s %(lookup_type)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:180
+#, python-format
+msgid "Field of type: %(field_type)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1162
+#, python-format
+msgid "“%(value)s” value must be either True or False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1163
+#, python-format
+msgid "“%(value)s” value must be either True, False, or None."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1165
+msgid "Boolean (Either True or False)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1215
+#, python-format
+msgid "String (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1217
+msgid "String (unlimited)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1326
+msgid "Comma-separated integers"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1427
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid date format. It must be in YYYY-MM-DD "
+"format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1431
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1566
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD) but it is an invalid "
+"date."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1435
+msgid "Date (without time)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1562
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in YYYY-MM-DD HH:MM[:ss[."
+"uuuuuu]][TZ] format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1570
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (YYYY-MM-DD HH:MM[:ss[.uuuuuu]]"
+"[TZ]) but it is an invalid date/time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1575
+msgid "Date (with time)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1702
+#, python-format
+msgid "“%(value)s” value must be a decimal number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1704
+msgid "Decimal number"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1864
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in [DD] [[HH:]MM:]ss[."
+"uuuuuu] format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1868
+msgid "Duration"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1920
+msgid "Email address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:1945
+msgid "File path"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2023
+#, python-format
+msgid "“%(value)s” value must be a float."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2025
+msgid "Floating point number"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2065
+#, python-format
+msgid "“%(value)s” value must be an integer."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2067
+msgid "Integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2163
+msgid "Big (8 byte) integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2180
+msgid "Small integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2188
+msgid "IPv4 address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2219
+msgid "IP address"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2310
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2311
+#, python-format
+msgid "“%(value)s” value must be either None, True or False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2313
+msgid "Boolean (Either True, False or None)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2364
+msgid "Positive big integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2379
+msgid "Positive integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2394
+msgid "Positive small integer"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2410
+#, python-format
+msgid "Slug (up to %(max_length)s)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2446
+msgid "Text"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2526
+#, python-format
+msgid ""
+"“%(value)s” value has an invalid format. It must be in HH:MM[:ss[.uuuuuu]] "
+"format."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2530
+#, python-format
+msgid ""
+"“%(value)s” value has the correct format (HH:MM[:ss[.uuuuuu]]) but it is an "
+"invalid time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2534
+msgid "Time"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2642
+msgid "URL"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2666
+msgid "Raw binary data"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2731
+#, python-format
+msgid "“%(value)s” is not a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/__init__.py:2733
+msgid "Universally unique identifier"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/files.py:244
+msgid "File"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/files.py:420
+msgid "Image"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/json.py:24
+msgid "A JSON object"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/json.py:26
+msgid "Value must be valid JSON."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:978
+#, python-format
+msgid "%(model)s instance with %(field)s %(value)r is not a valid choice."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:981
+msgid "Foreign Key (type determined by related field)"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1275
+msgid "One-to-one relationship"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1332
+#, python-format
+msgid "%(from)s-%(to)s relationship"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1334
+#, python-format
+msgid "%(from)s-%(to)s relationships"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/db/models/fields/related.py:1382
+msgid "Many-to-many relationship"
+msgstr ""
+
+#. Translators: If found as last label character, these punctuation
+#. characters will prevent the default label_suffix to be appended to the label
+#: venv/lib/python3.12/site-packages/django/forms/boundfield.py:185
+msgid ":?.!"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:95
+msgid "This field is required."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:315
+msgid "Enter a whole number."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:486
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1267
+msgid "Enter a valid date."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:509
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1268
+msgid "Enter a valid time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:536
+msgid "Enter a valid date/time."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:570
+msgid "Enter a valid duration."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:571
+#, python-brace-format
+msgid "The number of days must be between {min_days} and {max_days}."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:640
+msgid "No file was submitted. Check the encoding type on the form."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:641
+msgid "No file was submitted."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:642
+msgid "The submitted file is empty."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:644
+#, python-format
+msgid "Ensure this filename has at most %(max)d character (it has %(length)d)."
+msgid_plural ""
+"Ensure this filename has at most %(max)d characters (it has %(length)d)."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:649
+msgid "Please either submit a file or check the clear checkbox, not both."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:717
+msgid ""
+"Upload a valid image. The file you uploaded was either not an image or a "
+"corrupted image."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:889
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:975
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1592
+#, python-format
+msgid "Select a valid choice. %(value)s is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:977
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1096
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1590
+msgid "Enter a list of values."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1097
+msgid "Enter a complete value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1339
+msgid "Enter a valid UUID."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/fields.py:1369
+msgid "Enter a valid JSON."
+msgstr ""
+
+#. Translators: This is the default suffix added to form field labels
+#: venv/lib/python3.12/site-packages/django/forms/forms.py:97
+msgid ":"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/forms.py:239
+#, python-format
+msgid "(Hidden field %(name)s) %(error)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:61
+#, python-format
+msgid ""
+"ManagementForm data is missing or has been tampered with. Missing fields: "
+"%(field_names)s. You may need to file a bug report if the issue persists."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:65
+#, python-format
+msgid "Please submit at most %(num)d form."
+msgid_plural "Please submit at most %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:70
+#, python-format
+msgid "Please submit at least %(num)d form."
+msgid_plural "Please submit at least %(num)d forms."
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:484
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:491
+msgid "Order"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/formsets.py:499
+msgid "Delete"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:901
+#, python-format
+msgid "Please correct the duplicate data for %(field)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:906
+#, python-format
+msgid "Please correct the duplicate data for %(field)s, which must be unique."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:913
+#, python-format
+msgid ""
+"Please correct the duplicate data for %(field_name)s which must be unique "
+"for the %(lookup)s in %(date_field)s."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:922
+msgid "Please correct the duplicate values below."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1359
+msgid "The inline value did not match the parent instance."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1450
+msgid "Select a valid choice. That choice is not one of the available choices."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/models.py:1594
+#, python-format
+msgid "“%(pk)s” is not a valid value."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/utils.py:229
+#, python-format
+msgid ""
+"%(datetime)s couldn’t be interpreted in time zone %(current_timezone)s; it "
+"may be ambiguous or it may not exist."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:527
+msgid "Clear"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:528
+msgid "Currently"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:529
+msgid "Change"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:866
+msgid "Unknown"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:867
+msgid "Yes"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/forms/widgets.py:868
+msgid "No"
+msgstr ""
+
+#. Translators: Please do not add spaces around commas.
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:873
+msgid "yes,no,maybe"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:903
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:920
+#, python-format
+msgid "%(size)d byte"
+msgid_plural "%(size)d bytes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:922
+#, python-format
+msgid "%s KB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:924
+#, python-format
+msgid "%s MB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:926
+#, python-format
+msgid "%s GB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:928
+#, python-format
+msgid "%s TB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/template/defaultfilters.py:930
+#, python-format
+msgid "%s PB"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:74
+msgid "p.m."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:75
+msgid "a.m."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:80
+msgid "PM"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:81
+msgid "AM"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:153
+msgid "midnight"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dateformat.py:155
+msgid "noon"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:7
+msgid "Monday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:8
+msgid "Tuesday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:9
+msgid "Wednesday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:10
+msgid "Thursday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:11
+msgid "Friday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:12
+msgid "Saturday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:13
+msgid "Sunday"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:16
+msgid "Mon"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:17
+msgid "Tue"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:18
+msgid "Wed"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:19
+msgid "Thu"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:20
+msgid "Fri"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:21
+msgid "Sat"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:22
+msgid "Sun"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:25
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:26
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:27
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:28
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:29
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:30
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:31
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:32
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:33
+msgid "September"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:34
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:35
+msgid "November"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:36
+msgid "December"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:39
+msgid "jan"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:40
+msgid "feb"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:41
+msgid "mar"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:42
+msgid "apr"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:43
+msgid "may"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:44
+msgid "jun"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:45
+msgid "jul"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:46
+msgid "aug"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:47
+msgid "sep"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:48
+msgid "oct"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:49
+msgid "nov"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:50
+msgid "dec"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:53
+msgctxt "abbrev. month"
+msgid "Jan."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:54
+msgctxt "abbrev. month"
+msgid "Feb."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:55
+msgctxt "abbrev. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:56
+msgctxt "abbrev. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:57
+msgctxt "abbrev. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:58
+msgctxt "abbrev. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:59
+msgctxt "abbrev. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:60
+msgctxt "abbrev. month"
+msgid "Aug."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:61
+msgctxt "abbrev. month"
+msgid "Sept."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:62
+msgctxt "abbrev. month"
+msgid "Oct."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:63
+msgctxt "abbrev. month"
+msgid "Nov."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:64
+msgctxt "abbrev. month"
+msgid "Dec."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:67
+msgctxt "alt. month"
+msgid "January"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:68
+msgctxt "alt. month"
+msgid "February"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:69
+msgctxt "alt. month"
+msgid "March"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:70
+msgctxt "alt. month"
+msgid "April"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:71
+msgctxt "alt. month"
+msgid "May"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:72
+msgctxt "alt. month"
+msgid "June"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:73
+msgctxt "alt. month"
+msgid "July"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:74
+msgctxt "alt. month"
+msgid "August"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:75
+msgctxt "alt. month"
+msgid "September"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:76
+msgctxt "alt. month"
+msgid "October"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:77
+msgctxt "alt. month"
+msgid "November"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/dates.py:78
+msgctxt "alt. month"
+msgid "December"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/ipv6.py:20
+msgid "This is not a valid IPv6 address."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/text.py:76
+#, python-format
+msgctxt "String to return when truncating text"
+msgid "%(truncated_text)s…"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/text.py:287
+msgid "or"
+msgstr ""
+
+#. Translators: This string is used as a separator between list elements
+#: venv/lib/python3.12/site-packages/django/utils/text.py:306
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:135
+msgid ", "
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:8
+#, python-format
+msgid "%(num)d year"
+msgid_plural "%(num)d years"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:9
+#, python-format
+msgid "%(num)d month"
+msgid_plural "%(num)d months"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:10
+#, python-format
+msgid "%(num)d week"
+msgid_plural "%(num)d weeks"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:11
+#, python-format
+msgid "%(num)d day"
+msgid_plural "%(num)d days"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:12
+#, python-format
+msgid "%(num)d hour"
+msgid_plural "%(num)d hours"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/utils/timesince.py:13
+#, python-format
+msgid "%(num)d minute"
+msgid_plural "%(num)d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:29
+msgid "Forbidden"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:30
+msgid "CSRF verification failed. Request aborted."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:34
+msgid ""
+"You are seeing this message because this HTTPS site requires a “Referer "
+"header” to be sent by your web browser, but none was sent. This header is "
+"required for security reasons, to ensure that your browser is not being "
+"hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:40
+msgid ""
+"If you have configured your browser to disable “Referer” headers, please re-"
+"enable them, at least for this site, or for HTTPS connections, or for “same-"
+"origin” requests."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:45
+msgid ""
+"If you are using the <meta name=\"referrer\" content=\"no-referrer\"> tag or "
+"including the “Referrer-Policy: no-referrer” header, please remove them. The "
+"CSRF protection requires the “Referer” header to do strict referer checking. "
+"If you’re concerned about privacy, use alternatives like <a "
+"rel=\"noreferrer\" …> for links to third-party sites."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:54
+msgid ""
+"You are seeing this message because this site requires a CSRF cookie when "
+"submitting forms. This cookie is required for security reasons, to ensure "
+"that your browser is not being hijacked by third parties."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:60
+msgid ""
+"If you have configured your browser to disable cookies, please re-enable "
+"them, at least for this site, or for “same-origin” requests."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/csrf.py:66
+msgid "More information is available with DEBUG=True."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:44
+msgid "No year specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:64
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:115
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:214
+msgid "Date out of range"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:94
+msgid "No month specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:147
+msgid "No day specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:194
+msgid "No week specified"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:353
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:384
+#, python-format
+msgid "No %(verbose_name_plural)s available"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:680
+#, python-format
+msgid ""
+"Future %(verbose_name_plural)s not available because %(class_name)s."
+"allow_future is False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/dates.py:720
+#, python-format
+msgid "Invalid date string “%(datestr)s” given format “%(format)s”"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/detail.py:56
+#, python-format
+msgid "No %(verbose_name)s found matching the query"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:70
+msgid "Page is not “last”, nor can it be converted to an int."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:77
+#, python-format
+msgid "Invalid page (%(page_number)s): %(message)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/generic/list.py:173
+#, python-format
+msgid "Empty list and “%(class_name)s.allow_empty” is False."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:49
+msgid "Directory indexes are not allowed here."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:51
+#, python-format
+msgid "“%(path)s” does not exist"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/static.py:68
+#: venv/lib/python3.12/site-packages/django/views/templates/directory_index.html:8
+#: venv/lib/python3.12/site-packages/django/views/templates/directory_index.html:11
+#, python-format
+msgid "Index of %(directory)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:7
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:204
+msgid "The install worked successfully! Congratulations!"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:206
+#, python-format
+msgid ""
+"View <a href=\"https://docs.djangoproject.com/en/%(version)s/releases/\" "
+"target=\"_blank\" rel=\"noopener\">release notes</a> for Django %(version)s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:208
+#, python-format
+msgid ""
+"You are seeing this page because <a href=\"https://docs.djangoproject.com/en/"
+"%(version)s/ref/settings/#debug\" target=\"_blank\" "
+"rel=\"noopener\">DEBUG=True</a> is in your settings file and you have not "
+"configured any URLs."
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:217
+msgid "Django Documentation"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:218
+msgid "Topics, references, &amp; how-to’s"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:226
+msgid "Tutorial: A Polling App"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:227
+msgid "Get started with Django"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:235
+msgid "Django Community"
+msgstr ""
+
+#: venv/lib/python3.12/site-packages/django/views/templates/default_urlconf.html:236
+msgid "Connect, get help, or contribute"
+msgstr ""

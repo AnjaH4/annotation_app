@@ -1,27 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Task Instructions</title>
+    {% load i18n %}
+    {% load static %}
+    <title>{% trans "Task Instructions" %}</title>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    {% load static %}
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <style>
+        .lang-switch-btn {
+            background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .lang-switch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .flag-icon {
+            margin-right: 2px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <h1>Task Instructions</h1>
+    <div class="position-absolute" style="top: 10px; right: 10px; z-index: 1000;">
+        {% get_current_language as CURRENT_LANGUAGE %}
+        <form action="{% url 'set_language' %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            <input type="hidden" name="language" value="{% if CURRENT_LANGUAGE == 'en' %}sl{% else %}en{% endif %}">
+            <button type="submit" class="btn btn-sm lang-switch-btn">
+                {% if CURRENT_LANGUAGE == 'en' %}
+                    <span class="flag-icon">🇸🇮</span> SL
+                {% else %}
+                    <span class="flag-icon">🇬🇧</span> EN
+                {% endif %}
+            </button>
+        </form>
+    </div>
+    <h1>{% trans "Task Instructions" %}</h1>
     <div class="px-5" style="font-size:xx-large;">
+        {% blocktrans %}
         <p><br><i>The data you submit will be kept anonymous.</i></p>
         <p style="padding-left:0%"><br> Your task is as follows:</p>
         <p ><br>for each image shown to you, you are asked to decide whether it is </p>
         <p style="padding-left: 4%;"><br>an image of a real human face <br><br>or <br><br>an artificial image that has been created by this AI technology.<br></p>
+        {% endblocktrans %}
     </div>
     <p><br></p>
 
     <div class="px-5" style="font-size:x-large;">
+        {% blocktrans %}
         <p><hr><br>You will also be asked for the level of <b>confidence</b> you have in each of these answers.<br><br></p>
+        {% endblocktrans %}
     </div>
 
 {#    tuki dodej tip napake, ki izda#}
@@ -33,12 +74,13 @@
 {#    </div>#}
 {#    <hr>#}
     <div class="px-5" style="font-size:x-large;">
+        {% blocktrans %}
         <p><br>In addition, you will see a <b>copy of the image with a grid</b> over it.<br><br></p>
         <p>Here we ask you to <u>click the grid-squares containing any parts of the image that affected your decision</u>.<br><br><hr><br></p>
-
+        {% endblocktrans %}
     </div>
     <div class="col text-center">
-        <a class="btn btn-primary btn-lg btn-block" href="{% url 'exampleTask' %}">Next Page</a>
+        <a class="btn btn-primary btn-lg btn-block" href="{% url 'exampleTask' %}">{% trans "Next Page" %}</a>
     </div>
 
     <p><br></p>

@@ -1,18 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Help Page</title>
+    {% load i18n %}
+    {% load static %}
+    <title>{% trans "Help Page" %}</title>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    {% load static %}
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <style>
+        .lang-switch-btn {
+            background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .lang-switch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .flag-icon {
+            margin-right: 2px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-    <h1 style="font-size: 2.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">Introductory Help</h1>
+    <div class="position-absolute" style="top: 10px; right: 10px; z-index: 1000;">
+        {% get_current_language as CURRENT_LANGUAGE %}
+        <form action="{% url 'set_language' %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            <input type="hidden" name="language" value="{% if CURRENT_LANGUAGE == 'en' %}sl{% else %}en{% endif %}">
+            <button type="submit" class="btn btn-sm lang-switch-btn">
+                {% if CURRENT_LANGUAGE == 'en' %}
+                    <span class="flag-icon">🇸🇮</span> SL
+                {% else %}
+                    <span class="flag-icon">🇬🇧</span> EN
+                {% endif %}
+            </button>
+        </form>
+    </div>
+    <h1 style="font-size: 2.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">{% trans "Introductory Help" %}</h1>
     <div class="px-4 mx-4" style="font-size: 1.2rem; margin-bottom: 15px;">
+        {% blocktrans %}
         <p>Below are examples of some "tell-tale" features that the <b>AI-manipulated images</b> tend to exhibit.</p>
 
         <p>The inconsistencies are divided into four categories:<b> Color, Boundary, Texture and Landmark.</b> Note that they can appear <b>individually</b> or in <b>any combination</b>.</p>
@@ -20,6 +58,7 @@
         <p>In the main question sequence, you will be <b>tested on your ability to distinguish manipulated images from real images</b>.</p>
 
         <p><b>Please study these carefully.</b></p>
+        {% endblocktrans %}
         <hr style="margin: 10px 0;">
     </div>
 
@@ -33,95 +72,95 @@
 
 <div style="display: none">
     <li>
-        <ul>a) Color</ul>
+        <ul>a) {% trans "Color" %}</ul>
         <ul id="la1">
-            Part of a face is a different color than the rest.<br>
+            {% trans "Part of a face is a different color than the rest." %}<br>
             <div class="row">
                 <div class="col">
                     <div class="img-with-text" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/color/950/544_0_real.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <p style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Real Image</p>
+                        <p style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Real Image" %}</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="img-with-text" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/color/950/544_0_fakeOG.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <p style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Fake Image</p>
+                        <p style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Fake Image" %}</p>
                     </div>
                 </div>
                 <div class="col">
                     <div class="img-with-text" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/color/950/544_0_fake.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <p style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Inconsistencies</p>
+                        <p style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Inconsistencies" %}</p>
                     </div>
                 </div>
             </div>
         </ul>
-        <ul>b) boundary</ul>
-        <ul id="lb1">The boundary where two faces have been blended together is visible.<br>
+        <ul>b) {% trans "Boundary" %}</ul>
+        <ul id="lb1">{% trans "The boundary where two faces have been blended together is visible." %}<br>
             <div class="row">
                 <div class="col">
                     <div class="image-container" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/boundary/267/305_0_real.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Real Image</figcaption>
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Real Image" %}</figcaption>
                     </div>
                 </div>
                 <div class="col">
                     <div class="image-container" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/boundary/267/305_0_fakeOG.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Fake Image</figcaption>
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Fake Image" %}</figcaption>
                     </div>
                 </div>
                 <div class="col">
                     <div class="image-container" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/boundary/267/305_0_fake.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Inconsistencies</figcaption>
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Inconsistencies" %}</figcaption>
                     </div>
                 </div>
             </div>
         </ul>
-        <ul>c) texture</ul>
-        <ul id="lc1">The texture is not consistent across the entire face.<br>&emsp;
+        <ul>c) {% trans "Texture" %}</ul>
+        <ul id="lc1">{% trans "The texture is not consistent across the entire face." %}<br>&emsp;
             <div class="row">
                 <div class="col">
                     <div class="image-container" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/texture/936/000_0_real.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Real Image</figcaption>
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Real Image" %}</figcaption>
                     </div>
                 </div>
                 <div class="col">
                     <div class="image-container" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/texture/936/000_0_fakeOG.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Fake Image</figcaption>
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Fake Image" %}</figcaption>
                     </div>
                 </div>
                 <div class="col">
                     <div class="image-container" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/texture/936/000_0_fake.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Inconsistencies</figcaption>
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Inconsistencies" %}</figcaption>
                     </div>
                 </div>
             </div>
         </ul>
-        <ul>d) landmarks</ul>
-        <ul id="ld1"> Facial landmarks such as the eyes, eyebrows, mouth, and nose appear duplicated.<br>&emsp;
+        <ul>d) {% trans "Landmarks" %}</ul>
+        <ul id="ld1"> {% trans "Facial landmarks such as the eyes, eyebrows, mouth, and nose appear duplicated." %}<br>&emsp;
             <div class="row">
                 <div class="col">
                     <div class="image-container" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/landmarks/046/359_0_real.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Real Image</figcaption>
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Real Image" %}</figcaption>
                     </div>
                 </div>
                 <div class="col">
                     <div class="image-container" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/landmarks/046/359_0_fakeOG.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Fake Image</figcaption>
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Fake Image" %}</figcaption>
                     </div>
                 </div>
                 <div class="col">
                     <div class="image-container" style="text-align: center; margin-bottom: 10px;">
                         <img height="250" src="{% static 'img/SBIs/inconsistencies/landmarks/046/359_0_fake.png' %}" style="max-height: 250px; width: auto; margin-bottom: 5px;">
-                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">Inconsistencies</figcaption>
+                        <figcaption style="font-size: 18px; font-weight: 500; color: #444; margin-top: 5px;">{% trans "Inconsistencies" %}</figcaption>
                     </div>
                 </div>
             </div>
@@ -133,7 +172,7 @@
     <form action="" method="post">
         {% csrf_token %}
         <button class="btn btn-primary btn-lg btn-block" type="submit">
-            <span style="font-size: 1.5rem;">Next Page</span>
+            <span style="font-size: 1.5rem;">{% trans "Next Page" %}</span>
         </button>
     </form>
 </div>
@@ -142,7 +181,7 @@
     document.addEventListener("DOMContentLoaded", function () {
         var majA = document.getElementById("a");
         if (majA) {
-            majA.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>Color</h3>";
+            majA.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>{% trans "Color" %}</h3>";
             {% for A in minA %}
                 var laElement = document.getElementById("la{{ A }}");
                 if (laElement) {
@@ -153,7 +192,7 @@
 
         var majB = document.getElementById("b");
         if (majB) {
-            majB.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>Boundary</h3>";
+            majB.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>{% trans "Boundary" %}</h3>";
             {% for B in minB %}
                 var lbElement = document.getElementById("lb{{ B }}");
                 if (lbElement) {
@@ -164,7 +203,7 @@
 
         var majC = document.getElementById("c");
         if (majC) {
-            majC.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>Texture</h3>";
+            majC.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>{% trans "Texture" %}</h3>";
             {% for C in minC %}
                 var lcElement = document.getElementById("lc{{ C }}");
                 if (lcElement) {
@@ -175,7 +214,7 @@
 
         var majD = document.getElementById("d");
         if (majD) {
-            majD.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>Landmark</h3>";
+            majD.innerHTML = "<h3 style='font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;'>{% trans "Landmark" %}</h3>";
             {% for D in minD %}
                 var ldElement = document.getElementById("ld{{ D }}");
                 if (ldElement) {

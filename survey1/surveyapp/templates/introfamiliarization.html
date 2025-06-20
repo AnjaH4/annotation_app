@@ -1,22 +1,59 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Familiarization Page</title>
+    {% load i18n %}
+    {% load static %}
+    <title>{% trans "Familiarization Page" %}</title>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
-    {% load static %}
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <style>
+        .lang-switch-btn {
+            background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .lang-switch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .flag-icon {
+            margin-right: 2px;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
-<h1>Introductory Familiarization</h1>
+    <div class="position-absolute" style="top: 10px; right: 10px; z-index: 1000;">
+        {% get_current_language as CURRENT_LANGUAGE %}
+        <form action="{% url 'set_language' %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            <input type="hidden" name="language" value="{% if CURRENT_LANGUAGE == 'en' %}sl{% else %}en{% endif %}">
+            <button type="submit" class="btn btn-sm lang-switch-btn">
+                {% if CURRENT_LANGUAGE == 'en' %}
+                    <span class="flag-icon">🇸🇮</span> SL
+                {% else %}
+                    <span class="flag-icon">🇬🇧</span> EN
+                {% endif %}
+            </button>
+        </form>
+    </div>
+<h1>{% trans "Introductory Familiarization" %}</h1>
     <div class="row mx-4">
 
 
-
 <p style="font-size:x-large;">
+    {% blocktrans %}
     <br>
     Below are twenty examples of these <b>AI-generated images</b>.
     <br><br>Again, <b>these images feature the faces of people who do not exist</b>.
@@ -24,6 +61,7 @@
 
     <br><br><br><br>In the main question sequence, you will be <b>tested on your ability to distinguish these images from images of faces of people who do exist</b>. <br><br><br><br>
     <b>Please study these carefully.</b> <br><br><br><br>
+    {% endblocktrans %}
     </div>
         <div id="demo" class="carousel slide" data-interval="false" data-wrap="false" >
             <div class="carousel-inner" id="carousel123">
@@ -116,24 +154,24 @@
 
     <form action="" method="post">
         {% csrf_token %}
-    <input class="btn btn-primary btn-lg btn-block" style="font-size:x-large;" type="submit" value="Next Page">
+    <input class="btn btn-primary btn-lg btn-block" style="font-size:x-large;" type="submit" value="{% trans "Next Page" %}">
         </form>
     <p><br><br></p>
 </div>
 
 <script>
     var majA = document.getElementById("a");
-    majA.innerHTML = "<h2>Asymmetries</h2>";
+    majA.innerHTML = "<h2>{% trans "Asymmetries" %}</h2>";
     {% for A in minA %}
         majA.innerHTML += "<p>"+la{{ A }}.innerHTML+"</p>";
     {% endfor %}
     var majB = document.getElementById("b");
-    majB.innerHTML = "<h2>Background</h2>";
+    majB.innerHTML = "<h2>{% trans "Background" %}</h2>";
     {% for B in minB %}
         majB.innerHTML += "<p>"+lb{{ B }}.innerHTML+"</p>";
     {% endfor %}
     var majC = document.getElementById("c");
-    majC.innerHTML = "<h2>Weirdness (/Abnormalities)</h2>";
+    majC.innerHTML = "<h2>{% trans "Weirdness (/Abnormalities)" %}</h2>";
     {% for C in minC %}
         majC.innerHTML += "<p>"+lc{{ C }}.innerHTML+"</p>";
     {% endfor %}

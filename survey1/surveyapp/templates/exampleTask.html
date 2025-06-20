@@ -1,13 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Example Demonstration Task</title>
+    {% load i18n %}
+    {% load static %}
+    <title>{% trans "Example Demonstration Task" %}</title>
     <!-- CSS only -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-    {% load static %}
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <style>
         .badge {
@@ -31,23 +32,60 @@
             border-color: #007bff;
             box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
         }
+
+        .lang-switch-btn {
+            background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%);
+            color: white;
+            border-radius: 20px;
+            padding: 5px 10px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+
+        .lang-switch-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+
+        .flag-icon {
+            margin-right: 2px;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1 style="font-size: 2.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">Example Task</h1>
+    <div class="position-absolute" style="top: 10px; right: 10px; z-index: 1000;">
+        {% get_current_language as CURRENT_LANGUAGE %}
+        <form action="{% url 'set_language' %}" method="post" class="d-inline">
+            {% csrf_token %}
+            <input name="next" type="hidden" value="{{ request.path }}">
+            <input type="hidden" name="language" value="{% if CURRENT_LANGUAGE == 'en' %}sl{% else %}en{% endif %}">
+            <button type="submit" class="btn btn-sm lang-switch-btn">
+                {% if CURRENT_LANGUAGE == 'en' %}
+                    <span class="flag-icon">🇸🇮</span> SL
+                {% else %}
+                    <span class="flag-icon">🇬🇧</span> EN
+                {% endif %}
+            </button>
+        </form>
+    </div>
+    <h1 style="font-size: 2.2rem; font-weight: bold; color: #2c3e50; margin-bottom: 15px;">{% trans "Example Task" %}</h1>
     <div class="px-4 mx-4" style="font-size: 1.2rem; margin-bottom: 15px;">
+        {% blocktrans %}
         <p>Here is an example question, with two face images where one is real and one is fake.</p>
         The example answers demonstrate how the questions may be answered. The inconsistencies might be difficult to spot but if you have a feeling "something is off" mark it on the grid.
         Please <b>answer the actual questions in whichever way you think is most relevant.</b>
 
         <p>To select multiple squares, click and drag your mouse over them. To hide the grid, simply click outside the image. Your selected squares will be saved and shown again when you return to the image. If you change your mind while selecting, no problem — just switch to another image and make your selections there. You don't need to unselect anything!</p>
+        {% endblocktrans %}
 
         <hr style="margin: 10px 0;">
     </div>
 
     <div class="text-center">
-        <h3 style="font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;">Select the fake image. Select parts of the image (squares) that seem off.</h3>
+        <h3 style="font-size: 1.6rem; color: #2c3e50; font-weight: bold; margin-bottom: 12px;">{% trans "Select the fake image. Select parts of the image (squares) that seem off." %}</h3>
         <div class="row">
             <div class="col-md-6 text-center">
                 <div style="position: relative; margin-bottom: 10px;">
@@ -69,24 +107,24 @@
     <div class="row mt-3">
         <div class="col-md-6">
             <div class="text-center">
-                <h3 style="font-size: 1.3rem; color: #2c3e50; font-weight: bold; margin-bottom: 8px;">What did you observe in the fake image?</h3>
+                <h3 style="font-size: 1.3rem; color: #2c3e50; font-weight: bold; margin-bottom: 8px;">{% trans "What did you observe in the fake image?" %}</h3>
                 <div class="row justify-content-center">
                     <div class="col-md-8">
                         <div class="form-check" style="margin-left: 30%; text-align: left; margin-bottom: 4px;">
                             <input class="form-check-input" type="checkbox" id="id_inconsistency_type_0" name="inconsistency_type" value="color" disabled>
-                            <label class="form-check-label" for="id_inconsistency_type_0" style="font-size: 1.2rem;">Color</label>
+                            <label class="form-check-label" for="id_inconsistency_type_0" style="font-size: 1.2rem;">{% trans "Color" %}</label>
                         </div>
                         <div class="form-check" style="margin-left: 30%; text-align: left; margin-bottom: 4px;">
                             <input class="form-check-input" type="checkbox" id="id_inconsistency_type_1" name="inconsistency_type" value="boundary" disabled>
-                            <label class="form-check-label" for="id_inconsistency_type_1" style="font-size: 1.2rem;">Boundary</label>
+                            <label class="form-check-label" for="id_inconsistency_type_1" style="font-size: 1.2rem;">{% trans "Boundary" %}</label>
                         </div>
                         <div class="form-check" style="margin-left: 30%; text-align: left; margin-bottom: 4px;">
                             <input class="form-check-input" type="checkbox" id="id_inconsistency_type_2" name="inconsistency_type" value="texture" disabled>
-                            <label class="form-check-label" for="id_inconsistency_type_2" style="font-size: 1.2rem;">Texture</label>
+                            <label class="form-check-label" for="id_inconsistency_type_2" style="font-size: 1.2rem;">{% trans "Texture" %}</label>
                         </div>
                         <div class="form-check" style="margin-left: 30%; text-align: left; margin-bottom: 4px;">
                             <input class="form-check-input" type="checkbox" id="id_inconsistency_type_3" name="inconsistency_type" value="landmark" checked disabled>
-                            <label class="form-check-label" for="id_inconsistency_type_3" style="font-size: 1.2rem;">Landmark</label>
+                            <label class="form-check-label" for="id_inconsistency_type_3" style="font-size: 1.2rem;">{% trans "Landmark" %}</label>
                         </div>
                     </div>
                 </div>
@@ -94,7 +132,7 @@
         </div>
         <div class="col-md-6">
             <div class="text-center">
-                <h3 style="font-size: 1.3rem; color: #2c3e50; font-weight: bold; margin-bottom: 8px;">Confidence level: <small style="font-size: 0.9rem;">(1=None, 9=Complete)</small></h3>
+                <h3 style="font-size: 1.3rem; color: #2c3e50; font-weight: bold; margin-bottom: 8px;">{% trans "Confidence level:" %} <small style="font-size: 0.9rem;">{% trans "(1=None, 9=Complete)" %}</small></h3>
                 <div class="form-check-inline">
                     {% for i in "123456789" %}
                     <div class="form-check form-check-inline" style="margin-right: 8px;">
@@ -111,7 +149,7 @@
         <form action="" method="post">
             {% csrf_token %}
             <button class="btn btn-primary btn-lg btn-block" type="submit">
-                <span style="font-size: 1.5rem;">Next Page</span>
+                <span style="font-size: 1.5rem;">{% trans "Next Page" %}</span>
             </button>
         </form>
     </div>
@@ -224,5 +262,3 @@
     </script>
 </body>
 </html>
-
-
