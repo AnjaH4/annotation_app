@@ -142,10 +142,20 @@
 <div class="container">
     <div class="position-absolute" style="top: 10px; right: 10px; z-index: 1000;">
         {% get_current_language as CURRENT_LANGUAGE %}
+        {% get_current_language_bidi as CURRENT_LANGUAGE_BIDI %}
+
         <form action="{% url 'set_language' %}" method="post" class="d-inline">
             {% csrf_token %}
-            <input name="next" type="hidden" value="{{ request.path }}">
+
+            {# This is the crucial part that has been fixed #}
+            {% if request.path|slice:":3" == '/sl/' or request.path|slice:":3" == '/en/' %}
+                <input name="next" type="hidden" value="{{ request.path|slice:'3:' }}">
+            {% else %}
+                <input name="next" type="hidden" value="{{ request.path }}">
+            {% endif %}
+
             <input type="hidden" name="language" value="{% if CURRENT_LANGUAGE == 'en' %}sl{% else %}en{% endif %}">
+
             <button type="submit" class="btn btn-sm lang-switch-btn">
                 {% if CURRENT_LANGUAGE == 'en' %}
                     <span class="flag-icon">🇸🇮</span> SL
