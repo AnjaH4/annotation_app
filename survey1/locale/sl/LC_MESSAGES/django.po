@@ -21,7 +21,7 @@ msgstr ""
 
 #: surveyapp/templates/endsurvey.html:8
 msgid "Your Results"
-msgstr "Vaši rezultati"
+msgstr "Rezultat"
 
 #: surveyapp/templates/endsurvey.html:108
 msgid "Challenge Complete! Thank you for your response!"
@@ -31,7 +31,7 @@ msgstr "Izziv končan! Hvala za vaš odgovor!"
 msgid ""
 "Congratulations on completing the challenge to identify fake AI-manipulated "
 "faces!"
-msgstr "Čestitke za dokončanje izziva prepoznavanja lažnih obrazov, manipuliranih z umetno inteligenco!"
+msgstr "Čestitke!"
 
 #: surveyapp/templates/endsurvey.html:121
 msgid "Correct Answers"
@@ -39,7 +39,7 @@ msgstr "Pravilni odgovori"
 
 #: surveyapp/templates/endsurvey.html:129
 msgid "Accuracy"
-msgstr "Natančnost"
+msgstr "Uspešnost"
 
 #: surveyapp/templates/endsurvey.html:142
 msgid "Detective Rank"
@@ -65,7 +65,7 @@ msgstr ""
 "                    Ta izziv je preizkusil vašo sposobnost prepoznavanja lažnih obrazov, ustvarjenih z umetno inteligenco. \n"
 "                    Tehnologija za temi slikami se nenehno izboljšuje, zaradi česar je odkrivanje vse težje.\n"
 "\n"
-"                    To je del magistrskega projekta na Fakulteti za računalništvo in informatiko Univerze v Ljubljani.\n"
+"                    Raziskava je del magistrskega projekta na Fakulteti za računalništvo in informatiko Univerze v Ljubljani.\n"
 "                    "
 
 #: surveyapp/templates/endsurvey.html:175
@@ -123,10 +123,9 @@ msgstr ""
 "href=\"https://www.fri.uni-lj.si/sl/\" style=\"color: inherit; text-"
 "decoration: none; box-shadow: none;\">https://www.fri.uni-lj.si/sl/</a>), "
 "katerega cilj je ustvariti detektor deepfake obrazov, ki uporablja človeško "
-"zaznavanje. Vaši odgovori nam pomagajo zbirati vpoglede v vizualne namige, "
+"zaznavanje. Vaši odgovori nam nudijo vpoglede v vizualne namige, "
 "stopnje zaupanja in zaznane nedoslednosti. Podatki o človeški intuiciji iz "
-"tega izziva bodo združeni s strojnim učenjem, da bi zgradili model, ki se "
-"uči ne le iz slikovnih točk, temveč tudi iz človeškega zaznavanja. "
+"bodo uporabljeni pri učenju modela."
 "<strong>Vsi odgovori so anonimni</strong>.\n"
 "                "
 
@@ -147,7 +146,7 @@ msgstr ""
 "vendar je bil eden preoblikovan z naključnimi transformacijami, da bi bil "
 "podoben lažni sliki. <strong>Vaša naloga je izbrati lažno sliko in "
 "odgovoriti na nekaj vprašanj o vaši odločitvi</strong>. Aplikacija je "
-"konfigurirana za računalnik, zato je najbolje, da jo uporabljate za svoj "
+"konfigurirana za računalnik, zato je najbolje, da ga uporabljate za svoj "
 "odgovor.\n"
 "                "
 
@@ -157,11 +156,11 @@ msgstr "Začni Izziv"
 
 #: surveyapp/templates/exampleTask.html:8
 msgid "Example Demonstration Task"
-msgstr "Primer demonstracijske naloge"
+msgstr "Primer vprašanja"
 
 #: surveyapp/templates/exampleTask.html:39
 msgid "Example Task"
-msgstr "Primer naloge"
+msgstr "Primer vprašanja"
 
 #: surveyapp/templates/exampleTask.html:41
 msgid ""
@@ -182,8 +181,8 @@ msgid ""
 "        "
 msgstr ""
 "\n"
-"        <p>Tukaj je primer vprašanja z dvema slikama obrazov, kjer je ena resnična in ena lažna.</p>\n"
-"        Primeri odgovorov prikazujejo, kako lahko odgovorite na vprašanja. Nedoslednosti so morda težko opazne, vendar če imate občutek, da \"nekaj ni v redu\", to označite na mreži.\n"
+"        <p>Spodaj je primer vprašanja z dvema slikama obrazov, kjer je ena resnična in ena lažna.</p>\n"
+"        Primeri odgovorov prikazujejo, kako lahko odgovorite na vprašanja. Nedoslednosti so morda težko opazne, a če imate občutek, da \"nekaj ni v redu\", to označite na mreži.\n"
 "        Prosimo, <b>na dejanska vprašanja odgovorite na način, ki se vam zdi najbolj primeren.</b>\n"
 "\n"
 "        <p>Za izbiro več kvadratkov kliknite in povlecite miško čez njih. Za skrivanje mreže preprosto kliknite zunaj slike. Vaši izbrani kvadratki bodo shranjeni in ponovno prikazani, ko se vrnete na sliko. Če si premislite med izbiranjem, ni problema - preprosto preklopite na drugo sliko in tam naredite svoje izbire. Ničesar vam ni treba odznačiti!</p>\n"
@@ -208,7 +207,7 @@ msgstr "Barva"
 #: surveyapp/templates/introhelp.html:63 surveyapp/templates/introhelp.html:159
 #: surveyapp/templates/page1.html:179
 msgid "Boundary"
-msgstr "Meja"
+msgstr "Rob"
 
 #: surveyapp/templates/exampleTask.html:88
 #: surveyapp/templates/introhelp.html:86 surveyapp/templates/introhelp.html:170
@@ -219,7 +218,7 @@ msgstr "Tekstura"
 #: surveyapp/templates/exampleTask.html:92
 #: surveyapp/templates/introhelp.html:181 surveyapp/templates/page1.html:187
 msgid "Landmark"
-msgstr "Značilnost"
+msgstr "Obrazne značilke"
 
 #: surveyapp/templates/exampleTask.html:100 surveyapp/templates/page1.html:195
 msgid "Confidence level:"
@@ -308,7 +307,7 @@ msgstr ""
 "\n"
 "        <p>Spodaj so primeri nekaterih \"izdajalskih\" značilnosti, ki jih <b>slike, manipulirane z umetno inteligenco</b>, pogosto kažejo.</p>\n"
 "\n"
-"        <p>Nedoslednosti so razdeljene v štiri kategorije:<b> Barva, Meja, Tekstura in Značilnost.</b> Upoštevajte, da se lahko pojavijo <b>posamično</b> ali v <b>kakršnikoli kombinaciji</b>.</p>\n"
+"        <p>Nedoslednosti so razdeljene v štiri kategorije:<b> barva, rob, tekstura in obrazne značilke.</b> Upoštevajte, da se lahko pojavijo <b>posamično</b> ali v <b>kakršnikoli kombinaciji</b>.</p>\n"
 "\n"
 "        <p>V glavnem zaporedju vprašanj boste <b>preizkušeni v svoji sposobnosti razlikovanja manipuliranih slik od resničnih slik</b>.</p>\n"
 "\n"
@@ -337,7 +336,7 @@ msgstr "Nedoslednosti"
 
 #: surveyapp/templates/introhelp.html:64
 msgid "The boundary where two faces have been blended together is visible."
-msgstr "Meja, kjer sta bila dva obraza združena, je vidna."
+msgstr "Rob, kjer sta bila dva obraza združena, je viden."
 
 #: surveyapp/templates/introhelp.html:87
 msgid "The texture is not consistent across the entire face."
@@ -345,13 +344,13 @@ msgstr "Tekstura ni dosledna po celotnem obrazu."
 
 #: surveyapp/templates/introhelp.html:109
 msgid "Landmarks"
-msgstr "Značilnosti obraza"
+msgstr "Obrazne značilke"
 
 #: surveyapp/templates/introhelp.html:110
 msgid ""
 "Facial landmarks such as the eyes, eyebrows, mouth, and nose appear "
 "duplicated."
-msgstr "Značilnosti obraza, kot so oči, obrvi, usta in nos, se pojavljajo podvojeno."
+msgstr "Obrazne značilke, kot so oči, obrvi, usta in nos, se pojavljajo podvojeno."
 
 #: surveyapp/templates/page1.html:8
 msgid "Choices Page"
@@ -399,7 +398,7 @@ msgstr "Le tako naprej!"
 #: surveyapp/templates/page1.html:82 surveyapp/templates/page1.html:299
 #: surveyapp/templates/page1.html:301
 msgid "Look closely at the details in the next one!"
-msgstr "Pozorno si oglejte podrobnosti pri naslednjem!"
+msgstr "Pozorno si oglejte podrobnosti pri naslednjem primeru!"
 
 #: surveyapp/templates/page1.html:125
 msgid "Left image is fake (AI-generated)"
