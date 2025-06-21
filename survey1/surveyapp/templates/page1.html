@@ -12,6 +12,7 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
 </head>
 <body>
+<div id="grid-overlay" onclick="hideGridAndOverlay()"></div>
 {% comment %}{% get_current_language as CURRENT_LANGUAGE %}
 <form action="{% url 'set_language' %}" method="post" class="d-inline">
     {% csrf_token %}
@@ -101,6 +102,17 @@
     {% endif %}
 
     <style>
+
+        #grid-overlay {
+            display: none; /* Hidden by default */
+            position: fixed; /* Cover the entire viewport */
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.3); /* Semi-transparent black */
+            z-index: 15; /* Below the grid (z-index 20) but above everything else */
+        }
         .lang-switch-btn {
             background: linear-gradient(135deg, #4a69bd 0%, #1e3799 100%);
             color: white;
@@ -391,157 +403,72 @@
         var rightGridState = [];
 
         function selectImage(choice) {
-            // If form has been submitted, don't allow changing the selection
+            // If the form has been submitted, do nothing.
             if (formSubmitted) {
-                console.log("Form already submitted - selection cannot be changed");
                 return;
             }
+
             try {
-                // If clicking on the same image that's already selected, ensure grid is visible
+                // This handles the case where you click the SAME image again to reopen the grid
+                // after hiding it by clicking the overlay.
                 if (currentSelectedSide === choice) {
-                    var svg = document.querySelector('#container-' + choice + ' svg');
-                    if (svg) {
-                        if (svg.style.display === "none" || svg.style.visibility === "hidden") {
-                            // Save the current grid state before showing it again
-                            saveGridState(choice);
-
-                            // Show the grid
-                            svg.style.display = "block";
-                            svg.style.pointerEvents = "auto";
-                            svg.style.visibility = "visible";
-
-                            // Restore previously selected squares
-                            restoreGridState(choice);
-                        }
-                        // Always keep the grid visible when clicking on the same image again
+                    var activeSvg = document.querySelector('#container-' + choice + ' svg');
+                    var overlay = document.getElementById('grid-overlay');
+                    if (activeSvg && activeSvg.style.display === 'none') {
+                        activeSvg.style.display = 'block';
+                        activeSvg.style.pointerEvents = 'auto';
+                        overlay.style.display = 'block';
                     }
-                    return;
+                    return; // Exit because we are just re-showing the grid
                 }
 
-                // Save current grid state before switching
+                // This handles SWITCHING to a different image.
+
+                // 1. Save the state of the grid you are leaving (if any)
                 if (currentSelectedSide) {
                     saveGridState(currentSelectedSide);
                 }
 
-                // Update UI to show which image is selected
+                // 2. Update which image has the blue border
                 updateImageSelection(choice);
-
-                // Update the currently selected side
                 currentSelectedSide = choice;
-
-                // Set the radio button value
-                if (choice === 'left') {
-                    var leftRadio = document.getElementById('id_choice_0');
-                    if (leftRadio) {
-                        leftRadio.checked = true;
-                    }
-
-                    // Show left grid, hide right grid
-                    var leftSvg = document.querySelector('#container-left svg');
-                    var rightSvg = document.querySelector('#container-right svg');
-
-                    if (leftSvg && rightSvg) {
-                        leftSvg.style.display = "block";
-                        leftSvg.style.pointerEvents = "auto";
-                        leftSvg.style.visibility = "visible"; // Ensure visibility is set to visible
-                        rightSvg.style.display = "none";
-                        rightSvg.style.pointerEvents = "none";
-                    } else {
-                        // Try to recreate the grids with the correct dimensions
-                        var leftImage = document.getElementById('left-image');
-                        if (leftImage) {
-                            var leftRect = leftImage.getBoundingClientRect();
-                            createGrid('left', leftRect.width, leftRect.height);
-                            adjustGridContainer('left'); // Ensure grid is properly positioned
-
-                            // Try to get the SVG element again
-                            leftSvg = document.querySelector('#container-left svg');
-                            if (leftSvg) {
-                                leftSvg.style.display = "block";
-                                leftSvg.style.pointerEvents = "auto";
-                                leftSvg.style.visibility = "visible"; // Ensure visibility is set to visible
-                            }
-                        }
-
-                        var rightImage = document.getElementById('right-image');
-                        if (rightImage) {
-                            var rightRect = rightImage.getBoundingClientRect();
-                            createGrid('right', rightRect.width, rightRect.height);
-                            adjustGridContainer('right'); // Ensure grid is properly positioned
-
-                            // Try to get the SVG element again
-                            rightSvg = document.querySelector('#container-right svg');
-                            if (rightSvg) {
-                                rightSvg.style.display = "none";
-                                rightSvg.style.pointerEvents = "none";
-                                rightSvg.style.visibility = "hidden"; // Ensure visibility is set to hidden
-                            }
-                        }
-                    }
-                } else {
-                    var rightRadio = document.getElementById('id_choice_1');
-                    if (rightRadio) {
-                        rightRadio.checked = true;
-                    }
-
-                    // Show right grid, hide left grid
-                    var leftSvg = document.querySelector('#container-left svg');
-                    var rightSvg = document.querySelector('#container-right svg');
-
-                    if (leftSvg && rightSvg) {
-                        leftSvg.style.display = "none";
-                        leftSvg.style.pointerEvents = "none";
-                        rightSvg.style.display = "block";
-                        rightSvg.style.pointerEvents = "auto";
-                        rightSvg.style.visibility = "visible"; // Ensure visibility is set to visible
-                    } else {
-                        // Try to recreate the grids with the correct dimensions
-                        var leftImage = document.getElementById('left-image');
-                        if (leftImage) {
-                            var leftRect = leftImage.getBoundingClientRect();
-                            createGrid('left', leftRect.width, leftRect.height);
-                            adjustGridContainer('left'); // Ensure grid is properly positioned
-
-                            // Try to get the SVG element again
-                            leftSvg = document.querySelector('#container-left svg');
-                            if (leftSvg) {
-                                leftSvg.style.display = "none";
-                                leftSvg.style.pointerEvents = "none";
-                                leftSvg.style.visibility = "hidden"; // Ensure visibility is set to hidden
-                            }
-                        }
-
-                        var rightImage = document.getElementById('right-image');
-                        if (rightImage) {
-                            var rightRect = rightImage.getBoundingClientRect();
-                            createGrid('right', rightRect.width, rightRect.height);
-                            adjustGridContainer('right'); // Ensure grid is properly positioned
-
-                            // Try to get the SVG element again
-                            rightSvg = document.querySelector('#container-right svg');
-                            if (rightSvg) {
-                                rightSvg.style.display = "block";
-                                rightSvg.style.pointerEvents = "auto";
-                                rightSvg.style.visibility = "visible"; // Ensure visibility is set to visible
-                            }
-                        }
-                    }
-                }
-
-
-                // Mark that a selection has been made
                 imageSelected = true;
 
-                // Manually trigger a change event on the radio button to ensure form validation recognizes the selection
-                if (choice === 'left') {
-                    var event = new Event('change');
-                    document.getElementById('id_choice_0').dispatchEvent(event);
-                } else {
-                    var event = new Event('change');
-                    document.getElementById('id_choice_1').dispatchEvent(event);
+                // 3. Update the hidden radio button
+                document.getElementById(choice === 'left' ? 'id_choice_0' : 'id_choice_1').checked = true;
+
+                // 4. Get the grid and overlay elements
+                var leftSvg = document.querySelector('#container-left svg');
+                var rightSvg = document.querySelector('#container-right svg');
+                var overlay = document.getElementById('grid-overlay');
+
+                if (!leftSvg || !rightSvg || !overlay) {
+                    console.error("SVG grid or overlay not found!");
+                    return;
                 }
+
+                // 5. Show/hide the correct grids
+                if (choice === 'left') {
+                    leftSvg.style.display = 'block';
+                    leftSvg.style.pointerEvents = 'auto';
+                    rightSvg.style.display = 'none';
+                    rightSvg.style.pointerEvents = 'none';
+                } else { // This means choice is 'right'
+                    leftSvg.style.display = 'none';
+                    leftSvg.style.pointerEvents = 'none';
+                    rightSvg.style.display = 'block';
+                    rightSvg.style.pointerEvents = 'auto';
+                }
+
+                // 6. Show the overlay for both cases
+                overlay.style.display = 'block';
+
+                // 7. Restore the saved selections for the grid you just opened
+                restoreGridState(choice);
+
             } catch (error) {
-                // Handle errors silently
+                // Log any errors to the console instead of failing silently
+                console.error("An error occurred in selectImage:", error);
             }
         }
 
@@ -845,63 +772,24 @@
                 }
             }
 
-            // Function to handle clicks outside the images
-            function handleOutsideClick(event) {
-                // If no image is selected or form is submitted, do nothing
-                if (!currentSelectedSide || formSubmitted) {
-                    return;
+
+
+            function hideGridAndOverlay() {
+                // Do nothing if no grid is active
+                if (!currentSelectedSide) return;
+
+                // Save the state of the grid before hiding it
+                saveGridState(currentSelectedSide);
+
+                // Hide the active grid
+                var svg = document.querySelector('#container-' + currentSelectedSide + ' svg');
+                if (svg) {
+                    svg.style.display = "none";
+                    svg.style.pointerEvents = "none";
                 }
 
-                // Check if click is outside both image containers and not on any UI elements
-                var leftContainer = document.querySelector('#left-image').parentElement;
-                var rightContainer = document.querySelector('#right-image').parentElement;
-                var leftGridContainer = document.getElementById('container-left');
-                var rightGridContainer = document.getElementById('container-right');
-                var submitButton = document.getElementById('submit-answer');
-                var nextButton = document.getElementById('next-question');
-                var checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                var radioButtons = document.querySelectorAll('input[type="radio"]');
-
-                // Don't hide grid if clicking on form elements
-                if (submitButton && submitButton.contains(event.target)) return;
-                if (nextButton && nextButton.contains(event.target)) return;
-
-                for (var i = 0; i < checkboxes.length; i++) {
-                    if (checkboxes[i].contains(event.target) || 
-                        (checkboxes[i].labels && checkboxes[i].labels[0] && checkboxes[i].labels[0].contains(event.target))) {
-                        return;
-                    }
-                }
-
-                for (var i = 0; i < radioButtons.length; i++) {
-                    if (radioButtons[i].contains(event.target) || 
-                        (radioButtons[i].labels && radioButtons[i].labels[0] && radioButtons[i].labels[0].contains(event.target))) {
-                        return;
-                    }
-                }
-
-                // Check if the click is on a grid square (SVG rect element)
-                var isClickOnGridSquare = event.target.tagName && event.target.tagName.toLowerCase() === 'rect';
-
-                // Check if the click is inside the grid containers
-                var isClickInGridContainer = (leftGridContainer && leftGridContainer.contains(event.target)) || 
-                                           (rightGridContainer && rightGridContainer.contains(event.target));
-
-                // Only hide the grid if the click is outside both the image containers and the grid containers,
-                // and not on a grid square
-                if (!leftContainer.contains(event.target) && !rightContainer.contains(event.target) && 
-                    !isClickInGridContainer && !isClickOnGridSquare) {
-                    // Save current grid state
-                    saveGridState(currentSelectedSide);
-
-                    // Hide the grid
-                    var svg = document.querySelector('#container-' + currentSelectedSide + ' svg');
-                    if (svg) {
-                        svg.style.display = "none";
-                        svg.style.pointerEvents = "none";
-                        svg.style.visibility = "hidden";
-                    }
-                }
+                // Hide the overlay itself
+                document.getElementById('grid-overlay').style.display = 'none';
             }
 
             // Ensure this script runs after DOM is fully loaded
@@ -915,8 +803,7 @@
                     }
                 }
 
-                // Add event listener for clicks outside the images
-                document.addEventListener('click', handleOutsideClick);
+
 
             // Initialize grids for both images
             var leftImage = document.getElementById('left-image');
