@@ -11,32 +11,22 @@
     <link href="{% static 'css/styles.css' %}" rel="stylesheet">
     <style>
         #grid-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            background-color: rgba(0, 0, 0, 0.3);
-            z-index: 15;
+            display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            background-color: rgba(0, 0, 0, 0.3); z-index: 15;
         }
         .clickable-image {
-            cursor: pointer;
-            border: 3px solid #ccc;
-            transition: all 0.3s;
-            max-height: 400px;
-            width: auto;
-            position: relative;
-            z-index: 5;
+            cursor: pointer; border: 3px solid #ccc; transition: all 0.3s;
+            max-height: 400px; width: auto; position: relative; z-index: 5;
         }
         .clickable-image:hover {
-            border-color: #007bff;
-            transform: scale(1.01);
-            box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
+            border-color: #007bff; transform: scale(1.01); box-shadow: 0 0 15px rgba(0, 123, 255, 0.3);
         }
         .selected-image {
-            border-color: #007bff;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+            border-color: #007bff; box-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+        }
+        #feedback-container {
+            position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
+            width: 90%; max-width: 700px; z-index: 9999; display: none;
         }
     </style>
 </head>
@@ -52,9 +42,7 @@
                     {% trans "Score:" %} <span style="color: #3498db; font-size: 1.1em;">{{ correct_answers_count }}</span> / {{ questions_attempted }}
                 </h5>
                 {% if correct_answers_count > 0 %}
-                <div class="progress" style="height: 6px; margin-top: 4px;">
-                    <div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio correct_answers_count questions_attempted 100 %}%;"></div>
-                </div>
+                <div class="progress" style="height: 6px; margin-top: 4px;"><div class="progress-bar bg-success" role="progressbar" style="width: {% widthratio correct_answers_count questions_attempted 100 %}%;"></div></div>
                 {% endif %}
             </div>
         </div>
@@ -64,9 +52,7 @@
                     <i class="fas fa-question-circle" style="color: #3498db; margin-right: 5px;"></i>
                     {% trans "Question" %} <span style="color: #e74c3c; font-size: 1.1em;">{{ current_question_number }}</span> / {{ total_questions }}
                 </h5>
-                <div class="progress" style="height: 6px; margin-top: 4px;">
-                    <div class="progress-bar bg-info" role="progressbar" style="width: {% widthratio current_question_number total_questions 100 %}%;"></div>
-                </div>
+                <div class="progress" style="height: 6px; margin-top: 4px;"><div class="progress-bar bg-info" role="progressbar" style="width: {% widthratio current_question_number total_questions 100 %}%;"></div></div>
             </div>
         </div>
     </div>
@@ -113,22 +99,10 @@
                     <h3 style="font-size: 1.8rem; margin-bottom: 10px;">{% trans "What did you observe in the fake image?" %}</h3>
                     <div class="row justify-content-center">
                         <div class="col-md-8">
-                            <div class="form-check" style="margin-left: 30%; text-align: left;">
-                                <input class="form-check-input" type="checkbox" id="id_inconsistency_type_0" name="inconsistency_type" value="color">
-                                <label class="form-check-label" for="id_inconsistency_type_0" style="font-size: 1.5rem;">{% trans "Color" %}</label>
-                            </div>
-                            <div class="form-check" style="margin-left: 30%; text-align: left;">
-                                <input class="form-check-input" type="checkbox" id="id_inconsistency_type_1" name="inconsistency_type" value="boundary">
-                                <label class="form-check-label" for="id_inconsistency_type_1" style="font-size: 1.5rem;">{% trans "Boundary" %}</label>
-                            </div>
-                            <div class="form-check" style="margin-left: 30%; text-align: left;">
-                                <input class="form-check-input" type="checkbox" id="id_inconsistency_type_2" name="inconsistency_type" value="texture">
-                                <label class="form-check-label" for="id_inconsistency_type_2" style="font-size: 1.5rem;">{% trans "Texture" %}</label>
-                            </div>
-                            <div class="form-check" style="margin-left: 30%; text-align: left;">
-                                <input class="form-check-input" type="checkbox" id="id_inconsistency_type_3" name="inconsistency_type" value="landmark">
-                                <label class="form-check-label" for="id_inconsistency_type_3" style="font-size: 1.5rem;">{% trans "Landmark" %}</label>
-                            </div>
+                            <div class="form-check" style="margin-left: 30%; text-align: left;"><input class="form-check-input" type="checkbox" id="id_inconsistency_type_0" name="inconsistency_type" value="color"><label class="form-check-label" for="id_inconsistency_type_0" style="font-size: 1.5rem;">{% trans "Color" %}</label></div>
+                            <div class="form-check" style="margin-left: 30%; text-align: left;"><input class="form-check-input" type="checkbox" id="id_inconsistency_type_1" name="inconsistency_type" value="boundary"><label class="form-check-label" for="id_inconsistency_type_1" style="font-size: 1.5rem;">{% trans "Boundary" %}</label></div>
+                            <div class="form-check" style="margin-left: 30%; text-align: left;"><input class="form-check-input" type="checkbox" id="id_inconsistency_type_2" name="inconsistency_type" value="texture"><label class="form-check-label" for="id_inconsistency_type_2" style="font-size: 1.5rem;">{% trans "Texture" %}</label></div>
+                            <div class="form-check" style="margin-left: 30%; text-align: left;"><input class="form-check-input" type="checkbox" id="id_inconsistency_type_3" name="inconsistency_type" value="landmark"><label class="form-check-label" for="id_inconsistency_type_3" style="font-size: 1.5rem;">{% trans "Landmark" %}</label></div>
                         </div>
                     </div>
                 </div>
@@ -138,10 +112,7 @@
                     <h3 style="font-size: 1.8rem; margin-bottom: 10px;">{% trans "Confidence level:" %} <small style="font-size: 1.2rem;">{% trans "(1=None, 9=Complete)" %}</small></h3>
                     <div class="form-check-inline">
                         {% for i in "123456789" %}
-                        <div class="form-check form-check-inline" style="margin-right: 12px;">
-                            <input class="form-check-input" type="radio" id="id_confidence_{{ i }}" name="confidence" value="{{ i }}" style="transform: scale(1.4); position: relative; top: -2px; margin-right: 4px;">
-                            <label class="form-check-label" for="id_confidence_{{ i }}" style="font-size: 1.6rem; margin-left: 4px;">{{ i }}</label>
-                        </div>
+                        <div class="form-check form-check-inline" style="margin-right: 12px;"><input class="form-check-input" type="radio" id="id_confidence_{{ i }}" name="confidence" value="{{ i }}" style="transform: scale(1.4); position: relative; top: -2px; margin-right: 4px;"><label class="form-check-label" for="id_confidence_{{ i }}" style="font-size: 1.6rem; margin-left: 4px;">{{ i }}</label></div>
                         {% endfor %}
                     </div>
                 </div>
@@ -168,15 +139,12 @@
         const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
         $.ajax({
-            url: '{% url "submit_answer" %}',
+            url: "{% url 'submit_answer' %}",
             type: 'POST',
             data: formData,
-            headers: {'X-CSRFToken': csrftoken}, // Add CSRF token to headers
+            headers: {'X-CSRFToken': csrftoken},
             success: function(response) {
-                // Show feedback container
                 $('#feedback-container').show();
-
-                // Update feedback content based on response
                 if (response.is_correct) {
                     $('#feedback-container').removeClass('alert-danger').addClass('alert-success');
                     $('#feedback-icon').removeClass('fa-times-circle').addClass('fa-check-circle').css('color', '#28a745');
@@ -188,12 +156,10 @@
                     $('#feedback-badge').removeClass('badge-success').addClass('badge-danger').text('{% trans "+0 POINTS" %}');
                     $('#feedback-heading').text('{% trans "Not quite right!" %}');
                 }
-
                 let feedbackText = response.correct_answer === 'left' ? '{% trans "The left image was the fake one." %}' : '{% trans "The right image was the fake one." %}';
                 let encouragementText = response.is_correct ? '<em>{% trans "Keep it up!" %}</em>' : '<em>{% trans "Look closely at the details in the next one!" %}</em>';
                 $('#feedback-text').html(feedbackText + ' ' + encouragementText);
 
-                // Show/hide buttons
                 $('#submit-answer').hide();
                 $('#next-question').show();
                 formSubmitted = true;
@@ -258,29 +224,20 @@
         };
 
         const handleDrag = (element, isSelecting) => {
-            const id = element.id;
-            let currentGridState = (prefix === 'left-') ? leftGridState : rightGridState;
-            const boxId = id.substring(prefix.length + 1);
-
-            if (isSelecting && id.startsWith(`${prefix}u`)) {
+            if (isSelecting && element.id.startsWith(`${prefix}u`)) {
                 handleSquareSelection(element);
-            } else if (!isSelecting && id.startsWith(`${prefix}c`)) {
+            } else if (!isSelecting && element.id.startsWith(`${prefix}c`)) {
                 handleSquareSelection(element);
             }
         };
 
         svg.addEventListener("mousedown", (e) => {
             if (e.target.tagName.toLowerCase() !== 'rect') return;
-            isMouseDown = true;
-            mouseButton = e.button;
+            isMouseDown = true; mouseButton = e.button;
             handleSquareSelection(e.target);
             e.preventDefault();
         });
-        svg.addEventListener("mousemove", (e) => {
-            if (isMouseDown && e.target.tagName.toLowerCase() === 'rect') {
-                handleDrag(e.target, mouseButton === 0);
-            }
-        });
+        svg.addEventListener("mousemove", (e) => { if (isMouseDown && e.target.tagName.toLowerCase() === 'rect') { handleDrag(e.target, mouseButton === 0); } });
         document.body.addEventListener("mouseup", () => { isMouseDown = false; mouseButton = -1; });
         svg.addEventListener("contextmenu", (e) => e.preventDefault());
 
@@ -291,10 +248,8 @@
     function createGrid(side, width, height) {
         const container = document.getElementById('container-' + side);
         if (!container) return;
-
         const existingSvg = container.querySelector('svg');
         if (existingSvg) container.removeChild(existingSvg);
-
         const newGrid = createGridSvg(side + '-', width, height);
         newGrid.style.display = "none";
         newGrid.style.visibility = "hidden";
@@ -317,18 +272,14 @@
 
     // Functions to save and restore the state of selected squares
     function saveGridState(side) {
-        const stateArray = (side === 'left') ? leftGridState : rightGridState;
-        // The state is already up-to-date in the global arrays.
-        // This function could be used for more complex logic if needed,
-        // but for now, just knowing we're leaving this side is enough.
+        // State is already live in the global leftGridState/rightGridState arrays
     }
 
     function restoreGridState(side) {
         const stateArray = (side === 'left') ? leftGridState : rightGridState;
         const allSquares = document.querySelectorAll(`#container-${side} svg rect`);
-
         allSquares.forEach(square => {
-            const boxId = square.id.substring(side.length + 2); // e.g., 'left-c12' -> '12'
+            const boxId = square.id.substring(side.length + 2);
             if (stateArray.includes(boxId)) {
                 square.id = `${side}-c${boxId}`;
                 square.style.fill = "rgba(0, 120, 255, 0.6)";
@@ -350,12 +301,10 @@
     // Main function to handle image selection logic
     function selectImage(choice) {
         if (formSubmitted) return;
-
         try {
             if (!document.querySelector(`#container-${choice} svg`)) {
                 adjustGridContainer(choice);
             }
-
             if (currentSelectedSide === choice) {
                 const activeSvg = document.querySelector(`#container-${choice} svg`);
                 const overlay = document.getElementById('grid-overlay');
@@ -367,25 +316,19 @@
                 }
                 return;
             }
-
             if (currentSelectedSide) {
                 saveGridState(currentSelectedSide);
             }
-
             updateImageSelection(choice);
             currentSelectedSide = choice;
             imageSelected = true;
-
             document.getElementById(choice === 'left' ? 'id_choice_0' : 'id_choice_1').checked = true;
-
             const leftSvg = document.querySelector('#container-left svg');
             const rightSvg = document.querySelector('#container-right svg');
             const overlay = document.getElementById('grid-overlay');
-
             if (!leftSvg || !rightSvg || !overlay) {
                 return;
             }
-
             if (choice === 'left') {
                 leftSvg.style.display = 'block';
                 leftSvg.style.visibility = 'visible';
@@ -399,7 +342,6 @@
                 rightSvg.style.visibility = 'visible';
                 rightSvg.style.pointerEvents = 'auto';
             }
-
             overlay.style.display = 'block';
             restoreGridState(choice);
         } catch (error) {
@@ -423,7 +365,6 @@
         // --- Logic to reliably create grids after images load ---
         const leftImage = document.getElementById('left-image');
         const rightImage = document.getElementById('right-image');
-
         function initializeGrid(imageElement) {
             if (!imageElement) return;
             if (imageElement.complete) {
@@ -436,7 +377,6 @@
         }
         initializeGrid(leftImage);
         initializeGrid(rightImage);
-
         window.addEventListener('resize', function() {
             if (leftImage) adjustGridContainer('left');
             if (rightImage) adjustGridContainer('right');
@@ -444,7 +384,18 @@
 
         // --- Logic for the feedback container ---
         if ($('#feedback-container').length === 0) {
-            var feedbackHtml = `<div id="feedback-container" ...>...</div>`; // (shortened for brevity)
+            var feedbackHtml = `<div id="feedback-container" class="alert py-2 mb-2">
+                                <div class="row">
+                                    <div class="col-md-1 text-center"><i id="feedback-icon" class="fas" style="font-size: 1.5rem;"></i></div>
+                                    <div class="col-md-11">
+                                        <h5 class="alert-heading mb-1">
+                                            <span id="feedback-badge" class="badge" style="font-size: 0.8rem; padding: 0.3rem;"></span>
+                                            <span id="feedback-heading"></span>
+                                        </h5>
+                                        <p id="feedback-text" class="mb-0" style="font-size: 0.9rem;"></p>
+                                    </div>
+                                </div>
+                            </div>`;
             $('.container').prepend(feedbackHtml);
         }
 
