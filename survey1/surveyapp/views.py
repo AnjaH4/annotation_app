@@ -514,6 +514,7 @@ def create_response_instance(form, request, ppant_instance, selected_image, time
 
     return responses
 
+
 @ensure_csrf_cookie
 def mainQuPage(request):
     """Main page with the image task."""
@@ -522,7 +523,6 @@ def mainQuPage(request):
 
     if 'question_start_time' not in request.session:
         request.session['question_start_time'] = time_now.isoformat()
-        #request.session.save()
 
     ppant_instance = get_participant(request)
     if ppant_instance is None:
@@ -530,75 +530,75 @@ def mainQuPage(request):
 
     img_nums_so_far_this_ppant, correct_answers_count = get_participant_responses(ppant_instance)
 
+    # Check if the survey is complete before doing anything else
     survey_completion_result = check_survey_completion(
         request, img_nums_so_far_this_ppant, correct_answers_count, how_many_qus
     )
     if survey_completion_result:
         return survey_completion_result
 
-    all_images = Image.objects.all().order_by('times_seen')
-
+    # --- POST REQUEST LOGIC ---
     if request.method == 'POST':
         form = SubmitResponse(request.POST)
         if form.is_valid():
-            #time_on_question = calculate_time_on_question(request, time_now)
-            #time_start = datetime.datetime.strptime(request.session['question_start_time'], '%Y-%m-%d %H:%M:%S.%f')
             time_start = datetime.datetime.fromisoformat(request.session['question_start_time'])
-
 
             try:
                 image_id_from_form = form.cleaned_data['image']
-                image_model_type = request.session.get('current_image_model_type', 'Image')  # Default to 'Image'
+                # Read the flag from the session to know which model to use
+                image_model_type = request.session.get('current_image_model_type', 'Image')
 
                 if image_model_type == 'AttentionTestImage':
                     selected_image = AttentionTestImage.objects.get(id=image_id_from_form)
                 else:
-                    selected_image=Image.objects.get(id=image_id_from_form)
+                    selected_image = Image.objects.get(id=image_id_from_form)
 
-
-                #selected_image = Image.objects.get(id=form.cleaned_data['image'])
-
+                # Atomically update the times_seen count
                 selected_image.times_seen = F('times_seen') + 1
                 selected_image.save(update_fields=['times_seen'])
 
-            except Image.DoesNotExist:
+                create_response_instance(
+                    form, request, ppant_instance, selected_image, time_now, time_start
+                )
+
+            except (Image.DoesNotExist, AttentionTestImage.DoesNotExist):
+                # Catch errors if the image from either model is not found
                 return JsonResponse({'error': 'Image not found'}, status=400)
 
-            create_response_instance(
-                form, request, ppant_instance, selected_image,
-                time_now, time_start
-            )
+            # Important: Get the correct answer from the session BEFORE clearing it
+            correct_answer = request.session.get('correct_answer', 'left')
+            is_correct = (form.cleaned_data['choice'] == correct_answer)
 
-            # Clear session
+            # Clear session data for the next question
             clear_session_data(request)
 
             return JsonResponse({
-                'is_correct': form.cleaned_data['choice'] == request.session.get('correct_answer', 'left'),
-                'correct_answer': request.session.get('correct_answer', 'left')
+                'is_correct': is_correct,
+                'correct_answer': correct_answer
             })
-
-
         else:
             return JsonResponse({'error': 'Form is invalid', 'errors': form.errors.as_json()}, status=400)
 
+    # --- GET REQUEST LOGIC ---
     else:
         form = SubmitResponse()
 
-    #g
+        # Determine which model to use and SET THE SESSION FLAG
+        if img_nums_so_far_this_ppant == 8 or img_nums_so_far_this_ppant == 15:
+            all_images = AttentionTestImage.objects.all().order_by('times_seen')
+            request.session['current_image_model_type'] = 'AttentionTestImage'
+        else:
+            all_images = Image.objects.all().order_by('times_seen')
+            request.session['current_image_model_type'] = 'Image'
 
-    # GET: set up new question
-    if img_nums_so_far_this_ppant == 8 or img_nums_so_far_this_ppant == 15:   #attention test - pokaži ful simple slike
-        all_images=AttentionTestImage.objects.all().order_by('times_seen')
+        selected_image = select_image(request, all_images)
 
-    selected_image = select_image(request, all_images)
-    # selected_image.times_seen = F('times_seen') + 1
-    # selected_image.save(update_fields=['times_seen'])
-    left_image_path, right_image_path, correct_answer = determine_image_placement(request, selected_image)
+        # This function sets session data like 'current_image_id' and 'correct_answer'
+        left_image_path, right_image_path, correct_answer = determine_image_placement(request, selected_image)
 
-    context = prepare_context(
-        request, selected_image, left_image_path, right_image_path,
-        img_nums_so_far_this_ppant, correct_answers_count, how_many_qus,
-        form
-    )
+        context = prepare_context(
+            request, selected_image, left_image_path, right_image_path,
+            img_nums_so_far_this_ppant, correct_answers_count, how_many_qus, form
+        )
 
-    return render(request, 'page1.html', context)
+        return render(request, 'page1.html', context)
