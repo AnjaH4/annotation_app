@@ -547,7 +547,16 @@ def mainQuPage(request):
 
 
             try:
-                selected_image = Image.objects.get(id=form.cleaned_data['image'])
+                image_id_from_form = form.cleaned_data['image']
+                image_model_type = request.session.get('current_image_model_type', 'Image')  # Default to 'Image'
+
+                if image_model_type == 'AttentionTestImage':
+                    selected_image = AttentionTestImage.objects.get(id=image_id_from_form)
+                else:
+                    selected_image=Image.objects.get(id=image_id_from_form)
+
+
+                #selected_image = Image.objects.get(id=form.cleaned_data['image'])
 
                 selected_image.times_seen = F('times_seen') + 1
                 selected_image.save(update_fields=['times_seen'])
