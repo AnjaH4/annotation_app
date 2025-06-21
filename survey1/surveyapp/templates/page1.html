@@ -255,116 +255,93 @@
         </div>
 
             <script>
-                // Function to manually submit the form
-                function submitForm() {
-                    // Validate form
-                    if (!imageSelected) {
-                        alert('{% trans "Please select the fake image before submitting." %}');
-                        return;
+                // ----------- ALL YOUR HELPER FUNCTIONS GO HERE -----------
+                // (createGridSvg, createGrid, saveGridState, restoreGridState, etc.)
+                // Make sure hideGridAndOverlay is also here.
+
+                function hideGridAndOverlay() {
+                    if (!currentSelectedSide) return;
+                    saveGridState(currentSelectedSide);
+                    var svg = document.querySelector('#container-' + currentSelectedSide + ' svg');
+                    if (svg) {
+                        svg.style.display = "none";
+                        svg.style.pointerEvents = "none";
                     }
-
-                    // Check if at least one inconsistency type is selected
-                    if ($('input[name="inconsistency_type"]:checked').length === 0) {
-                        alert('{% trans "Please select at least one feature you observed in the fake image." %}');
-                        return;
-                    }
-
-                    // Check if confidence level is selected
-                    if (!$('input[name="confidence"]:checked').val()) {
-                        alert('{% trans "Please select your confidence level." %}');
-                        return;
-                    }
-
-                    // Save the current grid state for the selected image
-                    if (currentSelectedSide) {
-                        saveGridState(currentSelectedSide);
-                    }
-
-                    // Prepare the final grid data for submission
-                    // We want to save the grid with selected squares for the selected image
-                    // and an empty grid for the unselected image
-                    var selectedChoice = '';
-                    if (document.getElementById('id_choice_0').checked) {
-                        selectedChoice = 'left';
-                    } else if (document.getElementById('id_choice_1').checked) {
-                        selectedChoice = 'right';
-                    }
-
-                    // Update clickedBoxes to contain only the selected squares from the chosen image
-                    if (selectedChoice === 'left') {
-                        clickedBoxes = ["FORM"].concat(leftGridState);
-                    } else if (selectedChoice === 'right') {
-                        clickedBoxes = ["FORM"].concat(rightGridState);
-                    } else {
-                        clickedBoxes = ["FORM"]; // Fallback to empty grid
-                    }
-
-                    // Update the heatmapFill input value
-                    var toFill = document.getElementById("id_heatmapFill");
-                    if (toFill) {
-                        toFill.value = JSON.stringify(clickedBoxes);
-                    }
-
-                    // Manually submit the form using AJAX
-                    var formData = $('form').serialize();
-
-                    // Ensure choice field is included
-                    if (imageSelected) {
-                        // Check if choice is already in formData
-                        if (formData.indexOf('choice=') === -1) {
-                            if (selectedChoice) {
-                                formData += '&choice=' + selectedChoice;
-                            }
-                        }
-                    }
-
-                    $.ajax({
-                        url: '{% url "submit_answer" %}',
-                        type: 'POST',
-                        data: formData,
-                        success: function(response) {
-                            // Display feedback
-                            $('#feedback-container').show();
-
-                            if (response.is_correct) {
-                                $('#feedback-container').removeClass('alert-danger').addClass('alert-success');
-                                $('#feedback-icon').removeClass('fa-times-circle').addClass('fa-check-circle').css('color', '#28a745');
-                                $('#feedback-badge').removeClass('badge-danger').addClass('badge-success').text('{% trans "+1 POINT" %}');
-                                $('#feedback-heading').text('{% trans "Great job!" %}');
-                                if (response.correct_answer === 'left') {
-                                    $('#feedback-text').html('{% trans "The left image was the fake one." %} <em>{% trans "Keep it up!" %}</em>');
-                                } else {
-                                    $('#feedback-text').html('{% trans "The right image was the fake one." %} <em>{% trans "Keep it up!" %}</em>');
-                                }
-
-                                // Add a small confetti effect for correct answers
-                                createMiniConfetti();
-                            } else {
-                                $('#feedback-container').removeClass('alert-success').addClass('alert-danger');
-                                $('#feedback-icon').removeClass('fa-check-circle').addClass('fa-times-circle').css('color', '#dc3545');
-                                $('#feedback-badge').removeClass('badge-success').addClass('badge-danger').text('{% trans "+0 POINTS" %}');
-                                $('#feedback-heading').text('{% trans "Not quite right!" %}');
-                                if (response.correct_answer === 'left') {
-                                    $('#feedback-text').html('{% trans "The left image was the fake one." %} <em>{% trans "Look closely at the details in the next one!" %}</em>');
-                                } else {
-                                    $('#feedback-text').html('{% trans "The right image was the fake one." %} <em>{% trans "Look closely at the details in the next one!" %}</em>');
-                                }
-                            }
-
-                            // Hide Submit Answer button and show Next Question button
-                            $('#submit-answer').hide();
-                            $('#next-question').show();
-
-                            // Set the formSubmitted flag to prevent changing selection
-                            formSubmitted = true;
-                        },
-                        error: function(xhr, status, error) {
-                            alert("{% trans "An error occurred while submitting your answer. Please try again." %}");
-                        }
-                    });
+                    document.getElementById('grid-overlay').style.display = 'none';
                 }
+
+
+                // ----------- MAIN SCRIPT EXECUTION (RUNS WHEN PAGE IS READY) -----------
+
+                $(document).ready(function() {
+
+                    // --- Logic to reliably create grids after images load ---
+                    const leftImage = document.getElementById('left-image');
+                    const rightImage = document.getElementById('right-image');
+
+                    function initializeGrid(imageElement) {
+                        if (!imageElement) return;
+                        // Checks if the image is already loaded (e.g., from cache)
+                        if (imageElement.complete) {
+                            adjustGridContainer(imageElement.id.split('-')[0]);
+                        } else {
+                            // If not, wait for it to finish loading
+                            imageElement.addEventListener('load', function() {
+                                adjustGridContainer(this.id.split('-')[0]);
+                            });
+                        }
+                    }
+                    initializeGrid(leftImage);
+                    initializeGrid(rightImage);
+
+                    // Re-adjust grids if the window is resized
+                    window.addEventListener('resize', function() {
+                        if (leftImage) adjustGridContainer('left');
+                        if (rightImage) adjustGridContainer('right');
+                    });
+
+
+                    // --- Logic for the feedback container and confetti ---
+                    if ($('#feedback-container').length === 0) {
+                        var feedbackHtml = `
+                        <div id="feedback-container" style="display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; width: 80%; max-width: 800px;" class="alert py-2 mb-2">
+                            <div class="row">
+                                <div class="col-md-1 text-center">
+                                    <i id="feedback-icon" class="fas" style="font-size: 1.5rem;"></i>
+                                </div>
+                                <div class="col-md-11">
+                                    <h5 class="alert-heading mb-1">
+                                        <span id="feedback-badge" class="badge" style="font-size: 0.8rem; padding: 0.3rem;"></span>
+                                        <span id="feedback-heading"></span>
+                                    </h5>
+                                    <p id="feedback-text" class="mb-0" style="font-size: 0.9rem;"></p>
+                                </div>
+                            </div>
+                        </div>`;
+                        $('.container').prepend(feedbackHtml);
+                    }
+
+                    // --- Logic for the submit button ---
+                    $('#submit-answer').click(function() {
+                        // Your validation logic...
+                        if (!imageSelected) {
+                            alert('{% trans "Please select the fake image before submitting." %}');
+                            return;
+                        }
+                        if ($('input[name="inconsistency_type"]:checked').length === 0) {
+                            alert('{% trans "Please select at least one feature you observed in the fake image." %}');
+                            return;
+                        }
+                        if (!$('input[name="confidence"]:checked').val()) {
+                            alert('{% trans "Please select your confidence level." %}');
+                            return;
+                        }
+                        // If validation passes, submit the form
+                        submitForm();
+                    });
+                });
             </script>
-        </div>
+
 
     <script>
         // Function to adjust grid container to match image dimensions and position
@@ -403,41 +380,41 @@
         var rightGridState = [];
 
         function selectImage(choice) {
-            // If the form has been submitted, do nothing.
-            if (formSubmitted) {
-                return;
-            }
+            if (formSubmitted) return;
 
             try {
-                // This handles the case where you click the SAME image again to reopen the grid
-                // after hiding it by clicking the overlay.
+                // First, ensure the grid for the choice exists.
+                if (!document.querySelector('#container-' + choice + ' svg')) {
+                    var imageEl = document.getElementById(choice + '-image');
+                    if(imageEl) {
+                        adjustGridContainer(choice);
+                    }
+                }
+
+                // This handles re-clicking the SAME image to show the grid again.
                 if (currentSelectedSide === choice) {
                     var activeSvg = document.querySelector('#container-' + choice + ' svg');
                     var overlay = document.getElementById('grid-overlay');
                     if (activeSvg && activeSvg.style.display === 'none') {
                         activeSvg.style.display = 'block';
+                        activeSvg.style.visibility = 'visible'; // <-- THE FIX IS HERE
                         activeSvg.style.pointerEvents = 'auto';
                         overlay.style.display = 'block';
                     }
-                    return; // Exit because we are just re-showing the grid
+                    return;
                 }
 
                 // This handles SWITCHING to a different image.
-
-                // 1. Save the state of the grid you are leaving (if any)
                 if (currentSelectedSide) {
                     saveGridState(currentSelectedSide);
                 }
 
-                // 2. Update which image has the blue border
                 updateImageSelection(choice);
                 currentSelectedSide = choice;
                 imageSelected = true;
 
-                // 3. Update the hidden radio button
                 document.getElementById(choice === 'left' ? 'id_choice_0' : 'id_choice_1').checked = true;
 
-                // 4. Get the grid and overlay elements
                 var leftSvg = document.querySelector('#container-left svg');
                 var rightSvg = document.querySelector('#container-right svg');
                 var overlay = document.getElementById('grid-overlay');
@@ -447,27 +424,24 @@
                     return;
                 }
 
-                // 5. Show/hide the correct grids
                 if (choice === 'left') {
                     leftSvg.style.display = 'block';
+                    leftSvg.style.visibility = 'visible'; // <-- THE FIX IS HERE
                     leftSvg.style.pointerEvents = 'auto';
                     rightSvg.style.display = 'none';
                     rightSvg.style.pointerEvents = 'none';
-                } else { // This means choice is 'right'
+                } else {
                     leftSvg.style.display = 'none';
                     leftSvg.style.pointerEvents = 'none';
                     rightSvg.style.display = 'block';
+                    rightSvg.style.visibility = 'visible'; // <-- AND THE FIX IS HERE
                     rightSvg.style.pointerEvents = 'auto';
                 }
 
-                // 6. Show the overlay for both cases
                 overlay.style.display = 'block';
-
-                // 7. Restore the saved selections for the grid you just opened
                 restoreGridState(choice);
 
             } catch (error) {
-                // Log any errors to the console instead of failing silently
                 console.error("An error occurred in selectImage:", error);
             }
         }
@@ -528,309 +502,7 @@
         });
     </script>
 
-            <script>
-            // Global variables for grid creation
-            var clickedBoxes = new Array();
-            var numberPerSide = 10;
-            var size = 10;
 
-            // Function to create an SVG grid
-            function createGridSvg(containerId, prefix, numberPerSide, size, width, height, colors) {
-                var svgNS = "http://www.w3.org/2000/svg";
-                var svg = document.createElementNS(svgNS, "svg");
-                svg.setAttribute("width", width);
-                svg.setAttribute("height", height);
-                svg.setAttribute("viewBox", [0, 0, numberPerSide * size, numberPerSide * size].join(" "));
-                svg.style.pointerEvents = "auto";
-                svg.style.zIndex = "20";
-
-                // Variables to track mouse state
-                var isMouseDown = false;
-                var mouseButton = -1; // -1: no button, 0: left, 1: middle, 2: right
-
-                for(var i = 0; i < numberPerSide; i++) {
-                    for(var j = 0; j < numberPerSide; j++) {
-                      var color1 = colors[(i+j) % colors.length];
-                      var g = document.createElementNS(svgNS, "g");
-                      g.setAttribute("transform", ["translate(", i*size, ",", j*size, ")"].join(""));
-                      var number = numberPerSide * i + j;
-                      var box = document.createElementNS(svgNS, "rect");
-                      box.setAttribute("width", size);
-                      box.setAttribute("height", size);
-                      box.setAttribute("fill", color1);
-                      box.setAttribute("opacity", 0.6);
-                      box.setAttribute("id", prefix + "u"+number);
-                      box.setAttribute("style", "stroke-width:0.4; stroke:rgba(80, 80, 80, 1);");
-
-                      g.appendChild(box);
-                      svg.appendChild(g);
-                    }
-                }
-
-                // Function to handle square selection/deselection
-                function handleSquareSelection(element) {
-                    var id = element.id;
-                    if(id.substring(0,prefix.length+1)==prefix+"u") {
-                        element.id=prefix+"c"+id.substring(prefix.length+1);
-                        element.style="fill:rgba(0, 120, 255, 0.6);stroke-width:0.4;stroke:rgba(0, 120, 255, 1);";
-                        var boxId = prefix+":"+element.id.substring(prefix.length+1);
-                        if(clickedBoxes.indexOf(boxId) === -1) {
-                            clickedBoxes.push(boxId);
-                        }
-                    }
-                    else if(id.substring(0,prefix.length+1)==prefix+"c") {
-                        element.id=prefix+"u"+id.substring(prefix.length+1);
-                        element.style="fill:rgba(0,0,0,0);stroke-width:0.4;stroke:rgba(80, 80, 80, 1);";
-                        const index = clickedBoxes.indexOf(prefix+":"+element.id.substring(prefix.length+1));
-                        if (index > -1) {
-                            clickedBoxes.splice(index,1);
-                        }
-                    }
-                    var toFill = document.getElementById("id_heatmapFill");
-                    if (toFill) {
-                        toFill.value = JSON.stringify(clickedBoxes);
-                    }
-                }
-
-                // Function to only select squares during drag
-                function handleDragSelection(element) {
-                    var id = element.id;
-                    if(id.substring(0,prefix.length+1)==prefix+"u") {
-                        element.id=prefix+"c"+id.substring(prefix.length+1);
-                        element.style="fill:rgba(0, 120, 255, 0.6);stroke-width:0.4;stroke:rgba(0, 120, 255, 1);";
-                        var boxId = prefix+":"+element.id.substring(prefix.length+1);
-                        if(clickedBoxes.indexOf(boxId) === -1) {
-                            clickedBoxes.push(boxId);
-                        }
-                        var toFill = document.getElementById("id_heatmapFill");
-                        if (toFill) {
-                            toFill.value = JSON.stringify(clickedBoxes);
-                        }
-                    }
-                }
-
-                // Function to only unselect squares during drag
-                function handleDragUnselection(element) {
-                    var id = element.id;
-                    if(id.substring(0,prefix.length+1)==prefix+"c") {
-                        element.id=prefix+"u"+id.substring(prefix.length+1);
-                        element.style="fill:rgba(0,0,0,0);stroke-width:0.4;stroke:rgba(80, 80, 80, 1);";
-                        const index = clickedBoxes.indexOf(prefix+":"+element.id.substring(prefix.length+1));
-                        if (index > -1) {
-                            clickedBoxes.splice(index,1);
-                        }
-                        var toFill = document.getElementById("id_heatmapFill");
-                        if (toFill) {
-                            toFill.value = JSON.stringify(clickedBoxes);
-                        }
-                    }
-                }
-
-                // Click event for individual selection
-                svg.addEventListener("click", function(e) {
-                    if (e.target.tagName.toLowerCase() === 'rect') {
-                        handleSquareSelection(e.target);
-                    }
-                }, false);
-
-                // Prevent context menu on right-click
-                svg.addEventListener("contextmenu", function(e) {
-                    e.preventDefault();
-                    return false;
-                }, false);
-
-                // Mouse events for drag selection
-                svg.addEventListener("mousedown", function(e) {
-                    isMouseDown = true;
-                    mouseButton = e.button; // 0: left, 1: middle, 2: right
-                    // Prevent default to avoid text selection during drag
-                    e.preventDefault();
-                }, false);
-
-                svg.addEventListener("mousemove", function(e) {
-                    if (isMouseDown && e.target.tagName.toLowerCase() === 'rect') {
-                        if (mouseButton === 0) {
-                            // Left button: select squares
-                            handleDragSelection(e.target);
-                        } else if (mouseButton === 2) {
-                            // Right button: unselect squares
-                            handleDragUnselection(e.target);
-                        }
-                    }
-                }, false);
-
-                // Add mouseup and mouseleave to stop selection
-                svg.addEventListener("mouseup", function() {
-                    isMouseDown = false;
-                    mouseButton = -1; // Reset button state
-                }, false);
-
-                svg.addEventListener("mouseleave", function() {
-                    isMouseDown = false;
-                    mouseButton = -1; // Reset button state
-                }, false);
-
-                return svg;
-            }
-
-            // Function to create or recreate a grid for a specific side
-            function createGrid(side, width, height) {
-                // Initialize clickedBoxes if not already done
-                if (clickedBoxes.length === 0) {
-                    clickedBoxes.push("FORM");
-                    var toFill = document.getElementById("id_heatmapFill");
-                    if (toFill) {
-                        toFill.value = JSON.stringify(clickedBoxes);
-                    }
-                }
-
-                // Get the container
-                var container = document.getElementById('container-' + side);
-                if (!container) {
-                    return;
-                }
-
-                // Remove any existing grid
-                var existingSvg = container.querySelector('svg');
-                if (existingSvg) {
-                    container.removeChild(existingSvg);
-                }
-
-                // Create the grid with the specified dimensions
-                var prefix = side + '-';
-                var colors = ["rgba(0, 0, 0, 0)", "rgba(0, 0, 0, 0)"];
-                var newGrid = createGridSvg(container.id, prefix, numberPerSide, size, width, height, colors);
-
-                // Initially hide the grid
-                newGrid.style.display = "none";
-                newGrid.style.visibility = "hidden";
-
-                // Add the grid to the container
-                container.appendChild(newGrid);
-            }
-
-            // Function to save the current grid state
-            function saveGridState(side) {
-                // Clear the previous state
-                if (side === 'left') {
-                    leftGridState = [];
-                } else {
-                    rightGridState = [];
-                }
-
-                // Get all selected squares
-                var selectedSquares = document.querySelectorAll('#container-' + side + ' svg rect[id^="' + side + '-c"]');
-                var stateArray = [];
-
-                selectedSquares.forEach(function(square) {
-                    var id = square.id;
-                    var boxId = side + ':' + id.substring(side.length + 1);
-                    stateArray.push(boxId);
-                });
-
-                // Store the state
-                if (side === 'left') {
-                    leftGridState = stateArray;
-                } else {
-                    rightGridState = stateArray;
-                }
-            }
-
-            // Function to restore a saved grid state
-            function restoreGridState(side) {
-                // Get the state array for the side
-                var stateArray = (side === 'left') ? leftGridState : rightGridState;
-
-                // Clear current selection first
-                var allSquares = document.querySelectorAll('#container-' + side + ' svg rect');
-                allSquares.forEach(function(square) {
-                    var id = square.id;
-                    if (id.substring(0, side.length + 1) === side + '-c') {
-                        // Reset to unselected state
-                        square.id = side + '-u' + id.substring(side.length + 2);
-                        square.style = "fill:rgba(0,0,0,0);stroke-width:0.4;stroke:rgba(80, 80, 80, 1);";
-                    }
-                });
-
-                // Apply saved state
-                stateArray.forEach(function(boxId) {
-                    if (boxId.startsWith(side + ':')) {
-                        var squareId = boxId.substring(side.length + 1);
-                        var square = document.getElementById(side + '-u' + squareId);
-                        if (square) {
-                            square.id = side + '-c' + squareId;
-                            square.style = "fill:rgba(0, 120, 255, 0.6);stroke-width:0.4;stroke:rgba(0, 120, 255, 1);";
-                        }
-                    }
-                });
-
-                // Update clickedBoxes array
-                clickedBoxes = ["FORM"].concat(stateArray);
-                var toFill = document.getElementById("id_heatmapFill");
-                if (toFill) {
-                    toFill.value = JSON.stringify(clickedBoxes);
-                }
-            }
-
-
-
-            function hideGridAndOverlay() {
-                // Do nothing if no grid is active
-                if (!currentSelectedSide) return;
-
-                // Save the state of the grid before hiding it
-                saveGridState(currentSelectedSide);
-
-                // Hide the active grid
-                var svg = document.querySelector('#container-' + currentSelectedSide + ' svg');
-                if (svg) {
-                    svg.style.display = "none";
-                    svg.style.pointerEvents = "none";
-                }
-
-                // Hide the overlay itself
-                document.getElementById('grid-overlay').style.display = 'none';
-            }
-
-            // Ensure this script runs after DOM is fully loaded
-            document.addEventListener('DOMContentLoaded', function() {
-                // Initialize clickedBoxes
-                if (clickedBoxes.length === 0) {
-                    clickedBoxes.push("FORM");
-                    var toFill = document.getElementById("id_heatmapFill");
-                    if (toFill) {
-                        toFill.value = JSON.stringify(clickedBoxes);
-                    }
-                }
-
-
-
-            // Initialize grids for both images
-            var leftImage = document.getElementById('left-image');
-            var rightImage = document.getElementById('right-image');
-
-            // Wait for images to load
-            setTimeout(function() {
-                if (leftImage) {
-                    var leftRect = leftImage.getBoundingClientRect();
-                    createGrid('left', leftRect.width, leftRect.height);
-                    adjustGridContainer('left');
-                }
-
-                if (rightImage) {
-                    var rightRect = rightImage.getBoundingClientRect();
-                    createGrid('right', rightRect.width, rightRect.height);
-                    adjustGridContainer('right');
-                }
-            }, 1000);
-
-            // Adjust grids on window resize
-            window.addEventListener('resize', function() {
-                if (leftImage) adjustGridContainer('left');
-                if (rightImage) adjustGridContainer('right');
-            });
-            });
-            </script>
         </form>
     </div>
 
