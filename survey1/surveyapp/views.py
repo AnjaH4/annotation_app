@@ -403,10 +403,25 @@ def get_participant(request):
 #         return time_on_question
 #     return None
 
+# def extract_image_id(path):
+#     """Extract formatted image ID from full path."""
+#     parts = path.split('/', 2)  # Get the part after 'img/SBIs/'
+#     return parts[2] if len(parts) >= 3 else path
+
 def extract_image_id(path):
-    """Extract formatted image ID from full path."""
-    parts = path.split('/', 2)  # Get the part after 'img/SBIs/'
-    return parts[2] if len(parts) >= 3 else path
+    """
+    Extracts the image identifier (e.g., '021/061_5.png') from the full path.
+    """
+    try:
+        # Split the path by slashes and take the last two parts
+        parts = path.split('/')
+        if len(parts) >= 2:
+            # Join the last two parts back together (e.g., '021' and '061_5.png')
+            return f"{parts[-2]}/{parts[-1]}"
+        else:
+            return path # Fallback for any unexpected formats
+    except:
+        return path # Fallback in case of any error
 
 def process_heatmap_data(form, user_answer):
     """Process and clean heatmap data."""
