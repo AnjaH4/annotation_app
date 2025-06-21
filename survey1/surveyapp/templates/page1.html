@@ -170,7 +170,10 @@
         });
     }
 
-    // This function creates the actual SVG grid with squares
+    // =======================================================================
+    // ALL GRID AND INTERACTION HELPER FUNCTIONS
+    // =======================================================================
+
     function createGridSvg(prefix, width, height) {
         const svgNS = "http://www.w3.org/2000/svg";
         const svg = document.createElementNS(svgNS, "svg");
@@ -183,12 +186,10 @@
         svg.style.pointerEvents = "auto";
         svg.style.zIndex = "20";
 
-        // --- State variables for both mouse and touch ---
         let isMouseDown = false;
         let mouseButton = -1;
         let isTouching = false;
 
-        // Create all the grid squares (rects)
         for (let i = 0; i < numberPerSide; i++) {
             for (let j = 0; j < numberPerSide; j++) {
                 const g = document.createElementNS(svgNS, "g");
@@ -206,18 +207,17 @@
             }
         }
 
-        // --- Helper functions for selection (these are unchanged) ---
         const handleSquareSelection = (element) => {
             const id = element.id;
             let currentGridState = (prefix === 'left-') ? leftGridState : rightGridState;
             const boxId = id.substring(prefix.length + 1);
 
-            if (id.startsWith(`${prefix}u`)) { // If unselected, select it
+            if (id.startsWith(`${prefix}u`)) {
                 element.id = `${prefix}c${boxId}`;
                 element.style.fill = "rgba(0, 120, 255, 0.6)";
                 element.style.stroke = "rgba(0, 120, 255, 1)";
                 if (!currentGridState.includes(boxId)) currentGridState.push(boxId);
-            } else if (id.startsWith(`${prefix}c`)) { // If selected, unselect it
+            } else if (id.startsWith(`${prefix}c`)) {
                 element.id = `${prefix}u${boxId}`;
                 element.style.fill = "rgba(0,0,0,0)";
                 element.style.stroke = "rgba(80, 80, 80, 1)";
@@ -229,60 +229,54 @@
 
         const handleDrag = (element, isSelecting) => {
             if (isSelecting && element.id.startsWith(`${prefix}u`)) {
-                handleSquareSelection(element); // Only select
+                handleSquareSelection(element);
             } else if (!isSelecting && element.id.startsWith(`${prefix}c`)) {
-                handleSquareSelection(element); // Only unselect
+                handleSquareSelection(element);
             }
         };
 
-
-        // --- MOUSE EVENT LISTENERS (Existing Logic) ---
         svg.addEventListener("mousedown", (e) => {
             if (e.target.tagName.toLowerCase() !== 'rect') return;
-            isMouseDown = true;
-            mouseButton = e.button;
+            isMouseDown = true; mouseButton = e.button;
             handleSquareSelection(e.target);
             e.preventDefault();
         });
-        svg.addEventListener("mousemove", (e) => {
-            if (isMouseDown && e.target.tagName.toLowerCase() === 'rect') {
-                handleDrag(e.target, mouseButton === 0);
-            }
-        });
+        svg.addEventListener("mousemove", (e) => { if (isMouseDown && e.target.tagName.toLowerCase() === 'rect') { handleDrag(e.target, mouseButton === 0); } });
         document.body.addEventListener("mouseup", () => { isMouseDown = false; });
         svg.addEventListener("contextmenu", (e) => e.preventDefault());
 
-
-        // --- TOUCH EVENT LISTENERS (New Logic for Mobile) ---
         svg.addEventListener("touchstart", (e) => {
-            e.preventDefault(); // Prevents page from scrolling while drawing on grid
-            isTouching = true;
+            e.preventDefault(); isTouching = true;
             const touch = e.touches[0];
             const element = document.elementFromPoint(touch.clientX, touch.clientY);
             if (element && element.tagName.toLowerCase() === 'rect') {
-                handleSquareSelection(element); // A single tap will select/unselect a square
+                handleSquareSelection(element);
             }
         }, { passive: false });
-
         svg.addEventListener("touchmove", (e) => {
-            e.preventDefault();
-            if (!isTouching) return;
+            e.preventDefault(); if (!isTouching) return;
             const touch = e.touches[0];
             const element = document.elementFromPoint(touch.clientX, touch.clientY);
             if (element && element.tagName.toLowerCase() === 'rect') {
-                // Sliding your finger will only SELECT squares (like a left-click drag)
                 handleDrag(element, true);
             }
         }, { passive: false });
-
-        document.body.addEventListener("touchend", () => {
-            isTouching = false;
-        });
+        document.body.addEventListener("touchend", () => { isTouching = false; });
 
         return svg;
     }
 
-    // This function resizes the grid container to match the image
+    function createGrid(side, width, height) {
+        const container = document.getElementById('container-' + side);
+        if (!container) return;
+        const existingSvg = container.querySelector('svg');
+        if (existingSvg) container.removeChild(existingSvg);
+        const newGrid = createGridSvg(side + '-', width, height);
+        newGrid.style.display = "none";
+        newGrid.style.visibility = "hidden";
+        container.appendChild(newGrid);
+    }
+
     function adjustGridContainer(side) {
         const image = document.getElementById(side + '-image');
         const container = document.getElementById('container-' + side);
@@ -296,10 +290,7 @@
         }
     }
 
-    // Functions to save and restore the state of selected squares
-    function saveGridState(side) {
-        // State is already live in the global leftGridState/rightGridState arrays
-    }
+    function saveGridState(side) {}
 
     function restoreGridState(side) {
         const stateArray = (side === 'left') ? leftGridState : rightGridState;
@@ -318,13 +309,11 @@
         });
     }
 
-    // Function to update the blue border on the selected image
     function updateImageSelection(choice) {
         document.querySelectorAll('.clickable-image').forEach(img => img.classList.remove('selected-image'));
         document.getElementById(choice + '-image').classList.add('selected-image');
     }
 
-    // Main function to handle image selection logic
     function selectImage(choice) {
         if (formSubmitted) return;
         try {
@@ -388,6 +377,12 @@
 
     // This block runs when the page is fully loaded and ready
     $(document).ready(function() {
+        // --- Logic for the feedback container ---
+        if ($('#feedback-container').length === 0) {
+            const feedbackHtml = `<div id="feedback-container" class="alert py-2 mb-2"><div class="row"><div class="col-md-1 text-center"><i id="feedback-icon" class="fas" style="font-size: 1.5rem;"></i></div><div class="col-md-11"><h5 class="alert-heading mb-1"><span id="feedback-badge" class="badge" style="font-size: 0.8rem; padding: 0.3rem;"></span><span id="feedback-heading"></span></h5><p id="feedback-text" class="mb-0" style="font-size: 0.9rem;"></p></div></div></div>`;
+            $('.container').prepend(feedbackHtml);
+        }
+
         // --- Logic to reliably create grids after images load ---
         const leftImage = document.getElementById('left-image');
         const rightImage = document.getElementById('right-image');
@@ -407,23 +402,6 @@
             if (leftImage) adjustGridContainer('left');
             if (rightImage) adjustGridContainer('right');
         });
-
-        // --- Logic for the feedback container ---
-        if ($('#feedback-container').length === 0) {
-            var feedbackHtml = `<div id="feedback-container" class="alert py-2 mb-2">
-                                <div class="row">
-                                    <div class="col-md-1 text-center"><i id="feedback-icon" class="fas" style="font-size: 1.5rem;"></i></div>
-                                    <div class="col-md-11">
-                                        <h5 class="alert-heading mb-1">
-                                            <span id="feedback-badge" class="badge" style="font-size: 0.8rem; padding: 0.3rem;"></span>
-                                            <span id="feedback-heading"></span>
-                                        </h5>
-                                        <p id="feedback-text" class="mb-0" style="font-size: 0.9rem;"></p>
-                                    </div>
-                                </div>
-                            </div>`;
-            $('.container').prepend(feedbackHtml);
-        }
 
         // --- Logic for the submit button ---
         $('#submit-answer').click(function() {
