@@ -183,9 +183,12 @@
         svg.style.pointerEvents = "auto";
         svg.style.zIndex = "20";
 
+        // --- State variables for both mouse and touch ---
         let isMouseDown = false;
         let mouseButton = -1;
+        let isTouching = false;
 
+        // Create all the grid squares (rects)
         for (let i = 0; i < numberPerSide; i++) {
             for (let j = 0; j < numberPerSide; j++) {
                 const g = document.createElementNS(svgNS, "g");
@@ -203,17 +206,18 @@
             }
         }
 
+        // --- Helper functions for selection (these are unchanged) ---
         const handleSquareSelection = (element) => {
             const id = element.id;
             let currentGridState = (prefix === 'left-') ? leftGridState : rightGridState;
             const boxId = id.substring(prefix.length + 1);
 
-            if (id.startsWith(`${prefix}u`)) {
+            if (id.startsWith(`${prefix}u`)) { // If unselected, select it
                 element.id = `${prefix}c${boxId}`;
                 element.style.fill = "rgba(0, 120, 255, 0.6)";
                 element.style.stroke = "rgba(0, 120, 255, 1)";
                 if (!currentGridState.includes(boxId)) currentGridState.push(boxId);
-            } else if (id.startsWith(`${prefix}c`)) {
+            } else if (id.startsWith(`${prefix}c`)) { // If selected, unselect it
                 element.id = `${prefix}u${boxId}`;
                 element.style.fill = "rgba(0,0,0,0)";
                 element.style.stroke = "rgba(80, 80, 80, 1)";
@@ -225,35 +229,57 @@
 
         const handleDrag = (element, isSelecting) => {
             if (isSelecting && element.id.startsWith(`${prefix}u`)) {
-                handleSquareSelection(element);
+                handleSquareSelection(element); // Only select
             } else if (!isSelecting && element.id.startsWith(`${prefix}c`)) {
-                handleSquareSelection(element);
+                handleSquareSelection(element); // Only unselect
             }
         };
 
+
+        // --- MOUSE EVENT LISTENERS (Existing Logic) ---
         svg.addEventListener("mousedown", (e) => {
             if (e.target.tagName.toLowerCase() !== 'rect') return;
-            isMouseDown = true; mouseButton = e.button;
+            isMouseDown = true;
+            mouseButton = e.button;
             handleSquareSelection(e.target);
             e.preventDefault();
         });
-        svg.addEventListener("mousemove", (e) => { if (isMouseDown && e.target.tagName.toLowerCase() === 'rect') { handleDrag(e.target, mouseButton === 0); } });
-        document.body.addEventListener("mouseup", () => { isMouseDown = false; mouseButton = -1; });
+        svg.addEventListener("mousemove", (e) => {
+            if (isMouseDown && e.target.tagName.toLowerCase() === 'rect') {
+                handleDrag(e.target, mouseButton === 0);
+            }
+        });
+        document.body.addEventListener("mouseup", () => { isMouseDown = false; });
         svg.addEventListener("contextmenu", (e) => e.preventDefault());
 
-        return svg;
-    }
 
-    // This function creates the grid and appends it to the container
-    function createGrid(side, width, height) {
-        const container = document.getElementById('container-' + side);
-        if (!container) return;
-        const existingSvg = container.querySelector('svg');
-        if (existingSvg) container.removeChild(existingSvg);
-        const newGrid = createGridSvg(side + '-', width, height);
-        newGrid.style.display = "none";
-        newGrid.style.visibility = "hidden";
-        container.appendChild(newGrid);
+        // --- TOUCH EVENT LISTENERS (New Logic for Mobile) ---
+        svg.addEventListener("touchstart", (e) => {
+            e.preventDefault(); // Prevents page from scrolling while drawing on grid
+            isTouching = true;
+            const touch = e.touches[0];
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (element && element.tagName.toLowerCase() === 'rect') {
+                handleSquareSelection(element); // A single tap will select/unselect a square
+            }
+        }, { passive: false });
+
+        svg.addEventListener("touchmove", (e) => {
+            e.preventDefault();
+            if (!isTouching) return;
+            const touch = e.touches[0];
+            const element = document.elementFromPoint(touch.clientX, touch.clientY);
+            if (element && element.tagName.toLowerCase() === 'rect') {
+                // Sliding your finger will only SELECT squares (like a left-click drag)
+                handleDrag(element, true);
+            }
+        }, { passive: false });
+
+        document.body.addEventListener("touchend", () => {
+            isTouching = false;
+        });
+
+        return svg;
     }
 
     // This function resizes the grid container to match the image
