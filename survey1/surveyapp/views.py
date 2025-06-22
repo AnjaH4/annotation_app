@@ -440,55 +440,58 @@ def process_heatmap_data(form, user_answer):
         #print("Heatmap parsing error:", e)
         return [], []
 
+
 def create_response_instance(form, request, ppant_instance, selected_image, time_now, time_start):
     """Create and save response entry."""
     user_answer = form.cleaned_data['choice']
     confidence = form.cleaned_data['confidence']
     inconsistency_types = form.cleaned_data.get('inconsistency_type', [])
 
-    # Generate a unique response_id
     import uuid
-    response_id = str(uuid.uuid4())[:20]  # Limit to 20 chars as per model definition
+    response_id = str(uuid.uuid4())[:20]
 
     fake_on_left = request.session.get('fake_on_left', False)
     correct_answer = 'left' if fake_on_left else 'right'
     is_correct = (user_answer == correct_answer)
 
+    # Determine which full path corresponds to the fake and real images
     real_path = selected_image.real_path
     fake_path = selected_image.fake_path
 
-    left_path = fake_path if fake_on_left else real_path
-    right_path = real_path if fake_on_left else fake_path
+    # Determine which path the user selected
+    selected_path = fake_path if (fake_on_left and user_answer == 'left') or (
+                not fake_on_left and user_answer == 'right') else real_path
+    unselected_path = real_path if selected_path == fake_path else fake_path
 
-    left_image_id = extract_image_id(left_path)
-    right_image_id = extract_image_id(right_path)
-
-    selected_path = left_path if user_answer == 'left' else right_path
-    unselected_path = right_path if user_answer == 'left' else left_path
-
+    # Get the clean IDs for saving in the database (this part is correct now)
     selected_image_id = extract_image_id(selected_path)
     unselected_image_id = extract_image_id(unselected_path)
 
     selected_heatmap, unselected_heatmap = process_heatmap_data(form, user_answer)
 
-    selected_gt = 1 if 'fake' in selected_image_id else 0
-    unselected_gt = 0 if selected_gt == 1 else 1
+    # --- THE FIX IS HERE ---
+    # We now determine the ground truth by checking the FULL PATH for the word 'fake',
+    # not the clean ID. This is much more reliable.
+    selected_gt = 1 if 'fake' in selected_path else 0
+    unselected_gt = 1 if 'fake' in unselected_path else 0
 
+    # The rest of the function saves the two response objects
     responses = []
     for image_id, heatmap, is_selected, gt in [
         (selected_image_id, selected_heatmap, True, selected_gt),
         (unselected_image_id, unselected_heatmap, False, unselected_gt)
     ]:
         assigned_label = 1 if is_selected else 0
-        position = 'left' if (user_answer == 'left' and is_selected) or (user_answer == 'right' and not is_selected) else 'right'
+        position = 'left' if (user_answer == 'left' and is_selected) or (
+                    user_answer == 'right' and not is_selected) else 'right'
 
-        # For the unselected image, set all inconsistency types to 0
+        # Only save the response for the image the user selected
         if is_selected:
             response = Response(
                 ppant_id=ppant_instance,
                 time_at_submission=time_now,
                 time_start=time_start,
-                response_id=response_id,  # Add the response_id
+                response_id=response_id,
                 image_id=image_id,
                 choice=user_answer,
                 confidence=confidence,
@@ -501,31 +504,9 @@ def create_response_instance(form, request, ppant_instance, selected_image, time
                 inconsistency_texture=int('texture' in inconsistency_types),
                 position=position,
                 is_correct=is_correct,
-
             )
-        # else: #ne rabim obeh zabeležit. Vse je 0
-        #     # For unselected image, all inconsistency types are 0
-        #     response = Response(
-        #         ppant_id=ppant_instance,
-        #         time_at_submission=time_now,
-        #         time_start=time_start,
-        #         response_id=response_id,  # Add the response_id
-        #         image_id=image_id,
-        #         choice=user_answer,
-        #         confidence=confidence,
-        #         heatmapFill=heatmap,
-        #         assigned_label=assigned_label,
-        #         gt=gt,
-        #         inconsistency_boundary=0,
-        #         inconsistency_color=0,
-        #         inconsistency_landmark=0,
-        #         inconsistency_texture=0,
-        #         position=position,
-        #         is_correct=is_correct,
-        #
-        #     )
-        response.save()
-        responses.append(response)
+            response.save()
+            responses.append(response)
 
     return responses
 
