@@ -156,7 +156,7 @@
                     $('#feedback-badge').removeClass('badge-success').addClass('badge-danger').text('{% trans "+0 POINTS" %}');
                     $('#feedback-heading').text('{% trans "Not quite right!" %}');
                 }
-                let feedbackText = response.correct_answer === 'left' ? '{% trans "The left image was the fake one." %}' : '{% trans "The right image was the fake one." %}';
+                let feedbackText = response.correct_answer === 'left' ? '{% trans "The image 1 was the fake one." %}' : '{% trans "The image 2 was the fake one." %}';
                 let encouragementText = response.is_correct ? '<em>{% trans "Keep it up!" %}</em>' : '<em>{% trans "Look closely at the details in the next one!" %}</em>';
                 $('#feedback-text').html(feedbackText + ' ' + encouragementText);
 
