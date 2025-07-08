@@ -258,7 +258,7 @@ def select_image(request, all_images):
 
     if not unseen_images.exists(): # Use .exists() for efficiency
         # If all images have been seen, allow any image.
-        return random.choice(all_images)
+        return unseen_images.first()
 
     return random.choice(unseen_images)
 
