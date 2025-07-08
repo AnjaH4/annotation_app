@@ -258,9 +258,9 @@ def select_image(request, all_images):
 
     if not unseen_images.exists(): # Use .exists() for efficiency
         # If all images have been seen, allow any image.
-        return unseen_images.first()
+        return all_images.first()
 
-    return random.choice(unseen_images)
+    return unseen_images.first()
 
 def prepare_context(request, selected_image, left_image_path, right_image_path,
                     img_nums_so_far_this_ppant, correct_answers_count, how_many_qus, form):
