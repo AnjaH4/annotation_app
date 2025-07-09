@@ -241,26 +241,88 @@ def helpPage(request):
 #
 #     return random.choice(unseen_images)
 
+# def select_image(request, all_images):
+#     """Select an image for the current question based on participant history."""
+#     ppant_instance = get_participant(request)
+#     if ppant_instance is None:
+#         return random.choice(all_images)
+#
+#     # Get unique image_id strings that the participant has responded to.
+#     seen_image_id_strings = Response.objects.filter(
+#         ppant_id=ppant_instance
+#     ).values_list('image_id', flat=True).distinct()
+#
+#     # Filter out images whose image_id has been seen.
+#     # This is much more efficient than looping in Python.
+#     unseen_images = all_images.exclude(image_id__in=seen_image_id_strings)
+#
+#     if not unseen_images.exists(): # Use .exists() for efficiency
+#         # If all images have been seen, allow any image.
+#         return all_images.first()
+#
+#     return unseen_images.first()
+
+
+import random
+
+
 def select_image(request, all_images):
-    """Select an image for the current question based on participant history."""
+    """
+    Selects a random image from the pool of least-seen images,
+    while trying to avoid showing an image from the same video consecutively.
+    """
     ppant_instance = get_participant(request)
     if ppant_instance is None:
-        return random.choice(all_images)
+        return random.choice(all_images.all())  # Use .all() if all_images is a queryset
 
-    # Get unique image_id strings that the participant has responded to.
+    # Get images this participant has already seen
     seen_image_id_strings = Response.objects.filter(
         ppant_id=ppant_instance
     ).values_list('image_id', flat=True).distinct()
 
-    # Filter out images whose image_id has been seen.
-    # This is much more efficient than looping in Python.
     unseen_images = all_images.exclude(image_id__in=seen_image_id_strings)
 
-    if not unseen_images.exists(): # Use .exists() for efficiency
-        # If all images have been seen, allow any image.
+    # If there are no unseen images, fall back to the least-seen overall
+    if not unseen_images.exists():
+        if 'last_video_id' in request.session:
+            del request.session['last_video_id']  # Clear session for the next round
         return all_images.first()
 
-    return unseen_images.first()
+    # STEP 1: Find the lowest 'times_seen' value among the unseen images.
+    min_seen_count = unseen_images.first().times_seen
+
+    # STEP 2: Create a candidate pool of all images with that minimum count.
+    candidate_pool = unseen_images.filter(times_seen=min_seen_count)
+
+    # STEP 3: Try to exclude the last video shown.
+    last_video_id = request.session.get('last_video_id')
+
+    selected_image = None
+
+    if last_video_id:
+        # Create a preferred pool by excluding images from the last video
+        # We assume the video ID is the first part of the image_id string (e.g., '021' in '021/061_5.png')
+        preferred_candidates = candidate_pool.exclude(image_id__startswith=f"{last_video_id}/")
+
+        if preferred_candidates.exists():
+            selected_image = random.choice(list(preferred_candidates))
+
+    # If a preferred image wasn't selected (either no 'last_video_id' or all candidates were from the last video)
+    # then just pick a random one from the original candidate pool.
+    if not selected_image:
+        selected_image = random.choice(list(candidate_pool))
+
+    # STEP 4: Store the new image's video ID in the session for the next round.
+    try:
+        # Assuming format 'video_id/image_file.png'
+        current_video_id = selected_image.image_id.split('/')[0]
+        request.session['last_video_id'] = current_video_id
+    except (IndexError, AttributeError):
+        # If image_id format is unexpected, just clear the session key
+        if 'last_video_id' in request.session:
+            del request.session['last_video_id']
+
+    return selected_image
 
 def prepare_context(request, selected_image, left_image_path, right_image_path,
                     img_nums_so_far_this_ppant, correct_answers_count, how_many_qus, form):
