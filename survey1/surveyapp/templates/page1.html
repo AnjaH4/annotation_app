@@ -275,7 +275,24 @@
         newGrid.style.display = "none";
         newGrid.style.visibility = "hidden";
         container.appendChild(newGrid);
+
+        // --- ADD THIS LINE ---
+
+        restoreGridState(side);
+
     }
+
+    function debounce(func, wait) {
+        let timeout;
+        return function executedFunction(...args) {
+            const later = () => {
+                clearTimeout(timeout);
+                func(...args);
+            };
+            clearTimeout(timeout);
+            timeout = setTimeout(later, wait);
+        };
+    };
 
     function adjustGridContainer(side) {
         const image = document.getElementById(side + '-image');
@@ -398,10 +415,12 @@
         }
         initializeGrid(leftImage);
         initializeGrid(rightImage);
-        window.addEventListener('resize', function() {
+        var debouncedResize = debounce(function() {
             if (leftImage) adjustGridContainer('left');
             if (rightImage) adjustGridContainer('right');
-        });
+        }, 200); // Only run 200ms after resizing stops
+
+        window.addEventListener('resize', debouncedResize);
 
         // --- Logic for the submit button ---
         $('#submit-answer').click(function() {
