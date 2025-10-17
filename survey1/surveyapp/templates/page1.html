@@ -28,6 +28,16 @@
             position: fixed; top: 80px; left: 50%; transform: translateX(-50%);
             width: 90%; max-width: 700px; z-index: 9999; display: none;
         }
+        .confidence-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px; /* This handles spacing nicely */
+        }
+        .confidence-container .form-check-inline {
+            /* Override Bootstrap's default margin */
+            margin-right: 0; 
+        }
     </style>
 </head>
 <body>
@@ -110,9 +120,9 @@
             <div class="col-md-6">
                 <div class="text-center">
                     <h3 style="font-size: 1.8rem; margin-bottom: 10px;">{% trans "Confidence level:" %} <small style="font-size: 1.2rem;">{% trans "(1=None, 9=Complete)" %}</small></h3>
-                    <div class="form-check-inline">
+                    <div class="confidence-container">
                         {% for i in "123456789" %}
-                        <div class="form-check form-check-inline" style="margin-right: 12px;"><input class="form-check-input" type="radio" id="id_confidence_{{ i }}" name="confidence" value="{{ i }}" style="transform: scale(1.4); position: relative; top: -2px; margin-right: 4px;"><label class="form-check-label" for="id_confidence_{{ i }}" style="font-size: 1.6rem; margin-left: 4px;">{{ i }}</label></div>
+                        <div class="form-check form-check-inline"><input class="form-check-input" type="radio" id="id_confidence_{{ i }}" name="confidence" value="{{ i }}" style="transform: scale(1.4); position: relative; top: -2px; margin-right: 4px;"><label class="form-check-label" for="id_confidence_{{ i }}" style="font-size: 1.6rem; margin-left: 4px;">{{ i }}</label></div>
                         {% endfor %}
                     </div>
                 </div>
