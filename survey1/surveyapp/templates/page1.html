@@ -245,33 +245,49 @@
             }
         };
 
-        svg.addEventListener("mousedown", (e) => {
+        // Use pointer events for consistent behavior across devices
+        svg.addEventListener("pointerdown", (e) => {
             if (e.target.tagName.toLowerCase() !== 'rect') return;
-            isMouseDown = true; mouseButton = e.button;
-            handleSquareSelection(e.target);
             e.preventDefault();
+            handleSquareSelection(e.target);
         });
-        svg.addEventListener("mousemove", (e) => { if (isMouseDown && e.target.tagName.toLowerCase() === 'rect') { handleDrag(e.target, mouseButton === 0); } });
-        document.body.addEventListener("mouseup", () => { isMouseDown = false; });
+
+        svg.addEventListener("pointermove", (e) => {
+            if (e.buttons !== 1 || e.target.tagName.toLowerCase() !== 'rect') return;
+            handleDrag(e.target, true);
+        });
+
+        // Prevent context menu on long press / right-click
         svg.addEventListener("contextmenu", (e) => e.preventDefault());
 
-        svg.addEventListener("touchstart", (e) => {
-            e.preventDefault(); isTouching = true;
-            const touch = e.touches[0];
-            const element = document.elementFromPoint(touch.clientX, touch.clientY);
-            if (element && element.tagName.toLowerCase() === 'rect') {
-                handleSquareSelection(element);
-            }
-        }, { passive: false });
-        svg.addEventListener("touchmove", (e) => {
-            e.preventDefault(); if (!isTouching) return;
-            const touch = e.touches[0];
-            const element = document.elementFromPoint(touch.clientX, touch.clientY);
-            if (element && element.tagName.toLowerCase() === 'rect') {
-                handleDrag(element, true);
-            }
-        }, { passive: false });
-        document.body.addEventListener("touchend", () => { isTouching = false; });
+
+        // svg.addEventListener("mousedown", (e) => {
+        //     if (e.target.tagName.toLowerCase() !== 'rect') return;
+        //     isMouseDown = true; mouseButton = e.button;
+        //     handleSquareSelection(e.target);
+        //     e.preventDefault();
+        // });
+        // svg.addEventListener("mousemove", (e) => { if (isMouseDown && e.target.tagName.toLowerCase() === 'rect') { handleDrag(e.target, mouseButton === 0); } });
+        // document.body.addEventListener("mouseup", () => { isMouseDown = false; });
+        // svg.addEventListener("contextmenu", (e) => e.preventDefault());
+
+        // svg.addEventListener("touchstart", (e) => {
+        //     e.preventDefault(); isTouching = true;
+        //     const touch = e.touches[0];
+        //     const element = document.elementFromPoint(touch.clientX, touch.clientY);
+        //     if (element && element.tagName.toLowerCase() === 'rect') {
+        //         handleSquareSelection(element);
+        //     }
+        // }, { passive: false });
+        // svg.addEventListener("touchmove", (e) => {
+        //     e.preventDefault(); if (!isTouching) return;
+        //     const touch = e.touches[0];
+        //     const element = document.elementFromPoint(touch.clientX, touch.clientY);
+        //     if (element && element.tagName.toLowerCase() === 'rect') {
+        //         handleDrag(element, true);
+        //     }
+        // }, { passive: false });
+        // document.body.addEventListener("touchend", () => { isTouching = false; });
 
         return svg;
     }
