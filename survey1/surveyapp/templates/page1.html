@@ -245,17 +245,17 @@
             }
         };
 
-        svg.style.touchAction = "none"; // stops the page from scrolling while dragging
+        let isPointerDown = false;
 
         svg.addEventListener("pointerdown", (e) => {
             if (e.target.tagName.toLowerCase() !== 'rect') return;
             e.preventDefault();
-            svg.setPointerCapture(e.pointerId);
+            isPointerDown = true;
             handleSquareSelection(e.target);
         });
 
         svg.addEventListener("pointermove", (e) => {
-            if (e.buttons !== 1) return; // only while finger/mouse pressed
+            if (!isPointerDown) return;
             e.preventDefault();
             const target = document.elementFromPoint(e.clientX, e.clientY);
             if (target && target.tagName.toLowerCase() === 'rect') {
@@ -263,8 +263,12 @@
             }
         });
 
-        svg.addEventListener("pointerup", (e) => {
-            svg.releasePointerCapture(e.pointerId);
+        svg.addEventListener("pointerup", () => {
+            isPointerDown = false;
+        });
+
+        svg.addEventListener("pointercancel", () => {
+            isPointerDown = false;
         });
 
 
