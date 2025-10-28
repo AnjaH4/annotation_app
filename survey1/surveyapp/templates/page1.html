@@ -245,20 +245,27 @@
             }
         };
 
-        // Use pointer events for consistent behavior across devices
+        svg.style.touchAction = "none"; // stops the page from scrolling while dragging
+
         svg.addEventListener("pointerdown", (e) => {
             if (e.target.tagName.toLowerCase() !== 'rect') return;
             e.preventDefault();
+            svg.setPointerCapture(e.pointerId);
             handleSquareSelection(e.target);
         });
 
         svg.addEventListener("pointermove", (e) => {
-            if (e.buttons !== 1 || e.target.tagName.toLowerCase() !== 'rect') return;
-            handleDrag(e.target, true);
+            if (e.buttons !== 1) return; // only while finger/mouse pressed
+            e.preventDefault();
+            const target = document.elementFromPoint(e.clientX, e.clientY);
+            if (target && target.tagName.toLowerCase() === 'rect') {
+                handleDrag(target, true);
+            }
         });
 
-        // Prevent context menu on long press / right-click
-        svg.addEventListener("contextmenu", (e) => e.preventDefault());
+        svg.addEventListener("pointerup", (e) => {
+            svg.releasePointerCapture(e.pointerId);
+        });
 
 
         // svg.addEventListener("mousedown", (e) => {
